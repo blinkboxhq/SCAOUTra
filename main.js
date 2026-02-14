@@ -1,15 +1,15 @@
-import Navbar from "./components/Navbar.js";
-import Hero from "./components/Hero.js";
-import StarBackground, { initStars } from "./components/starBackground.js"; // Import Stars
+import Navbar from "Navbar.js";
+import Hero from "Hero.js";
+import StarBackground, { initStars } from "starBackground.js"; // Import Stars
 import InefficiencyCalculator, {
   initCalculator,
-} from "./components/InefficiencyCalculator.js";
-import Protocol from "./components/Protocol.js";
-import Results from "./components/Results.js";
+} from "InefficiencyCalculator.js";
+import Protocol from "Protocol.js";
+import Results from "Results.js";
 import AuditApplication, {
   initAuditForm,
-} from "./components/AuditApplication.js";
-import Footer from "./components/Footer.js";
+} from "AuditApplication.js";
+import Footer from "Footer.js";
 
 const app = document.getElementById("app");
 
