@@ -1,4 +1,4 @@
-import { CONFIG } from "../config/settings.js";
+import { CONFIG } from "settings.js";
 
 export default function InefficiencyCalculator() {
   return `
