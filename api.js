@@ -1,4 +1,4 @@
-import { CONFIG } from "../config/settings.js";
+import { CONFIG } from "settings.js";
 
 export async function submitAudit(formData) {
   // 1. Prepare the payload matching the Google Script expects
