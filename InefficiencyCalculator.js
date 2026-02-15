@@ -92,3 +92,4 @@ export function initCalculator() {
   slider.addEventListener("input", update);
   update(); // Run once on load
 }
+
