@@ -78,3 +78,4 @@ export function initStars() {
   resize();
   animate();
 }
+
