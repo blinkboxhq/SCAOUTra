@@ -1,4 +1,4 @@
-import { submitAudit } from "api.js";
+import { submitAudit } from "./api.js";
 
 export default function AuditApplication() {
   return `
