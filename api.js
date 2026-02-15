@@ -19,7 +19,7 @@ export async function submitAudit(formData) {
       mode: "no-cors",
       headers: {
         "Content-Type": "text/plain;charset=utf-8",
-      },
+      }, 
       body: JSON.stringify(payload),
     });
 
