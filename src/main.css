@@ -17,10 +17,10 @@
   --text-primary: #f4f4f5;
   --text-secondary: #a1a1aa;
   --text-muted: #52525b;
-  --accent: #818cf8;
-  --accent-hover: #a5b4fc;
-  --accent-muted: rgba(129, 140, 248, 0.12);
-  --accent-glow: rgba(129, 140, 248, 0.22);
+  --accent: #4ade80;
+  --accent-hover: #86efac;
+  --accent-muted: rgba(74, 222, 128, 0.12);
+  --accent-glow: rgba(74, 222, 128, 0.22);
   --radius-card: 16px;
   --radius-btn: 10px;
 }
@@ -125,7 +125,7 @@
     letter-spacing: 0.09em;
     text-transform: uppercase;
     background: var(--accent-muted);
-    border: 1px solid var(--accent-glow);
+    border: 1px solid rgba(74, 222, 128, 0.22);
     color: var(--accent);
     width: fit-content;
   }
@@ -167,15 +167,15 @@
 
   .btn-primary {
     padding: 13px 26px;
-    background: var(--accent);
-    color: #09090b;
+    background: #22c55e;
+    color: #071a0e;
     border: 1px solid transparent;
   }
 
   .btn-primary:hover {
-    background: var(--accent-hover);
+    background: #4ade80;
     transform: translateY(-1px);
-    box-shadow: 0 0 28px var(--accent-glow);
+    box-shadow: 0 0 28px rgba(34, 197, 94, 0.3);
   }
 
   .btn-secondary {
@@ -216,7 +216,7 @@
   }
 
   .card:hover {
-    border-color: rgba(129, 140, 248, 0.28);
+    border-color: rgba(74, 222, 128, 0.28);
     transform: translateY(-4px);
     box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
   }
@@ -252,8 +252,8 @@
   }
 
   .form-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-muted);
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.14);
     background: rgba(255, 255, 255, 0.06);
   }
 
@@ -263,8 +263,8 @@
   }
 
   .form-input.is-success {
-    border-color: rgba(129, 140, 248, 0.5);
-    box-shadow: 0 0 0 3px var(--accent-muted);
+    border-color: rgba(74, 222, 128, 0.5);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
   }
 
   .form-error {
@@ -275,61 +275,6 @@
 
   .form-field.has-error .form-error {
     display: block;
-  }
-
-  /* --- Range slider --- */
-  .slider {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 5px;
-    border-radius: 9999px;
-    background: var(--bg-elevated);
-    outline: none;
-    cursor: pointer;
-  }
-
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-    box-shadow: 0 0 0 5px var(--accent-muted);
-    transition: box-shadow 0.2s, background 0.2s;
-  }
-
-  .slider::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
-    border: none;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-    box-shadow: 0 0 0 5px var(--accent-muted);
-    transition: box-shadow 0.2s, background 0.2s;
-  }
-
-  .slider:focus-visible::-webkit-slider-thumb {
-    background: var(--accent-hover);
-    box-shadow: 0 0 0 5px var(--accent-muted), 0 0 0 8px rgba(129, 140, 248, 0.1);
-  }
-
-  .slider:focus-visible::-moz-range-thumb {
-    background: var(--accent-hover);
-    box-shadow: 0 0 0 5px var(--accent-muted), 0 0 0 8px rgba(129, 140, 248, 0.1);
-  }
-
-  .slider {
-    background: linear-gradient(
-      to right,
-      var(--accent) 0%,
-      var(--accent) var(--fill, 37.5%),
-      var(--bg-elevated) var(--fill, 37.5%),
-      var(--bg-elevated) 100%
-    );
   }
 }
 
@@ -382,7 +327,7 @@
 .hero-orb-1 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, #818cf8, transparent 70%);
+  background: radial-gradient(circle, #4ade80, transparent 70%);
   top: -150px;
   left: 50%;
   transform: translateX(-50%);
@@ -391,7 +336,7 @@
 .hero-orb-2 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, #a78bfa, transparent 70%);
+  background: radial-gradient(circle, #22d3ee, transparent 70%);
   top: 200px;
   right: -100px;
   opacity: 0.1;
@@ -434,7 +379,7 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  opacity: 0.05;
+  opacity: 0.07;
 }
 
 #shader-bg canvas {
@@ -452,6 +397,9 @@
   pointer-events: none;
 }
 
+/* ============================================
+   CONTAINER SCROLL
+   ============================================ */
 .cscroll-section {
   position: relative;
   height: 140vh;
@@ -562,6 +510,9 @@
   height: 140px;
 }
 
+/* ============================================
+   TEXT REVEAL
+   ============================================ */
 .trw-section {
   position: relative;
   height: 200vh;
@@ -620,7 +571,7 @@
 }
 
 /* ============================================
-   LEAD FORM — split-screen layout
+   LEAD FORM 
    ============================================ */
 .lead-form-section {
   border-top: 1px solid var(--border-subtle);
@@ -704,7 +655,7 @@
   height: 40px;
   border-radius: 50%;
   background: var(--accent-muted);
-  border: 1px solid rgba(129,140,248,0.22);
+  border: 1px solid rgba(74, 222, 128, 0.22);
   color: var(--accent);
   font-size: 0.8125rem;
   font-weight: 700;
