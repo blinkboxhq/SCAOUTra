@@ -1,35 +1,45 @@
 import './main.css';
 
-import CanvasBackground, { initCanvas } from './components/CanvasBackground.js';
-import Navbar, { initNavbar } from './components/Navbar.js';
-import Hero from './components/Hero.js';
-import Results from './components/Results.js';
-import Protocol from './components/Protocol.js';
-import Calculator, { initCalculator } from './components/Calculator.js';
-import LeadForm, { initLeadForm } from './components/LeadForm.js';
-import Footer from './components/Footer.js';
-import { initReveal } from './utils/reveal.js';
+import ShaderBackground, { initShaderBackground } from './components/ShaderBackground.js';
+import Navbar,            { initNavbar }           from './components/Navbar.js';
+import Hero                                        from './components/Hero.js';
+import Results                                     from './components/Results.js';
+import ContainerScroll,   { initContainerScroll }  from './components/ContainerScroll.js';
+import TextReveal,        { initTextReveal }        from './components/TextReveal.js';
+import Protocol                                    from './components/Protocol.js';
+import Pricing,           { initPricing }           from './components/Pricing.js';
+import LeadForm,          { initLeadForm }          from './components/LeadForm.js';
+import Footer                                      from './components/Footer.js';
+import { initReveal }                              from './utils/reveal.js';
 
 function render() {
   const app = document.getElementById('app');
 
   app.innerHTML = `
-    ${CanvasBackground()}
+    ${ShaderBackground()}
     ${Navbar()}
     <main id="main-content" tabindex="-1">
       ${Hero()}
       ${Results()}
+      ${ContainerScroll()}
+      ${TextReveal({
+        text:  'We map your operations, find the bottlenecks costing you the most, and build the infrastructure to eliminate them — permanently, without disrupting your business.',
+        id:    'value-prop',
+        badge: 'The Scoutra Approach',
+      })}
       ${Protocol()}
-      ${Calculator()}
+      ${Pricing()}
       ${LeadForm()}
     </main>
     ${Footer()}
   `;
 
-  // Initialise interactive modules
-  initCanvas();
+  // Initialise interactive modules (order matters)
+  initShaderBackground();
   initNavbar();
-  initCalculator();
+  initContainerScroll();
+  initTextReveal();
+  initPricing();
   initLeadForm();
 
   // Scroll-reveal must run last so all elements are in the DOM
