@@ -1,4 +1,5 @@
 # Environment variables — never commit these
+env.js
 .env
 .env.local
 .env.*.local
