@@ -1,7 +1,7 @@
 export const CONFIG = {
   // This is where you paste your Make.com or Zapier Webhook URL
   // For now, it points to a dummy echo service for testing
-  WEBHOOK_URL: window.ENV?.WEBHOOK_URL,
+  WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbwTORU4cvSYYNHypJka0iFatrAx3kTLAFUEemtDRupITbXyTs7WRsqmuvkUtZtD0zI5/exec",
 
   // Feature Flags (Turn parts of the site on/off easily)
   ENABLE_CALCULATOR: true,
