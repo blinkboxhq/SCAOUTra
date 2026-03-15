@@ -97,7 +97,7 @@ export default function LeadForm() {
                   id="input-name"
                   name="name"
                   class="form-input"
-                  placeholder="Aaina Smith"
+                  placeholder="John Smith"
                   autocomplete="name"
                   required
                   aria-required="true"

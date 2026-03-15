@@ -11,8 +11,8 @@ export async function submitAudit(formData) {
     await fetch(CONFIG.WEBHOOK_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(payload).toString(),
     });
     return { success: true };
   } catch (error) {
