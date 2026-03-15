@@ -17,10 +17,10 @@
   --text-primary: #f4f4f5;
   --text-secondary: #a1a1aa;
   --text-muted: #52525b;
-  --accent: #4ade80;
-  --accent-hover: #86efac;
-  --accent-muted: rgba(74, 222, 128, 0.12);
-  --accent-glow: rgba(74, 222, 128, 0.22);
+  --accent: #818cf8;
+  --accent-hover: #a5b4fc;
+  --accent-muted: rgba(129, 140, 248, 0.12);
+  --accent-glow: rgba(129, 140, 248, 0.22);
   --radius-card: 16px;
   --radius-btn: 10px;
 }
@@ -50,7 +50,6 @@
     line-height: 1.15;
   }
 
-  /* WCAG AA focus-visible — visible for keyboard, invisible for mouse */
   :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
@@ -61,7 +60,6 @@
     outline: none;
   }
 
-  /* Skip-to-main link for screen readers */
   .skip-link {
     position: absolute;
     top: -100%;
@@ -81,7 +79,7 @@
 }
 
 /* ============================================
-   SCROLL-REVEAL — Progressive Enhancement
+   SCROLL-REVEAL
    ============================================ */
 @layer utilities {
   [data-reveal] {
@@ -102,7 +100,6 @@
   [data-reveal-delay="3"] { transition-delay: 0.24s; }
   [data-reveal-delay="4"] { transition-delay: 0.32s; }
 
-  /* Respect user motion preferences */
   @media (prefers-reduced-motion: reduce) {
     [data-reveal] {
       opacity: 1;
@@ -128,7 +125,7 @@
     letter-spacing: 0.09em;
     text-transform: uppercase;
     background: var(--accent-muted);
-    border: 1px solid rgba(74, 222, 128, 0.22);
+    border: 1px solid var(--accent-glow);
     color: var(--accent);
     width: fit-content;
   }
@@ -168,21 +165,19 @@
     transform: translateY(0) scale(0.975) !important;
   }
 
-  /* Primary — leafy green, dark text for contrast */
   .btn-primary {
     padding: 13px 26px;
-    background: #22c55e;
-    color: #071a0e;
+    background: var(--accent);
+    color: #09090b;
     border: 1px solid transparent;
   }
 
   .btn-primary:hover {
-    background: #4ade80;
+    background: var(--accent-hover);
     transform: translateY(-1px);
-    box-shadow: 0 0 28px rgba(34, 197, 94, 0.3);
+    box-shadow: 0 0 28px var(--accent-glow);
   }
 
-  /* Secondary — ghost with subtle border */
   .btn-secondary {
     padding: 12px 25px;
     background: transparent;
@@ -196,7 +191,6 @@
     transform: translateY(-1px);
   }
 
-  /* Ghost — same DNA as secondary, slightly smaller */
   .btn-ghost {
     padding: 9px 18px;
     background: transparent;
@@ -222,16 +216,9 @@
   }
 
   .card:hover {
-    border-color: rgba(74, 222, 128, 0.28);
+    border-color: rgba(129, 140, 248, 0.28);
     transform: translateY(-4px);
     box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-  }
-
-  /* --- Section divider --- */
-  .section-divider {
-    border: none;
-    border-top: 1px solid var(--border-subtle);
-    margin: 0;
   }
 
   /* --- Form inputs --- */
@@ -265,8 +252,8 @@
   }
 
   .form-input:focus {
-    border-color: #22c55e;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.14);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-muted);
     background: rgba(255, 255, 255, 0.06);
   }
 
@@ -276,8 +263,8 @@
   }
 
   .form-input.is-success {
-    border-color: rgba(74, 222, 128, 0.5);
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    border-color: rgba(129, 140, 248, 0.5);
+    box-shadow: 0 0 0 3px var(--accent-muted);
   }
 
   .form-error {
@@ -327,15 +314,14 @@
 
   .slider:focus-visible::-webkit-slider-thumb {
     background: var(--accent-hover);
-    box-shadow: 0 0 0 5px var(--accent-muted), 0 0 0 8px rgba(74, 222, 128, 0.1);
+    box-shadow: 0 0 0 5px var(--accent-muted), 0 0 0 8px rgba(129, 140, 248, 0.1);
   }
 
   .slider:focus-visible::-moz-range-thumb {
     background: var(--accent-hover);
-    box-shadow: 0 0 0 5px var(--accent-muted), 0 0 0 8px rgba(74, 222, 128, 0.1);
+    box-shadow: 0 0 0 5px var(--accent-muted), 0 0 0 8px rgba(129, 140, 248, 0.1);
   }
 
-  /* Slider track fill (dynamic, set via JS CSS variable) */
   .slider {
     background: linear-gradient(
       to right,
@@ -348,26 +334,13 @@
 }
 
 /* ============================================
-   KEYFRAMES
+   KEYFRAMES & GLOBALS
    ============================================ */
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.8); }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes count-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ============================================
-   NAVBAR — floating pill on scroll
-   ============================================ */
 .navbar {
   position: fixed;
   top: 0;
@@ -398,9 +371,6 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-/* ============================================
-   HERO GRADIENT ORBS
-   ============================================ */
 .hero-orb {
   position: absolute;
   border-radius: 50%;
@@ -412,7 +382,7 @@
 .hero-orb-1 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, #4ade80, transparent 70%);
+  background: radial-gradient(circle, #818cf8, transparent 70%);
   top: -150px;
   left: 50%;
   transform: translateX(-50%);
@@ -421,15 +391,12 @@
 .hero-orb-2 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, #22d3ee, transparent 70%);
+  background: radial-gradient(circle, #a78bfa, transparent 70%);
   top: 200px;
   right: -100px;
   opacity: 0.1;
 }
 
-/* ============================================
-   STAT COUNTER
-   ============================================ */
 .stat-value {
   font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: clamp(2.25rem, 4vw, 3rem);
@@ -443,9 +410,6 @@
   color: var(--accent);
 }
 
-/* ============================================
-   MOBILE NAV
-   ============================================ */
 .mobile-nav {
   display: none;
   position: fixed;
@@ -461,21 +425,6 @@
   display: flex;
 }
 
-/* ============================================
-   STEP CONNECTOR
-   ============================================ */
-.step-connector {
-  position: absolute;
-  top: 32px;
-  left: calc(50% + 40px);
-  width: calc(100% - 80px);
-  height: 1px;
-  background: linear-gradient(to right, var(--border), transparent);
-}
-
-/* ============================================
-   SHADER BACKGROUND
-   ============================================ */
 #shader-bg {
   position: fixed;
   top: 0;
@@ -485,7 +434,7 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  opacity: 0.07;
+  opacity: 0.05;
 }
 
 #shader-bg canvas {
@@ -494,7 +443,6 @@
   height: 100% !important;
 }
 
-/* Vignette — dark edges so hero text is unmistakably dominant */
 #shader-bg::after {
   content: '';
   position: absolute;
@@ -504,9 +452,6 @@
   pointer-events: none;
 }
 
-/* ============================================
-   CONTAINER SCROLL (perspective reveal)
-   ============================================ */
 .cscroll-section {
   position: relative;
   height: 140vh;
@@ -537,7 +482,7 @@
 
 .cscroll-card {
   background: var(--bg-card);
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: 20px;
   overflow: hidden;
   box-shadow:
@@ -617,9 +562,6 @@
   height: 140px;
 }
 
-/* ============================================
-   TEXT REVEAL (word-by-word scroll)
-   ============================================ */
 .trw-section {
   position: relative;
   height: 200vh;
@@ -660,7 +602,6 @@
 }
 
 .trw-ghost {
-  /* Absolute — visual dim placeholder */
   position: absolute;
   top: 0;
   left: 0;
@@ -672,194 +613,11 @@
 }
 
 .trw-live {
-  /* In normal flow — determines word dimensions */
   display: inline-block;
   white-space: nowrap;
   color: var(--text-primary);
   opacity: 0;
 }
-
-/* ============================================
-   PRICING SECTION
-   ============================================ */
-.pricing-bg-glow {
-  position: absolute;
-  top: -180px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 700px;
-  height: 700px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(49,49,245,0.12) 0%, transparent 70%);
-  pointer-events: none;
-  filter: blur(60px);
-}
-
-.pricing-toggle {
-  display: inline-flex;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  padding: 4px;
-  gap: 2px;
-}
-
-.pricing-toggle-btn {
-  position: relative;
-  padding: 8px 22px;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: color 0.2s;
-}
-
-.pricing-toggle-btn.is-active {
-  background: var(--accent);
-  color: #09090b;
-}
-
-.pricing-save-badge {
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  background: rgba(52,211,153,0.15);
-  border: 1px solid rgba(52,211,153,0.25);
-  color: #34d399;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  white-space: nowrap;
-}
-
-.pricing-toggle-btn.is-active .pricing-save-badge {
-  background: rgba(9,9,11,0.18);
-  border-color: rgba(9,9,11,0.2);
-  color: rgba(9,9,11,0.6);
-}
-
-.pricing-card {
-  position: relative;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  transition: border-color 0.3s, transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s;
-}
-
-.pricing-card:hover {
-  border-color: rgba(129,140,248,0.32);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
-}
-
-.pricing-card--popular {
-  border-color: rgba(129,140,248,0.38);
-  box-shadow:
-    0 0 0 1px rgba(129,140,248,0.1),
-    0 -6px 40px rgba(49,49,245,0.18);
-}
-
-.pricing-popular-badge {
-  position: absolute;
-  top: -1px;
-  right: 24px;
-  background: var(--accent);
-  color: #09090b;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 0 0 10px 10px;
-}
-
-.pricing-card-header { margin-bottom: 4px; }
-.pricing-card-body   { display: flex; flex-direction: column; flex: 1; }
-
-.pricing-name {
-  font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
-  font-size: 1.375rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 10px;
-}
-
-.pricing-price {
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-  margin-bottom: 10px;
-}
-
-.pricing-currency {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  align-self: flex-start;
-  margin-top: 6px;
-}
-
-.pricing-amount,
-.pricing-amount-custom {
-  font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
-  font-size: 2.75rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  letter-spacing: -0.04em;
-  line-height: 1;
-  transition: opacity 0.15s;
-}
-
-.pricing-period {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  margin-left: 4px;
-}
-
-.pricing-description {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.pricing-features-header {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 10px;
-}
-
-.pricing-features-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-.pricing-feature-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-
-.pricing-feature-item svg { flex-shrink: 0; }
 
 /* ============================================
    LEAD FORM — split-screen layout
@@ -896,7 +654,6 @@
   .lead-form-visual { display: flex; }
 }
 
-/* Dashed vertical line decorations */
 .lead-dashed-lines {
   position: absolute;
   inset: 0;
