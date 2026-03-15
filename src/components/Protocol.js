@@ -3,8 +3,8 @@ const STEPS = [
     number: '01',
     title: 'Diagnostic Audit',
     body: 'We map your entire workflow to pinpoint the highest-value automation opportunity — the one manual process costing you the most time and revenue. You receive a prioritised roadmap, not a generic report.',
-    color: '#818cf8',
-    bg: 'rgba(129, 140, 248, 0.08)',
+    color: '#4ade80',
+    bg: 'rgba(74, 222, 128, 0.08)',
     icon: `
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="11" cy="11" r="7"/>
@@ -17,8 +17,8 @@ const STEPS = [
     number: '02',
     title: 'Architecture & Build',
     body: 'We design and build your automation using enterprise-grade tools — n8n, OpenAI, Google Apps Script, and more. Everything is tested in a sandbox so your live business is never at risk during rollout.',
-    color: '#a78bfa',
-    bg: 'rgba(167, 139, 250, 0.08)',
+    color: '#22d3ee',
+    bg: 'rgba(34, 211, 238, 0.08)',
     icon: `
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <polyline points="16 18 22 12 16 6"/>
@@ -30,8 +30,8 @@ const STEPS = [
     number: '03',
     title: 'Deployment & Handoff',
     body: 'We go live, train your team on the new system, and provide 30 days of active monitoring. You walk away with a running automation and the knowledge to manage it — no dependency on us required.',
-    color: '#818cf8',
-    bg: 'rgba(129, 140, 248, 0.08)',
+    color: '#86efac',
+    bg: 'rgba(134, 239, 172, 0.08)',
     icon: `
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>

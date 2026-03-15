@@ -9,10 +9,10 @@ export default {
       },
       colors: {
         accent: {
-          DEFAULT: '#818cf8',
-          hover: '#a5b4fc',
-          muted: 'rgba(129,140,248,0.12)',
-          glow: 'rgba(129,140,248,0.22)',
+          DEFAULT: '#4ade80',
+          hover: '#86efac',
+          muted: 'rgba(74,222,128,0.12)',
+          glow: 'rgba(74,222,128,0.22)',
         },
         surface: {
           base: '#0c0c0f',

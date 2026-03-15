@@ -339,7 +339,7 @@ export function initLeadForm() {
       btnLabel.textContent = 'Application Sent ✓';
       statusBox.className  = 'mt-5 rounded-xl p-5 text-sm font-medium leading-relaxed';
       statusBox.style.cssText =
-        'background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.22); color: #a5b4fc;';
+        'background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.22); color: #86efac;';
       statusBox.innerHTML = `
         <strong>Application received.</strong> We've logged your details and will personally review your
         business. Expect to hear from us within 24 hours.

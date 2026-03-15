@@ -5,10 +5,10 @@
  */
 
 const METRICS = [
-  { label: 'Tasks Automated', value: '2,847', color: '#818cf8' },
-  { label: 'Hours Saved',     value: '438h',  color: '#a78bfa' },
-  { label: 'Error Rate',      value: '0.0%',  color: '#c4b5fd' },
-  { label: 'Active Flows',    value: '12',    color: '#818cf8' },
+  { label: 'Tasks Automated', value: '2,847', color: '#4ade80' },
+  { label: 'Hours Saved',     value: '438h',  color: '#22d3ee' },
+  { label: 'Error Rate',      value: '0.0%',  color: '#86efac' },
+  { label: 'Active Flows',    value: '12',    color: '#4ade80' },
 ];
 
 export default function ContainerScroll() {
@@ -37,7 +37,7 @@ export default function ContainerScroll() {
             Your Automation Hub,
             <span
               class="text-transparent bg-clip-text block"
-              style="background-image: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #c084fc 100%);"
+              style="background-image: linear-gradient(135deg, #4ade80 0%, #22d3ee 60%, #38bdf8 100%);"
             >
               Always On
             </span>
@@ -79,8 +79,8 @@ export default function ContainerScroll() {
                 >
                   <defs>
                     <linearGradient id="cscrollGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%"   stop-color="#818cf8" stop-opacity="0.35"/>
-                      <stop offset="100%" stop-color="#818cf8" stop-opacity="0"/>
+                      <stop offset="0%"   stop-color="#4ade80" stop-opacity="0.35"/>
+                      <stop offset="100%" stop-color="#4ade80" stop-opacity="0"/>
                     </linearGradient>
                   </defs>
                   <path
@@ -90,14 +90,14 @@ export default function ContainerScroll() {
                   <path
                     d="M0,130 C60,110 100,60 180,70 C260,80 300,40 380,50 C460,60 500,90 580,55 C660,20 720,75 800,35"
                     fill="none"
-                    stroke="#818cf8"
+                    stroke="#4ade80"
                     stroke-width="2"
                     stroke-linejoin="round"
                   />
-                  <circle cx="180" cy="70"  r="4" fill="#818cf8"/>
-                  <circle cx="380" cy="50"  r="4" fill="#a78bfa"/>
-                  <circle cx="580" cy="55"  r="4" fill="#818cf8"/>
-                  <circle cx="800" cy="35"  r="4" fill="#c4b5fd"/>
+                  <circle cx="180" cy="70"  r="4" fill="#4ade80"/>
+                  <circle cx="380" cy="50"  r="4" fill="#22d3ee"/>
+                  <circle cx="580" cy="55"  r="4" fill="#4ade80"/>
+                  <circle cx="800" cy="35"  r="4" fill="#86efac"/>
                 </svg>
               </div>
             </div>

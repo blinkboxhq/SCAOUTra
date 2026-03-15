@@ -31,7 +31,7 @@ export default function Hero() {
           Automate the Work
           <span
             class="block text-transparent bg-clip-text"
-            style="background-image: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #c084fc 100%);"
+            style="background-image: linear-gradient(135deg, #4ade80 0%, #22d3ee 60%, #38bdf8 100%);"
           >
             That Limits Your Growth
           </span>
@@ -74,21 +74,21 @@ export default function Hero() {
         >
           <span class="flex items-center gap-2">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path d="M7 1l1.56 3.16L12 4.78l-2.5 2.44.59 3.44L7 9.19 4.91 10.66l.59-3.44L3 4.78l3.44-.62L7 1z" fill="#818cf8"/>
+              <path d="M7 1l1.56 3.16L12 4.78l-2.5 2.44.59 3.44L7 9.19 4.91 10.66l.59-3.44L3 4.78l3.44-.62L7 1z" fill="#4ade80"/>
             </svg>
             15+ Hours Saved Per Week
           </span>
           <span class="flex items-center gap-2">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <circle cx="7" cy="7" r="6" stroke="#818cf8" stroke-width="1.4"/>
-              <path d="M4.5 7l2 2 3-3" stroke="#818cf8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="7" cy="7" r="6" stroke="#4ade80" stroke-width="1.4"/>
+              <path d="M4.5 7l2 2 3-3" stroke="#4ade80" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             Zero Error Rate
           </span>
           <span class="flex items-center gap-2">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <rect x="1" y="3" width="12" height="9" rx="2" stroke="#818cf8" stroke-width="1.4"/>
-              <path d="M1 6h12" stroke="#818cf8" stroke-width="1.4"/>
+              <rect x="1" y="3" width="12" height="9" rx="2" stroke="#4ade80" stroke-width="1.4"/>
+              <path d="M1 6h12" stroke="#4ade80" stroke-width="1.4"/>
             </svg>
             30-Day Deployment Guarantee
           </span>
