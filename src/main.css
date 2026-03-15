@@ -86,10 +86,10 @@
 @layer utilities {
   [data-reveal] {
     opacity: 0;
-    transform: translateY(28px);
+    transform: translateY(18px);
     transition:
-      opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   [data-reveal].is-visible {
@@ -152,57 +152,62 @@
     font-size: 0.9375rem;
     cursor: pointer;
     border: none;
-    border-radius: var(--radius-btn);
+    border-radius: 8px;
     transition:
-      background 0.2s,
-      color 0.2s,
-      transform 0.15s,
-      box-shadow 0.2s,
-      border-color 0.2s;
+      background 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
     text-decoration: none;
     white-space: nowrap;
+    letter-spacing: -0.01em;
   }
 
   .btn:active {
-    transform: translateY(0) scale(0.98) !important;
+    transform: translateY(0) scale(0.975) !important;
   }
 
+  /* Primary — solid indigo, white text */
   .btn-primary {
-    padding: 13px 28px;
-    background: var(--accent);
-    color: #09090b;
+    padding: 13px 26px;
+    background: #6366f1;
+    color: #fff;
+    border: 1px solid transparent;
   }
 
   .btn-primary:hover {
-    background: var(--accent-hover);
+    background: #818cf8;
     transform: translateY(-1px);
-    box-shadow: 0 8px 28px var(--accent-glow);
+    box-shadow: 0 0 28px rgba(99, 102, 241, 0.32);
   }
 
+  /* Secondary — ghost with subtle border */
   .btn-secondary {
-    padding: 12px 26px;
+    padding: 12px 25px;
     background: transparent;
-    color: var(--text-primary);
-    border: 1px solid var(--border);
+    color: #f4f4f5;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.18);
     transform: translateY(-1px);
   }
 
+  /* Ghost — same DNA as secondary, slightly smaller */
   .btn-ghost {
     padding: 9px 18px;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    border: 1px solid var(--border);
+    background: transparent;
+    color: #f4f4f5;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.875rem;
   }
 
   .btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.09);
-    border-color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.18);
   }
 
   /* --- Cards --- */
@@ -244,34 +249,35 @@
 
   .form-input {
     width: 100%;
-    background: var(--bg-base);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-btn);
-    padding: 13px 15px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 14px 16px;
     color: var(--text-primary);
     font-size: 0.9375rem;
     font-family: inherit;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     outline: none;
   }
 
   .form-input::placeholder {
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.22);
   }
 
   .form-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-muted);
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.14);
+    background: rgba(255, 255, 255, 0.06);
   }
 
   .form-input.is-error {
-    border-color: #f87171;
-    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.14);
+    border-color: rgba(248, 113, 113, 0.6);
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1);
   }
 
   .form-input.is-success {
-    border-color: #34d399;
-    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.14);
+    border-color: rgba(129, 140, 248, 0.5);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   }
 
   .form-error {
@@ -479,13 +485,23 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  opacity: 0.13;
+  opacity: 0.07;
 }
 
 #shader-bg canvas {
   display: block;
   width: 100% !important;
   height: 100% !important;
+}
+
+/* Vignette — dark edges so hero text is unmistakably dominant */
+#shader-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, transparent 40%, rgba(12,12,15,0.7) 100%);
+  pointer-events: none;
 }
 
 /* ============================================
@@ -981,7 +997,7 @@
 }
 
 .lead-form-panel {
-  padding: 64px 48px;
+  padding: 72px 56px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -989,5 +1005,5 @@
 }
 
 @media (max-width: 767px) {
-  .lead-form-panel { padding: 48px 24px; }
+  .lead-form-panel { padding: 56px 28px; }
 }

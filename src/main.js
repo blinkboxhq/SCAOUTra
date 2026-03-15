@@ -7,7 +7,6 @@ import Results                                     from './components/Results.js
 import ContainerScroll,   { initContainerScroll }  from './components/ContainerScroll.js';
 import TextReveal,        { initTextReveal }        from './components/TextReveal.js';
 import Protocol                                    from './components/Protocol.js';
-import Pricing,           { initPricing }           from './components/Pricing.js';
 import LeadForm,          { initLeadForm }          from './components/LeadForm.js';
 import Footer                                      from './components/Footer.js';
 import { initReveal }                              from './utils/reveal.js';
@@ -28,7 +27,6 @@ function render() {
         badge: 'The Scoutra Approach',
       })}
       ${Protocol()}
-      ${Pricing()}
       ${LeadForm()}
     </main>
     ${Footer()}
@@ -39,7 +37,6 @@ function render() {
   initNavbar();
   initContainerScroll();
   initTextReveal();
-  initPricing();
   initLeadForm();
 
   // Scroll-reveal must run last so all elements are in the DOM

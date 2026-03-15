@@ -31,9 +31,9 @@ export default function Navbar() {
             class="hidden md:flex items-center gap-7 text-sm font-medium text-ink-secondary list-none m-0 p-0"
             role="list"
           >
-            <li><a href="#protocol" class="hover:text-ink-primary transition-colors duration-150">The Protocol</a></li>
             <li><a href="#results" class="hover:text-ink-primary transition-colors duration-150">Results</a></li>
-            <li><a href="#calculator" class="hover:text-ink-primary transition-colors duration-150">ROI Calculator</a></li>
+            <li><a href="#protocol" class="hover:text-ink-primary transition-colors duration-150">Our Process</a></li>
+            <li><a href="#value-prop" class="hover:text-ink-primary transition-colors duration-150">Approach</a></li>
           </ul>
 
           <!-- CTA + mobile toggle -->
@@ -66,18 +66,18 @@ export default function Navbar() {
       >
         <ul class="flex flex-col gap-1 list-none m-0 p-0" role="list">
           <li>
-            <a href="#protocol" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
-              The Protocol
-            </a>
-          </li>
-          <li>
             <a href="#results" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
               Results
             </a>
           </li>
           <li>
-            <a href="#calculator" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
-              ROI Calculator
+            <a href="#protocol" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
+              Our Process
+            </a>
+          </li>
+          <li>
+            <a href="#value-prop" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
+              Approach
             </a>
           </li>
         </ul>

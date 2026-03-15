@@ -30,8 +30,8 @@ const STEPS = [
     number: '03',
     title: 'Deployment & Handoff',
     body: 'We go live, train your team on the new system, and provide 30 days of active monitoring. You walk away with a running automation and the knowledge to manage it — no dependency on us required.',
-    color: '#34d399',
-    bg: 'rgba(52, 211, 153, 0.08)',
+    color: '#818cf8',
+    bg: 'rgba(129, 140, 248, 0.08)',
     icon: `
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>

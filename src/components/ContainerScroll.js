@@ -6,9 +6,9 @@
 
 const METRICS = [
   { label: 'Tasks Automated', value: '2,847', color: '#818cf8' },
-  { label: 'Hours Saved',     value: '438h',  color: '#34d399' },
-  { label: 'Error Rate',      value: '0.0%',  color: '#a78bfa' },
-  { label: 'Active Flows',    value: '12',    color: '#f472b6' },
+  { label: 'Hours Saved',     value: '438h',  color: '#a78bfa' },
+  { label: 'Error Rate',      value: '0.0%',  color: '#c4b5fd' },
+  { label: 'Active Flows',    value: '12',    color: '#818cf8' },
 ];
 
 export default function ContainerScroll() {
@@ -97,7 +97,7 @@ export default function ContainerScroll() {
                   <circle cx="180" cy="70"  r="4" fill="#818cf8"/>
                   <circle cx="380" cy="50"  r="4" fill="#a78bfa"/>
                   <circle cx="580" cy="55"  r="4" fill="#818cf8"/>
-                  <circle cx="800" cy="35"  r="4" fill="#34d399"/>
+                  <circle cx="800" cy="35"  r="4" fill="#c4b5fd"/>
                 </svg>
               </div>
             </div>
@@ -122,11 +122,9 @@ export function initContainerScroll() {
     const scrollable = section.offsetHeight - window.innerHeight;
     const progress  = Math.max(0, Math.min(1, -rect.top / scrollable));
 
-    const isMobile  = window.innerWidth <= 768;
-    const rotate    = 20 * (1 - progress);
-    const scaleFrom = isMobile ? 0.7  : 1.05;
-    const scaleTo   = isMobile ? 0.92 : 1.0;
-    const scale     = scaleFrom + (scaleTo - scaleFrom) * progress;
+    const isMobile = window.innerWidth <= 768;
+    const rotate   = 18 * (1 - progress);
+    const scale    = isMobile ? 0.88 + 0.12 * progress : 1;
 
     card.style.transform = `rotateX(${rotate}deg) scale(${scale})`;
   }
