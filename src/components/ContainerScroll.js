@@ -1,7 +1,6 @@
 /**
- * ContainerScroll — scroll-driven 3D perspective reveal.
- * A "dashboard" card starts tilted (rotateX 20°) and flattens as the user scrolls.
- * Translated from the Framer Motion ContainerScroll component.
+ * ContainerScroll — scroll-driven perspective reveal.
+ * A "dashboard" card starts tilted (rotateX 8°) and flattens as the user scrolls.
  */
 
 const METRICS = [
@@ -27,7 +26,6 @@ export default function ContainerScroll() {
     >
       <div class="cscroll-sticky">
 
-        <!-- Title (translates up as card appears) -->
         <div class="cscroll-title text-center" data-reveal>
           <div class="badge mx-auto mb-4">Live Dashboard</div>
           <h2
@@ -44,7 +42,6 @@ export default function ContainerScroll() {
           </h2>
         </div>
 
-        <!-- Scroll-driven card -->
         <div
           id="scroll-card"
           class="cscroll-card-wrap"
@@ -52,7 +49,6 @@ export default function ContainerScroll() {
         >
           <div class="cscroll-card">
 
-            <!-- Browser chrome bar -->
             <div class="cscroll-chrome">
               <span class="cscroll-dot" style="background:#ff5f57;"></span>
               <span class="cscroll-dot" style="background:#febc2e;"></span>
@@ -62,13 +58,11 @@ export default function ContainerScroll() {
               </div>
             </div>
 
-            <!-- Metrics grid -->
             <div class="cscroll-body">
               <div class="cscroll-metrics">
                 ${metricCards}
               </div>
 
-              <!-- Sparkline graph -->
               <div class="cscroll-graph">
                 <svg
                   width="100%"
@@ -102,11 +96,7 @@ export default function ContainerScroll() {
               </div>
             </div>
 
-          </div><!-- /.cscroll-card -->
-        </div><!-- /.cscroll-card-wrap -->
-
-      </div><!-- /.cscroll-sticky -->
-    </section>
+          </div></div></div></section>
   `;
 }
 
@@ -123,8 +113,8 @@ export function initContainerScroll() {
     const progress  = Math.max(0, Math.min(1, -rect.top / scrollable));
 
     const isMobile = window.innerWidth <= 768;
-    const rotate   = 18 * (1 - progress);
-    const scale    = isMobile ? 0.88 + 0.12 * progress : 1;
+    const rotate   = 8 * (1 - progress);
+    const scale    = isMobile ? 0.9 + 0.1 * progress : 1;
 
     card.style.transform = `rotateX(${rotate}deg) scale(${scale})`;
   }

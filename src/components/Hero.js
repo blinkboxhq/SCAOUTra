@@ -5,13 +5,11 @@ export default function Hero() {
       class="relative pt-36 pb-28 md:pt-52 md:pb-36 flex flex-col items-center text-center px-6 overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      <!-- Decorative gradient orbs — aria-hidden -->
       <div class="hero-orb hero-orb-1" aria-hidden="true"></div>
       <div class="hero-orb hero-orb-2" aria-hidden="true"></div>
 
       <div class="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
 
-        <!-- Badge -->
         <div
           class="badge mb-8"
           data-reveal
@@ -21,7 +19,6 @@ export default function Hero() {
           Accepting 5 New Clients This Quarter
         </div>
 
-        <!-- Heading -->
         <h1
           id="hero-heading"
           class="text-[2.75rem] sm:text-6xl md:text-7xl font-display font-extrabold text-ink-primary mb-6 leading-[1.08]"
@@ -37,7 +34,6 @@ export default function Hero() {
           </span>
         </h1>
 
-        <!-- Subheading -->
         <p
           class="text-lg md:text-xl text-ink-secondary mb-10 max-w-xl leading-relaxed"
           data-reveal
@@ -48,7 +44,6 @@ export default function Hero() {
           bottlenecks — without disrupting your business.
         </p>
 
-        <!-- CTAs -->
         <div
           class="flex flex-col sm:flex-row gap-3 justify-center"
           data-reveal
@@ -65,7 +60,6 @@ export default function Hero() {
           </a>
         </div>
 
-        <!-- Social proof strip -->
         <div
           class="mt-14 flex flex-wrap justify-center gap-x-8 gap-y-3 text-xs text-ink-muted uppercase tracking-widest"
           data-reveal
