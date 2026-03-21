@@ -351,15 +351,18 @@ export function initLeadForm() {
         input.classList.remove('is-success', 'is-error');
       });
       statusBox.focus();
+      // Prevent re-submission for 5 seconds
+      setTimeout(() => { btnLabel.textContent = 'Submit Application'; }, 5000);
     } else {
       btnLabel.textContent = 'Submit Application';
       statusBox.className  = 'mt-5 rounded-xl p-5 text-sm font-medium leading-relaxed';
       statusBox.style.cssText =
         'background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.22); color: #fca5a5;';
-      statusBox.innerHTML = `
-        <strong>Something went wrong.</strong> Please try again, or email us directly
-        at <a href="mailto:hello@scoutra.co" class="underline">hello@scoutra.co</a>.
-      `;
+      const errorDetail = result.message
+        ? `<strong>Error:</strong> ${result.message}`
+        : `<strong>Something went wrong.</strong> Please try again, or email us directly
+           at <a href="mailto:hello@scoutra.co" class="underline">hello@scoutra.co</a>.`;
+      statusBox.innerHTML = errorDetail;
       statusBox.classList.remove('hidden');
       statusBox.focus();
     }
