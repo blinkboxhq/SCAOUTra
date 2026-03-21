@@ -341,8 +341,8 @@ export function initLeadForm() {
       statusBox.style.cssText =
         'background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.22); color: #86efac;';
       statusBox.innerHTML = `
-        <strong>Application received.</strong> We've logged your details and will personally review your
-        business. Expect to hear from us within 24 hours.
+        <strong>Application received!</strong> Check your inbox for a welcome email with next steps.
+        Our team will personally review your business and follow up within 24 hours.
       `;
       statusBox.classList.remove('hidden');
       form.reset();

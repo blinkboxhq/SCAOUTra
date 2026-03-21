@@ -3,6 +3,9 @@
 .env.local
 .env.*.local
 
+# Scripts with secrets
+ai_news_digest.py
+
 # Dependencies
 node_modules/
 
