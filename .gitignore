@@ -3,15 +3,19 @@
 .env.local
 .env.*.local
 
-# Scripts with secrets
-ai_news_digest.py
-
 # Dependencies
 node_modules/
 
 # Build output
 dist/
 build/
+
+# Research agent outputs
+reports/
+research_log.csv
+
+# Python
+__pycache__/
 
 # Editor/OS artifacts
 .DS_Store
