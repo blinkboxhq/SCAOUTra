@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoutra — Research Agent</title>
+    <style>
+        :root {
+            --bg: #0c0c0f;
+            --surface: #111115;
+            --elevated: #18181c;
+            --border: #26262b;
+            --text: #f4f4f5;
+            --muted: #a1a1aa;
+            --dim: #52525b;
+            --accent: #4ade80;
+            --accent-hover: #86efac;
+            --accent-muted: rgba(74, 222, 128, 0.12);
+            --accent-glow: rgba(74, 222, 128, 0.22);
+            --red: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Nav */
+        .nav {
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1.5px;
+        }
+
+        .logo span { color: var(--dim); }
+
+        .nav-links { display: flex; gap: 24px; font-size: 0.85rem; }
+        .nav-links a { color: var(--muted); text-decoration: none; transition: color 0.15s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-links a.active { color: var(--accent); }
+
+        /* Layout */
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        /* Header */
+        .page-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent-muted);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        .page-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 1rem;
+            margin-bottom: 40px;
+        }
+
+        /* Form */
+        .form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        .field input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-muted);
+        }
+
+        .field input::placeholder {
+            color: var(--dim);
+        }
+
+        .btn-run {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent);
+            color: #0c0c0f;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 8px;
+        }
+
+        .btn-run:hover:not(:disabled) {
+            background: var(--accent-hover);
+        }
+
+        .btn-run:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .btn-run:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Status */
+        .status {
+            margin-top: 28px;
+            display: none;
+        }
+
+        .status.visible { display: block; }
+
+        .status-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .status-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .steps {
+            list-style: none;
+            padding: 0;
+        }
+
+        .steps li {
+            padding: 8px 0;
+            font-size: 0.85rem;
+            color: var(--dim);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .steps li.done { color: var(--accent); }
+        .steps li.active { color: var(--text); }
+        .steps li.error { color: var(--red); }
+
+        .step-icon {
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* Result */
+        .result-card {
+            background: var(--accent-muted);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result-card.visible { display: block; }
+
+        .result-card h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat {
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-val {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .btn-view {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 20px;
+            background: var(--accent);
+            color: #0c0c0f;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-view:hover { background: var(--accent-hover); }
+
+        .error-msg {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            color: var(--red);
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .error-msg.visible { display: block; }
+
+        /* History */
+        .history {
+            margin-top: 48px;
+        }
+
+        .history h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--muted);
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 32px;
+            color: var(--dim);
+            font-size: 0.85rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 48px 0 24px;
+            color: var(--dim);
+            font-size: 0.8rem;
+        }
+
+        .footer a { color: var(--accent); text-decoration: none; }
+
+        @media (max-width: 600px) {
+            .container { padding: 32px 16px; }
+            h1 { font-size: 1.5rem; }
+            .form-card { padding: 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nav -->
+    <div class="nav">
+        <div class="logo">SCOUT<span>RA</span></div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/agent" class="active">Agent</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="page-badge">
+            <span class="dot"></span>
+            Research Agent
+        </div>
+        <h1>Business Intelligence Agent</h1>
+        <p class="subtitle">
+            Enter a business name and website. The agent will scrape, analyse, and generate a
+            full opportunity report delivered to your dashboard.
+        </p>
+
+        <!-- Form -->
+        <div class="form-card">
+            <form id="agentForm">
+                <div class="field">
+                    <label for="business">Business Name</label>
+                    <input
+                        type="text"
+                        id="business"
+                        name="business"
+                        placeholder="e.g. Bakkerij De Molen"
+                        required
+                    />
+                </div>
+                <div class="field">
+                    <label for="website">Website URL</label>
+                    <input
+                        type="text"
+                        id="website"
+                        name="website"
+                        placeholder="e.g. bakkerijdemolen.nl"
+                        required
+                    />
+                </div>
+                <button type="submit" class="btn-run" id="btnRun">
+                    Run Research Agent
+                </button>
+            </form>
+        </div>
+
+        <!-- Status -->
+        <div class="status" id="statusSection">
+            <div class="status-card">
+                <div class="status-header">
+                    <div class="spinner" id="spinner"></div>
+                    <span class="status-text" id="statusText">Starting agent...</span>
+                </div>
+                <ul class="steps" id="steps">
+                    <li id="step-scrape" class="active">
+                        <span class="step-icon">&#9679;</span> Scraping website...
+                    </li>
+                    <li id="step-analyse">
+                        <span class="step-icon">&#9679;</span> Analysing with Claude AI...
+                    </li>
+                    <li id="step-report">
+                        <span class="step-icon">&#9679;</span> Generating report...
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div class="result-card" id="resultCard">
+            <h3>Report Ready</h3>
+            <div class="result-stats" id="resultStats"></div>
+            <a class="btn-view" id="btnView" href="#" target="_blank">
+                View Full Report &rarr;
+            </a>
+        </div>
+
+        <!-- Error -->
+        <div class="error-msg" id="errorMsg"></div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Scoutra Research Agent &middot; Powered by Claude AI<br>
+            <a href="/">Back to scoutra.co</a>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('agentForm');
+        const btn = document.getElementById('btnRun');
+        const statusSection = document.getElementById('statusSection');
+        const statusText = document.getElementById('statusText');
+        const spinner = document.getElementById('spinner');
+        const resultCard = document.getElementById('resultCard');
+        const resultStats = document.getElementById('resultStats');
+        const btnView = document.getElementById('btnView');
+        const errorMsg = document.getElementById('errorMsg');
+
+        const steps = {
+            scrape:  document.getElementById('step-scrape'),
+            analyse: document.getElementById('step-analyse'),
+            report:  document.getElementById('step-report'),
+        };
+
+        function resetUI() {
+            statusSection.classList.remove('visible');
+            resultCard.classList.remove('visible');
+            errorMsg.classList.remove('visible');
+            spinner.style.display = '';
+            Object.values(steps).forEach(s => { s.className = ''; });
+            steps.scrape.className = 'active';
+        }
+
+        function setStep(name) {
+            const order = ['scrape', 'analyse', 'report'];
+            const idx = order.indexOf(name);
+            order.forEach((key, i) => {
+                if (i < idx)  steps[key].className = 'done';
+                else if (i === idx) steps[key].className = 'active';
+                else steps[key].className = '';
+            });
+            steps[name].querySelector('.step-icon').textContent =
+                steps[name].className === 'done' ? '\u2713' : '\u25CF';
+            // Mark previous as done with checkmark
+            order.forEach((key, i) => {
+                if (i < idx) steps[key].querySelector('.step-icon').textContent = '\u2713';
+            });
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const business = document.getElementById('business').value.trim();
+            const website = document.getElementById('website').value.trim();
+            if (!business || !website) return;
+
+            resetUI();
+            statusSection.classList.add('visible');
+            btn.disabled = true;
+            btn.textContent = 'Running...';
+
+            statusText.textContent = 'Scraping website...';
+            setStep('scrape');
+
+            // Simulate step progress with timing
+            const stepTimer1 = setTimeout(() => {
+                statusText.textContent = 'Analysing with Claude AI...';
+                setStep('analyse');
+            }, 3000);
+
+            const stepTimer2 = setTimeout(() => {
+                statusText.textContent = 'Generating report...';
+                setStep('report');
+            }, 12000);
+
+            try {
+                const res = await fetch('/api/research', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ business, website }),
+                });
+
+                clearTimeout(stepTimer1);
+                clearTimeout(stepTimer2);
+
+                const data = await res.json();
+
+                if (!res.ok || data.error) {
+                    throw new Error(data.error || 'Agent failed');
+                }
+
+                // All steps done
+                Object.values(steps).forEach(s => {
+                    s.className = 'done';
+                    s.querySelector('.step-icon').textContent = '\u2713';
+                });
+                statusText.textContent = 'Complete!';
+                spinner.style.display = 'none';
+
+                // Show result
+                resultStats.innerHTML = `
+                    <div class="stat">
+                        <div class="stat-label">Business</div>
+                        <div class="stat-val" style="font-size:0.95rem;color:var(--text);">${data.business}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Opportunities</div>
+                        <div class="stat-val">${data.opportunities}</div>
+                    </div>
+                `;
+                btnView.href = data.report_url;
+                resultCard.classList.add('visible');
+
+            } catch (err) {
+                clearTimeout(stepTimer1);
+                clearTimeout(stepTimer2);
+                spinner.style.display = 'none';
+                statusText.textContent = 'Failed';
+
+                // Mark current active step as error
+                Object.values(steps).forEach(s => {
+                    if (s.className === 'active') s.className = 'error';
+                });
+
+                errorMsg.textContent = err.message;
+                errorMsg.classList.add('visible');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Run Research Agent';
+            }
+        });
+    </script>
+</body>
+</html>
