@@ -9,6 +9,7 @@ import TextReveal,        { initTextReveal }        from './components/TextRevea
 import Protocol                                    from './components/Protocol.js';
 import LeadForm,          { initLeadForm }          from './components/LeadForm.js';
 import Footer                                      from './components/Footer.js';
+import Modals,            { initModals }            from './components/Modals.js';
 import { initReveal }                              from './utils/reveal.js';
 
 function render() {
@@ -30,6 +31,7 @@ function render() {
       ${LeadForm()}
     </main>
     ${Footer()}
+    ${Modals()}
   `;
 
   // Initialise interactive modules (order matters)
@@ -38,6 +40,7 @@ function render() {
   initContainerScroll();
   initTextReveal();
   initLeadForm();
+  initModals();
 
   // Scroll-reveal must run last so all elements are in the DOM
   initReveal();

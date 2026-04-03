@@ -160,6 +160,35 @@ export default function LeadForm() {
                 >Please enter your website URL or describe your project (min. 10 chars).</span>
               </div>
 
+              <!-- GDPR Consent -->
+              <div class="form-field" id="field-consent">
+                <label class="form-consent-label">
+                  <input
+                    type="checkbox"
+                    id="input-consent"
+                    name="consent"
+                    class="form-consent-checkbox"
+                    required
+                    aria-required="true"
+                    aria-describedby="error-consent"
+                  />
+                  <span>
+                    I have read and agree to the
+                    <button type="button" class="consent-link" data-modal-open="privacy">Privacy Policy</button>
+                    and
+                    <button type="button" class="consent-link" data-modal-open="terms">Terms of Service</button>,
+                    and I consent to Scoutra processing my personal data to evaluate and respond
+                    to my audit request. I understand I can withdraw this consent at any time.
+                  </span>
+                </label>
+                <span
+                  id="error-consent"
+                  class="form-error"
+                  role="alert"
+                  aria-live="polite"
+                >Please accept the Privacy Policy and Terms of Service to continue.</span>
+              </div>
+
               <!-- Submit -->
               <button
                 type="submit"
@@ -209,11 +238,12 @@ export default function LeadForm() {
 }
 
 export function initLeadForm() {
-  const form      = document.getElementById('audit-form');
-  const btn       = document.getElementById('submit-btn');
-  const btnLabel  = document.getElementById('btn-label');
-  const spinner   = document.getElementById('btn-spinner');
-  const statusBox = document.getElementById('form-status');
+  const form         = document.getElementById('audit-form');
+  const btn          = document.getElementById('submit-btn');
+  const btnLabel     = document.getElementById('btn-label');
+  const spinner      = document.getElementById('btn-spinner');
+  const statusBox    = document.getElementById('form-status');
+  const consentInput = document.getElementById('input-consent');
 
   if (!form) return;
 
@@ -237,6 +267,17 @@ export function initLeadForm() {
       wrapper.classList.remove('has-error');
       input.classList.remove('is-error');
       input.setAttribute('aria-invalid', 'false');
+    }
+  }
+
+  function setConsentError(show) {
+    const wrapper = document.getElementById('field-consent');
+    if (show) {
+      wrapper.classList.add('has-error');
+      consentInput.setAttribute('aria-invalid', 'true');
+    } else {
+      wrapper.classList.remove('has-error');
+      consentInput.setAttribute('aria-invalid', 'false');
     }
   }
 
@@ -308,19 +349,22 @@ export function initLeadForm() {
     const nameOk    = validateName(name);
     const emailOk   = validateEmail(email);
     const websiteOk = validateWebsite(website);
+    const consentOk = consentInput.checked;
 
     setFieldError('name',    !nameOk);
     setFieldError('email',   !emailOk);
     setFieldError('website', !websiteOk);
+    setConsentError(!consentOk);
 
     if (nameOk)    setFieldSuccess('name');
     if (emailOk)   setFieldSuccess('email');
     if (websiteOk) setFieldSuccess('website');
 
-    if (!nameOk || !emailOk || !websiteOk) {
-      if (!nameOk)        nameInput.focus();
-      else if (!emailOk)  emailInput.focus();
-      else                websiteInput.focus();
+    if (!nameOk || !emailOk || !websiteOk || !consentOk) {
+      if (!nameOk)          nameInput.focus();
+      else if (!emailOk)    emailInput.focus();
+      else if (!websiteOk)  websiteInput.focus();
+      else                  consentInput.focus();
       return;
     }
 

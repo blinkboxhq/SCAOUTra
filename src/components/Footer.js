@@ -31,12 +31,20 @@ export default function Footer() {
           <a href="mailto:hello@scoutra.co" class="hover:text-ink-primary transition-colors">
             hello@scoutra.co
           </a>
-          <a href="#" class="hover:text-ink-primary transition-colors">
+          <button
+            type="button"
+            data-modal-open="privacy"
+            class="hover:text-ink-primary transition-colors cursor-pointer bg-transparent border-0 p-0 text-xs text-ink-muted"
+          >
             Privacy Policy
-          </a>
-          <a href="#" class="hover:text-ink-primary transition-colors">
+          </button>
+          <button
+            type="button"
+            data-modal-open="terms"
+            class="hover:text-ink-primary transition-colors cursor-pointer bg-transparent border-0 p-0 text-xs text-ink-muted"
+          >
             Terms of Service
-          </a>
+          </button>
           <span>© ${year} Scoutra</span>
         </nav>
       </div>
