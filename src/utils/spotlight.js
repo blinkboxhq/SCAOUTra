@@ -19,12 +19,12 @@ export function initSpotlight() {
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.3s ease;
-      z-index: 0;
+      z-index: -1;
     `;
     // Ensure parent is positioned
     const pos = getComputedStyle(el).position;
     if (pos === 'static') el.style.position = 'relative';
-    el.appendChild(glow);
+    el.prepend(glow);
 
     el.addEventListener('mousemove', (e) => {
       const rect = el.getBoundingClientRect();

@@ -168,4 +168,22 @@ export function initNavbar() {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isOpen) closeNav();
   });
+
+  // Fix anchor links on /web page — section anchors don't exist there,
+  // so rewrite them to absolute home-page links (e.g. #results → /#results).
+  if (window.location.pathname.startsWith('/web')) {
+    const anchorMap = {
+      '#results':    '/#results',
+      '#protocol':   '/#protocol',
+      '#value-prop': '/#value-prop',
+      '#apply':      '/#apply',
+    };
+
+    document.querySelectorAll('a[href]').forEach((a) => {
+      const href = a.getAttribute('href');
+      if (anchorMap[href]) {
+        a.setAttribute('href', anchorMap[href]);
+      }
+    });
+  }
 }

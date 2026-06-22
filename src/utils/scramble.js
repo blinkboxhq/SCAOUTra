@@ -41,26 +41,45 @@ function scramble(el, finalText, duration = 900) {
   return () => cancelAnimationFrame(frame);
 }
 
+function triggerScramble(el) {
+  const text = el.dataset.scramble || el.textContent.trim();
+  el.dataset.scramble = text; // preserve original
+  scramble(el, text, parseInt(el.dataset.scrambleDuration || '900'));
+}
+
 export function initScramble() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   const elements = document.querySelectorAll('[data-scramble]');
   if (!elements.length) return;
 
+  // Store original text before any IntersectionObserver fires
+  elements.forEach((el) => {
+    if (!el.dataset.scramble) el.dataset.scramble = el.textContent.trim();
+  });
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       observer.unobserve(entry.target);
-      const el   = entry.target;
-      const text = el.dataset.scramble || el.textContent;
-      el.dataset.scramble = text; // preserve original
-      scramble(el, text, parseInt(el.dataset.scrambleDuration || '900'));
+      const el = entry.target;
+
+      // If the element is part of the reveal system and hasn't been shown yet,
+      // wait for is-visible to be added before running the scramble so it
+      // doesn't fire while the element is still opacity: 0.
+      if (el.hasAttribute('data-reveal') && !el.classList.contains('is-visible')) {
+        const mo = new MutationObserver(() => {
+          if (el.classList.contains('is-visible')) {
+            mo.disconnect();
+            triggerScramble(el);
+          }
+        });
+        mo.observe(el, { attributes: true, attributeFilter: ['class'] });
+      } else {
+        triggerScramble(el);
+      }
     });
   }, { threshold: 0.5 });
 
-  elements.forEach((el) => {
-    // Store original text in attribute if not already set
-    if (!el.dataset.scramble) el.dataset.scramble = el.textContent.trim();
-    observer.observe(el);
-  });
+  elements.forEach((el) => observer.observe(el));
 }

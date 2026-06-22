@@ -29,7 +29,8 @@ export function initTransition() {
 
     const href = link.getAttribute('href');
     if (!href) return;
-    if (href.startsWith('#'))       return;
+    if (href.startsWith('#'))       return; // pure anchor
+    if (href.startsWith('/#'))      return; // home-page section links (e.g. /#results)
     if (href.startsWith('http'))    return;
     if (href.startsWith('mailto:')) return;
     if (href.startsWith('tel:'))    return;
@@ -40,8 +41,14 @@ export function initTransition() {
     curtain.classList.remove('curtain-reveal');
     curtain.classList.add('curtain-cover');
 
-    // Navigate after transition, with fallback in case transitionend misfires
-    const go = () => { window.location.href = href; };
+    // Navigate after transition — guard against both transitionend AND
+    // setTimeout firing (double-navigation race condition).
+    let navigated = false;
+    const go = () => {
+      if (navigated) return;
+      navigated = true;
+      window.location.href = href;
+    };
     curtain.addEventListener('transitionend', go, { once: true });
     setTimeout(go, 650); // safety net
   });
