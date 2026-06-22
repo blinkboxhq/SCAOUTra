@@ -34,6 +34,7 @@ export default function Navbar() {
             <li><a href="#results" class="hover:text-ink-primary transition-colors duration-150">Results</a></li>
             <li><a href="#protocol" class="hover:text-ink-primary transition-colors duration-150">Our Process</a></li>
             <li><a href="#value-prop" class="hover:text-ink-primary transition-colors duration-150">Approach</a></li>
+            <li><a href="/web" class="hover:text-ink-primary transition-colors duration-150">Web Design</a></li>
           </ul>
 
           <!-- CTA + mobile toggle -->
@@ -78,6 +79,11 @@ export default function Navbar() {
           <li>
             <a href="#value-prop" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
               Approach
+            </a>
+          </li>
+          <li>
+            <a href="/web" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
+              Web Design
             </a>
           </li>
         </ul>

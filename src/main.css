@@ -864,3 +864,435 @@
   color: var(--text-muted, var(--text-secondary));
   margin-bottom: 16px !important;
 }
+
+/* ============================================
+   WEB PRICING PAGE
+   ============================================ */
+
+/* Trust bar */
+.wp-trust-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.wp-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--bg-card);
+  white-space: nowrap;
+}
+
+/* Stats block */
+.wp-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 2rem 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+@media (max-width: 640px) {
+  .wp-stats { grid-template-columns: 1fr; }
+}
+
+.wp-stat-num {
+  font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.wp-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 6px;
+  line-height: 1.45;
+  max-width: 18ch;
+  margin-inline: auto;
+}
+
+/* Section label */
+.wp-section-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Pricing cards */
+.wp-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.375rem;
+}
+
+.wp-card.card:hover {
+  /* featured/elite cards keep their own border color on hover */
+}
+
+.wp-popular-badge {
+  display: inline-block;
+  width: fit-content;
+  background: var(--accent-muted);
+  border: 1px solid var(--accent-glow);
+  color: var(--accent);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  margin-bottom: 10px;
+}
+
+.wp-elite-badge {
+  display: inline-block;
+  width: fit-content;
+  background: rgba(133, 79, 11, 0.12);
+  border: 1px solid rgba(133, 79, 11, 0.3);
+  color: #d97706;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  margin-bottom: 10px;
+}
+
+.wp-tier-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.wp-card-name {
+  font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.wp-card-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 1rem;
+  min-height: 52px;
+}
+
+.wp-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-bottom: 3px;
+}
+
+.wp-currency {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.wp-price {
+  font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+  font-size: 2.125rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.wp-price-note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.wp-value-badge {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.wp-value-badge--gray {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+}
+
+.wp-value-badge--green {
+  background: rgba(74, 222, 128, 0.1);
+  color: var(--accent);
+}
+
+.wp-value-badge--amber {
+  background: rgba(133, 79, 11, 0.12);
+  color: #d97706;
+}
+
+.wp-delivery-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.wp-divider {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: 1rem 0;
+}
+
+.wp-feat-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.wp-feat-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.wp-feat-list li {
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.45;
+}
+
+.wp-feat-list--not li {
+  color: var(--text-muted);
+}
+
+.wp-cta-note {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.55;
+}
+
+.wp-btn-elite {
+  background: #854F0B;
+  color: #fff;
+  border: 1px solid #854F0B;
+  border-radius: 8px;
+}
+
+.wp-btn-elite:hover {
+  background: #6b3f09;
+  border-color: #6b3f09;
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px rgba(133, 79, 11, 0.35);
+}
+
+/* Comparison table */
+.wp-compare-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+}
+
+.wp-compare-table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.wp-th {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+}
+
+.wp-th:first-child { width: 36%; }
+
+.wp-th-center { text-align: center; }
+
+.wp-th-price {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.wp-td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.8125rem;
+  vertical-align: middle;
+}
+
+.wp-td-center { text-align: center; }
+
+.wp-td-feat { color: var(--text-secondary); }
+
+.wp-td-text { font-size: 0.75rem; color: var(--text-secondary); }
+
+.wp-td-dash { color: var(--text-muted); }
+
+/* Always included */
+.wp-always-box {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 1.75rem;
+  background: var(--bg-card);
+}
+
+.wp-always-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.wp-always-item-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.wp-always-icon {
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+}
+
+.wp-always-item-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* Guarantee box */
+.wp-guarantee-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 1.75rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.wp-guarantee-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px 0 0 2px;
+}
+
+.wp-guarantee-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 0.875rem;
+}
+
+.wp-guarantee-icon { color: var(--accent); flex-shrink: 0; }
+
+.wp-guarantee-title {
+  font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.wp-guarantee-text {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Process steps */
+.wp-process-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+  transition:
+    border-color 0.25s,
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wp-process-card:hover {
+  border-color: rgba(74, 222, 128, 0.28);
+  transform: translateY(-3px);
+}
+
+.wp-process-day {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.wp-process-title {
+  font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.wp-process-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
