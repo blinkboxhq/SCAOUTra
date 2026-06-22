@@ -1,25 +1,21 @@
 const STATS = [
   {
-    value: '15h',
-    suffix: '+',
+    count: 15, suffix: 'h+',
     label: 'Weekly hours reclaimed',
     description: 'Average time saved per client per week',
   },
   {
-    value: '0',
-    suffix: '%',
+    count: 0, suffix: '%',
     label: 'Error rate',
     description: 'Automated workflows run without human error',
   },
   {
-    value: '24',
-    suffix: '/7',
+    count: 24, suffix: '/7',
     label: 'Operational uptime',
     description: 'Your automation runs around the clock',
   },
   {
-    value: '10',
-    suffix: 'x',
+    count: 10, suffix: 'x',
     label: 'Average ROI, Year 1',
     description: 'Return on automation investment',
   },
@@ -35,9 +31,13 @@ export default function Results() {
       >
         <div
           class="stat-value mb-1"
-          aria-label="${s.value}${s.suffix} — ${s.label}"
+          aria-label="${s.count}${s.suffix} — ${s.label}"
         >
-          <span class="stat-accent" aria-hidden="true">${s.value}</span><span class="text-ink-muted text-2xl font-bold" aria-hidden="true">${s.suffix}</span>
+          <span
+            class="stat-accent"
+            data-count="${s.count}"
+            aria-hidden="true"
+          >0</span><span class="text-ink-muted text-2xl font-bold" aria-hidden="true">${s.suffix}</span>
         </div>
         <div class="text-sm font-semibold text-ink-primary mb-1">${s.label}</div>
         <div class="text-xs text-ink-muted leading-snug max-w-[180px] mx-auto">${s.description}</div>

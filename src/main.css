@@ -9,18 +9,24 @@
    DESIGN TOKENS
    ============================================ */
 :root {
-  --bg-base: #0c0c0f;
-  --bg-card: #111115;
-  --bg-elevated: #18181c;
-  --border: #26262b;
-  --border-subtle: #1c1c21;
-  --text-primary: #f4f4f5;
+  /* ── Option A: Obsidian + Dual Accent ──────────────────────── */
+  --bg-base:        #050508;
+  --bg-card:        #09090e;
+  --bg-elevated:    #0d0d15;
+  --border:         #1a1a24;
+  --border-subtle:  #0e0e16;
+  --text-primary:   #f4f4f5;
   --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
-  --accent: #4ade80;
-  --accent-hover: #86efac;
-  --accent-muted: rgba(74, 222, 128, 0.12);
-  --accent-glow: rgba(74, 222, 128, 0.22);
+  --text-muted:     #52525b;
+  /* Green accent */
+  --accent:         #4ade80;
+  --accent-hover:   #86efac;
+  --accent-muted:   rgba(74, 222, 128, 0.12);
+  --accent-glow:    rgba(74, 222, 128, 0.22);
+  /* Cyan second accent */
+  --cyan:           #22d3ee;
+  --cyan-muted:     rgba(34, 211, 238, 0.08);
+  --cyan-glow:      rgba(34, 211, 238, 0.18);
   --radius-card: 16px;
   --radius-btn: 10px;
 }
@@ -309,11 +315,11 @@
   left: 1rem;
   right: 1rem;
   border-radius: 14px;
-  background: rgba(12, 12, 15, 0.88);
+  background: rgba(5, 5, 8, 0.92);
   border-color: var(--border);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7);
 }
 
 .hero-orb {
@@ -863,6 +869,83 @@
   font-size: 0.75rem;
   color: var(--text-muted, var(--text-secondary));
   margin-bottom: 16px !important;
+}
+
+/* ============================================
+   CUSTOM CURSOR
+   ============================================ */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+#cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 0.2s;
+}
+
+#cursor-dot.is-visible { opacity: 1; }
+
+#cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid rgba(74, 222, 128, 0.45);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0;
+  will-change: transform;
+  transition:
+    opacity 0.2s,
+    width 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.22s,
+    background 0.22s;
+}
+
+#cursor-ring.is-visible { opacity: 1; }
+
+#cursor-ring.is-hovering {
+  width: 48px;
+  height: 48px;
+  border-color: rgba(74, 222, 128, 0.7);
+  background: rgba(74, 222, 128, 0.06);
+}
+
+@media (hover: none) {
+  #cursor-dot,
+  #cursor-ring { display: none !important; }
+}
+
+/* ============================================
+   BUTTON MICRO-INTERACTIONS
+   ============================================ */
+
+/* Arrow slides right on hover */
+.btn svg {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn:hover svg {
+  transform: translateX(3px);
+}
+
+/* Micro-press on all buttons */
+.btn:active {
+  transform: translateY(0) scale(0.972) !important;
+  transition-duration: 0.08s !important;
 }
 
 /* ============================================

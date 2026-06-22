@@ -1,6 +1,7 @@
 import './main.css';
 
 import ShaderBackground, { initShaderBackground } from './components/ShaderBackground.js';
+import Cursor,            { initCursor }           from './components/Cursor.js';
 import Navbar,            { initNavbar }           from './components/Navbar.js';
 import Hero                                        from './components/Hero.js';
 import Results                                     from './components/Results.js';
@@ -11,11 +12,14 @@ import LeadForm,          { initLeadForm }          from './components/LeadForm.
 import Footer                                      from './components/Footer.js';
 import Modals,            { initModals }            from './components/Modals.js';
 import { initReveal }                              from './utils/reveal.js';
+import { initSmoothScroll }                        from './utils/smoothScroll.js';
+import { initCounters }                            from './utils/counter.js';
 
 function render() {
   const app = document.getElementById('app');
 
   app.innerHTML = `
+    ${Cursor()}
     ${ShaderBackground()}
     ${Navbar()}
     <main id="main-content" tabindex="-1">
@@ -35,6 +39,8 @@ function render() {
   `;
 
   // Initialise interactive modules (order matters)
+  initSmoothScroll();
+  initCursor();
   initShaderBackground();
   initNavbar();
   initContainerScroll();
@@ -42,8 +48,9 @@ function render() {
   initLeadForm();
   initModals();
 
-  // Scroll-reveal must run last so all elements are in the DOM
+  // Scroll-reveal + counters must run last so all elements are in the DOM
   initReveal();
+  initCounters();
 }
 
 // Guard against DOMContentLoaded having already fired (Vite HMR)

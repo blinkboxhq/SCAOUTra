@@ -396,15 +396,21 @@ export default function WebPricing() {
       <div class="max-w-7xl mx-auto">
         <div class="wp-stats" data-reveal>
           <div class="text-center">
-            <div class="wp-stat-num" aria-label="€4,200 per month">€4,200</div>
+            <div class="wp-stat-num" aria-label="€4,200 per month">
+              <span data-count="4200" data-prefix="€" data-separator="true">€0</span>
+            </div>
             <p class="wp-stat-label">Average lost revenue from low-converting sites per month</p>
           </div>
           <div class="text-center">
-            <div class="wp-stat-num" aria-label="7 seconds">7 sec</div>
+            <div class="wp-stat-num" aria-label="7 seconds">
+              <span data-count="7">0</span><span style="font-size:0.55em;letter-spacing:0;margin-left:3px;opacity:0.7">sec</span>
+            </div>
             <p class="wp-stat-label">Time a visitor decides whether to stay or leave forever</p>
           </div>
           <div class="text-center">
-            <div class="wp-stat-num" aria-label="3.8 times">3.8×</div>
+            <div class="wp-stat-num" aria-label="3.8 times">
+              <span data-count="3.8" data-decimals="1">0</span><span style="font-size:0.7em;letter-spacing:0;margin-left:1px;opacity:0.8">×</span>
+            </div>
             <p class="wp-stat-label">More leads from conversion-engineered sites vs template builds</p>
           </div>
         </div>
