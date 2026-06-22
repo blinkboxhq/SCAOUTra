@@ -5,14 +5,15 @@ export default function Hero() {
       class="relative pt-36 pb-28 md:pt-52 md:pb-36 flex flex-col items-center text-center px-6 overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      <div class="hero-orb hero-orb-1" aria-hidden="true"></div>
-      <div class="hero-orb hero-orb-2" aria-hidden="true"></div>
+      <div class="hero-orb hero-orb-1" aria-hidden="true" data-parallax="-0.08"></div>
+      <div class="hero-orb hero-orb-2" aria-hidden="true" data-parallax="-0.12"></div>
 
       <div class="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
 
         <div
           class="badge mb-8"
           data-reveal
+          data-parallax="-0.04"
           aria-label="Now accepting five new clients this quarter"
         >
           <span class="badge__dot" aria-hidden="true"></span>
@@ -24,6 +25,7 @@ export default function Hero() {
           class="text-[2.75rem] sm:text-6xl md:text-7xl font-display font-extrabold text-ink-primary mb-6 leading-[1.08]"
           data-reveal
           data-reveal-delay="1"
+          data-parallax="-0.06"
         >
           <span data-scramble="Automate the Work" data-scramble-duration="800">Automate the Work</span>
           <span
@@ -38,6 +40,7 @@ export default function Hero() {
           class="text-lg md:text-xl text-ink-secondary mb-10 max-w-xl leading-relaxed"
           data-reveal
           data-reveal-delay="2"
+          data-parallax="-0.03"
         >
           We map your operations, identify the highest-value automation
           opportunities, and build the infrastructure to eliminate manual

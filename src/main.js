@@ -19,6 +19,7 @@ import { initCounters }                            from './utils/counter.js';
 import { initMagnet }                              from './utils/magnet.js';
 import { initScramble }                            from './utils/scramble.js';
 import { initTransition }                          from './utils/transition.js';
+import { initParallax }                            from './utils/parallax.js';
 
 function render() {
   const app = document.getElementById('app');
@@ -62,6 +63,7 @@ function render() {
   initCounters();
   initScramble();
   initMagnet();
+  initParallax();
 }
 
 // Guard against DOMContentLoaded having already fired (Vite HMR)
