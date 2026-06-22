@@ -15,6 +15,8 @@ import Modals,            { initModals }            from './components/Modals.js
 import { initReveal }                              from './utils/reveal.js';
 import { initSmoothScroll }                        from './utils/smoothScroll.js';
 import { initCounters }                            from './utils/counter.js';
+import { initMagnet }                              from './utils/magnet.js';
+import { initScramble }                            from './utils/scramble.js';
 
 function render() {
   const app = document.getElementById('app');
@@ -54,6 +56,8 @@ function render() {
   // Scroll-reveal + counters must run last so all elements are in the DOM
   initReveal();
   initCounters();
+  initScramble();
+  initMagnet();
 }
 
 // Guard against DOMContentLoaded having already fired (Vite HMR)

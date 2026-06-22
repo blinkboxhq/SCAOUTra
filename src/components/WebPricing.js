@@ -300,6 +300,7 @@ function renderCard(plan, index) {
         data-plan="${plan.name}"
         data-price="€${plan.price}"
         id="cta-${plan.id}"
+        data-magnet
       >
         ${plan.ctaText}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">

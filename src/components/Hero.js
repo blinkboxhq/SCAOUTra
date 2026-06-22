@@ -25,12 +25,12 @@ export default function Hero() {
           data-reveal
           data-reveal-delay="1"
         >
-          Automate the Work
+          <span data-scramble="Automate the Work" data-scramble-duration="800">Automate the Work</span>
           <span
             class="block text-transparent bg-clip-text"
             style="background-image: linear-gradient(135deg, #4ade80 0%, #22d3ee 60%, #38bdf8 100%);"
           >
-            That Limits Your Growth
+            <span data-scramble="That Limits Your Growth" data-scramble-duration="1000">That Limits Your Growth</span>
           </span>
         </h1>
 
@@ -49,13 +49,13 @@ export default function Hero() {
           data-reveal
           data-reveal-delay="3"
         >
-          <a href="#apply" class="btn btn-primary">
+          <a href="#apply" class="btn btn-primary" data-magnet>
             Apply for a Free Audit
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </a>
-          <a href="#protocol" class="btn btn-secondary">
+          <a href="#protocol" class="btn btn-secondary" data-magnet>
             See How It Works
           </a>
         </div>

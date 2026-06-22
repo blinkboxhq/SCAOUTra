@@ -10,6 +10,8 @@ import WebPricing,        { initWebPricing }        from './components/WebPricin
 import { initReveal }                              from './utils/reveal.js';
 import { initSmoothScroll }                        from './utils/smoothScroll.js';
 import { initCounters }                            from './utils/counter.js';
+import { initMagnet }                              from './utils/magnet.js';
+import { initScramble }                            from './utils/scramble.js';
 
 function render() {
   const app = document.getElementById('app');
@@ -35,6 +37,8 @@ function render() {
   initModals();
   initReveal();
   initCounters();
+  initScramble();
+  initMagnet();
 }
 
 if (document.readyState === 'loading') {
