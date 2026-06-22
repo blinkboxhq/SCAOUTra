@@ -376,16 +376,58 @@
   display: flex;
 }
 
+/* ============================================
+   VIDEO BACKGROUND
+   ============================================ */
+#video-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+#video-bg video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+/* Cinematic multi-layer overlay */
+.vbg-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Top: darken so navbar & headline text read cleanly */
+    linear-gradient(to bottom, rgba(5,5,8,0.72) 0%, transparent 35%),
+    /* Bottom: seamless fade into next section */
+    linear-gradient(to top, rgba(5,5,8,1) 0%, rgba(5,5,8,0.55) 30%, transparent 65%),
+    /* Side vignette: cinematic letterbox feel */
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 45%, rgba(5,5,8,0.6) 100%),
+    /* Base tint: video never fights text */
+    rgba(5,5,8,0.28);
+}
+
+@media (max-width: 768px) {
+  #video-bg { display: none; }
+}
+
+/* ── shader sits ON TOP of video as a subtle animated texture ── */
 #shader-bg {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
   overflow: hidden;
-  opacity: 0.07;
+  opacity: 0.06;
 }
 
 #shader-bg canvas {
@@ -399,7 +441,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, transparent 40%, rgba(12,12,15,0.7) 100%);
+    radial-gradient(ellipse 80% 60% at 50% 0%, transparent 40%, rgba(5,5,8,0.7) 100%);
   pointer-events: none;
 }
 

@@ -1,6 +1,7 @@
 import './main.css';
 
 import ShaderBackground, { initShaderBackground } from './components/ShaderBackground.js';
+import VideoBackground,  { initVideoBackground }  from './components/VideoBackground.js';
 import Cursor,            { initCursor }           from './components/Cursor.js';
 import Navbar,            { initNavbar }           from './components/Navbar.js';
 import Hero                                        from './components/Hero.js';
@@ -20,6 +21,7 @@ function render() {
 
   app.innerHTML = `
     ${Cursor()}
+    ${VideoBackground()}
     ${ShaderBackground()}
     ${Navbar()}
     <main id="main-content" tabindex="-1">
@@ -41,6 +43,7 @@ function render() {
   // Initialise interactive modules (order matters)
   initSmoothScroll();
   initCursor();
+  initVideoBackground();
   initShaderBackground();
   initNavbar();
   initContainerScroll();
