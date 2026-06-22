@@ -543,7 +543,7 @@ export default function WebPricing() {
           <div class="wp-enquire-actions">
             <a
               id="enquire-whatsapp"
-              href="https://wa.me/31612345678?text=Hi%20Scoutra%2C%20I'm%20interested%20in%20a%20web%20design%20project."
+              href="https://wa.me/31629383481?text=Hi%20Scoutra%2C%20I'm%20interested%20in%20a%20web%20design%20project."
               target="_blank"
               rel="noopener"
               class="btn btn-primary"
@@ -603,7 +603,7 @@ export function initWebPricing() {
       const waMsg = encodeURIComponent(
         `Hi Scoutra, I'm interested in the ${plan} (${price}) web design package. Can we book a discovery call?`
       );
-      wpLink.href = `https://wa.me/31612345678?text=${waMsg}`;
+      wpLink.href = `https://wa.me/31629383481?text=${waMsg}`;
 
       // Pre-fill email subject + body
       const emailSubject = encodeURIComponent(`Web Design Enquiry — ${plan}`);
