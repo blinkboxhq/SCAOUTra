@@ -5,6 +5,7 @@ import VideoBackground,  { initVideoBackground }  from './components/VideoBackgr
 import Cursor,            { initCursor }           from './components/Cursor.js';
 import Navbar,            { initNavbar }           from './components/Navbar.js';
 import Hero                                        from './components/Hero.js';
+import Marquee                                     from './components/Marquee.js';
 import Results                                     from './components/Results.js';
 import ContainerScroll,   { initContainerScroll }  from './components/ContainerScroll.js';
 import TextReveal,        { initTextReveal }        from './components/TextReveal.js';
@@ -29,6 +30,7 @@ function render() {
     ${Navbar()}
     <main id="main-content" tabindex="-1">
       ${Hero()}
+      ${Marquee()}
       ${Results()}
       ${ContainerScroll()}
       ${TextReveal({
