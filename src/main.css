@@ -914,6 +914,50 @@
 }
 
 /* ============================================
+   PAGE TRANSITION CURTAIN
+   ============================================ */
+
+/* Starts covering the page (no transition, instant) */
+#page-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #050508;
+  transform: scaleY(1);
+  transform-origin: top;
+  pointer-events: all;
+  will-change: transform;
+}
+
+/* Glowing edge line at the bottom of the curtain */
+#page-curtain::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #4ade80 25%, #22d3ee 75%, transparent 100%);
+  opacity: 0.9;
+}
+
+/* Reveal: curtain slides UP off screen */
+#page-curtain.curtain-reveal {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.75s cubic-bezier(0.76, 0, 0.24, 1);
+  pointer-events: none;
+}
+
+/* Cover: curtain drops DOWN from top */
+#page-curtain.curtain-cover {
+  transform: scaleY(1);
+  transform-origin: top;
+  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+  pointer-events: all;
+}
+
+/* ============================================
    CUSTOM CURSOR
    ============================================ */
 html.has-cursor,

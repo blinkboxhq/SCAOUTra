@@ -12,6 +12,7 @@ import { initSmoothScroll }                        from './utils/smoothScroll.js
 import { initCounters }                            from './utils/counter.js';
 import { initMagnet }                              from './utils/magnet.js';
 import { initScramble }                            from './utils/scramble.js';
+import { initTransition }                          from './utils/transition.js';
 
 function render() {
   const app = document.getElementById('app');
@@ -28,6 +29,7 @@ function render() {
     ${Modals()}
   `;
 
+  initTransition(); // must be first — curtain covers page on load
   initSmoothScroll();
   initCursor();
   initVideoBackground();
