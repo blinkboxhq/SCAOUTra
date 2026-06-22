@@ -34,15 +34,17 @@ export async function initSplineBackground() {
     const app = new Application(canvas);
     await app.load(SCENE_URL);
 
-    // Pause when tab hidden
+    // Spline loaded — remove the video background, no longer needed
+    const videoBg = document.getElementById('video-bg');
+    if (videoBg) videoBg.remove();
+
+    // Pause render when tab is hidden
     document.addEventListener('visibilitychange', () => {
-      // Spline doesn't expose pause/resume on Application directly,
-      // but stopping render loop via canvas visibility is enough
       wrap.style.visibility = document.hidden ? 'hidden' : 'visible';
     });
   } catch (err) {
-    // Silently fall back to shader background if Spline fails to load
-    console.warn('Spline failed to load, shader background takes over:', err.message);
+    // Silently fall back to video → shader if Spline fails
+    console.warn('Spline failed, video/shader takes over:', err.message);
     wrap.remove();
   }
 }
