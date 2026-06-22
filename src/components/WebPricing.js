@@ -294,7 +294,13 @@ function renderCard(plan, index) {
 
       <hr class="wp-divider" aria-hidden="true">
 
-      <a href="/#apply" class="${ctaClass}">
+      <a
+        href="#web-enquire"
+        class="${ctaClass}"
+        data-plan="${plan.name}"
+        data-price="€${plan.price}"
+        id="cta-${plan.id}"
+      >
         ${plan.ctaText}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -487,7 +493,7 @@ export default function WebPricing() {
     </section>
 
     <!-- ── Process steps ──────────────────────────────────────── -->
-    <section class="px-6 pb-28" aria-labelledby="process-heading">
+    <section class="px-6 pb-20" aria-labelledby="process-heading">
       <div class="max-w-7xl mx-auto">
         <p class="wp-section-label" id="process-heading">How every project runs</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -495,9 +501,110 @@ export default function WebPricing() {
         </div>
       </div>
     </section>
+
+    <!-- ── Enquiry section ────────────────────────────────────── -->
+    <section
+      id="web-enquire"
+      class="px-6 pb-28"
+      aria-labelledby="enquire-heading"
+    >
+      <div class="max-w-2xl mx-auto">
+        <div class="wp-enquire-box" data-reveal>
+
+          <!-- Dynamic plan badge -->
+          <div class="wp-enquire-plan-badge" id="enquire-plan-badge" aria-live="polite">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <circle cx="6.5" cy="6.5" r="5.5" stroke="var(--accent)" stroke-width="1.3"/>
+              <path d="M4 6.5l2 2 3-3" stroke="var(--accent)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span id="enquire-plan-name">Select a plan above to get started</span>
+          </div>
+
+          <h2 class="wp-enquire-title" id="enquire-heading">
+            Ready to start your project?
+          </h2>
+          <p class="wp-enquire-sub" id="enquire-sub">
+            Pick any plan above and it'll appear here — then reach out and we'll book your free discovery call within 24 hours.
+          </p>
+
+          <!-- Price display -->
+          <div class="wp-enquire-price-row" id="enquire-price-row" style="display:none">
+            <span class="wp-enquire-price-label">Your selected plan:</span>
+            <span class="wp-enquire-price-val" id="enquire-price-val"></span>
+          </div>
+
+          <!-- CTA buttons -->
+          <div class="wp-enquire-actions">
+            <a
+              id="enquire-whatsapp"
+              href="https://wa.me/31612345678?text=Hi%20Scoutra%2C%20I'm%20interested%20in%20a%20web%20design%20project."
+              target="_blank"
+              rel="noopener"
+              class="btn btn-primary"
+            >
+              <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
+                <path d="M8.5 1.5C4.63 1.5 1.5 4.63 1.5 8.5c0 1.23.33 2.39.9 3.39L1.5 15.5l3.72-.88A6.97 6.97 0 008.5 15.5c3.87 0 7-3.13 7-7s-3.13-7-7-7z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 6.5c.1.5.5 1.5 1.5 2.5S9.5 10.7 10 10.9c.1 0 .3 0 .4-.1l.9-.9c.1-.1.1-.2 0-.3L10.1 8.4c-.1-.1-.2-.1-.3 0l-.5.5c-.6-.4-1.3-1-1.7-1.7l.5-.5c.1-.1.1-.2 0-.3L6.9 5.2c-.1-.1-.2-.1-.3 0l-.5.5c-.1.2-.1.6-.1.8z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              WhatsApp us now
+            </a>
+            <a
+              id="enquire-email"
+              href="mailto:hello@scoutra.co?subject=Web%20Design%20Enquiry&body=Hi%20Scoutra%2C%0A%0AI'm%20interested%20in%20a%20web%20design%20project.%0A%0AThanks"
+              class="btn btn-secondary"
+            >
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                <rect x="1.5" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                <path d="M1.5 4.5l6 4 6-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+              Send an email
+            </a>
+          </div>
+
+          <p class="wp-enquire-note">
+            Free discovery call · No payment until you see a preview · Reply within 24 hours
+          </p>
+        </div>
+      </div>
+    </section>
   `;
 }
 
 export function initWebPricing() {
-  // No interactive JS needed currently — scroll reveal is handled by initReveal()
+  const planBadge   = document.getElementById('enquire-plan-name');
+  const planSub     = document.getElementById('enquire-sub');
+  const priceRow    = document.getElementById('enquire-price-row');
+  const priceVal    = document.getElementById('enquire-price-val');
+  const wpLink      = document.getElementById('enquire-whatsapp');
+  const emailLink   = document.getElementById('enquire-email');
+
+  if (!planBadge) return;
+
+  document.querySelectorAll('[data-plan]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const plan  = btn.dataset.plan;
+      const price = btn.dataset.price;
+
+      // Update badge & sub-text
+      planBadge.textContent = plan;
+      planSub.textContent   = `Great choice. Send us a message and we'll book your free discovery call within 24 hours — no payment until you see a live preview.`;
+
+      // Show price row
+      priceVal.textContent  = `${plan} — ${price}`;
+      priceRow.style.display = 'flex';
+
+      // Pre-fill WhatsApp message
+      const waMsg = encodeURIComponent(
+        `Hi Scoutra, I'm interested in the ${plan} (${price}) web design package. Can we book a discovery call?`
+      );
+      wpLink.href = `https://wa.me/31612345678?text=${waMsg}`;
+
+      // Pre-fill email subject + body
+      const emailSubject = encodeURIComponent(`Web Design Enquiry — ${plan}`);
+      const emailBody    = encodeURIComponent(
+        `Hi Scoutra,\n\nI'm interested in the ${plan} (${price}) web design package.\n\nCan we book a discovery call?\n\nThanks`
+      );
+      emailLink.href = `mailto:hello@scoutra.co?subject=${emailSubject}&body=${emailBody}`;
+    });
+  });
 }
