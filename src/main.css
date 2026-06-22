@@ -417,7 +417,39 @@
   #video-bg { display: none; }
 }
 
-/* ── shader sits ON TOP of video as a subtle animated texture ── */
+/* ============================================
+   SPLINE 3D BACKGROUND
+   ============================================ */
+#spline-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+#spline-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Multi-layer cinematic overlay — same recipe as video overlay */
+.spline-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(5,5,8,0.65) 0%, transparent 35%),
+    linear-gradient(to top, rgba(5,5,8,1) 0%, rgba(5,5,8,0.5) 28%, transparent 60%),
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 45%, rgba(5,5,8,0.55) 100%),
+    rgba(5,5,8,0.22);
+}
+
+@media (max-width: 768px) {
+  #spline-bg { display: none; }
+}
+
+/* ── shader sits ON TOP of spline/video as a subtle animated texture ── */
 #shader-bg {
   position: fixed;
   top: 0;

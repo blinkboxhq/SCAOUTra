@@ -263,6 +263,7 @@ function renderCard(plan, index) {
       aria-labelledby="plan-name-${plan.id}"
       data-reveal
       data-reveal-delay="${index + 1}"
+      data-spotlight="rgba(74,222,128,0.06)"
     >
       ${topBadge}
       <p class="wp-tier-label">${plan.tier}</p>

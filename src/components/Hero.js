@@ -4,6 +4,7 @@ export default function Hero() {
       id="hero"
       class="relative pt-36 pb-28 md:pt-52 md:pb-36 flex flex-col items-center text-center px-6 overflow-hidden"
       aria-labelledby="hero-heading"
+      data-spotlight="rgba(74,222,128,0.04)"
     >
       <div class="hero-orb hero-orb-1" aria-hidden="true" data-parallax="-0.08"></div>
       <div class="hero-orb hero-orb-2" aria-hidden="true" data-parallax="-0.12"></div>

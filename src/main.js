@@ -2,6 +2,7 @@ import './main.css';
 
 import ShaderBackground, { initShaderBackground } from './components/ShaderBackground.js';
 import VideoBackground,  { initVideoBackground }  from './components/VideoBackground.js';
+import SplineBackground, { initSplineBackground } from './components/SplineBackground.js';
 import Cursor,            { initCursor }           from './components/Cursor.js';
 import Navbar,            { initNavbar }           from './components/Navbar.js';
 import Hero                                        from './components/Hero.js';
@@ -20,12 +21,14 @@ import { initMagnet }                              from './utils/magnet.js';
 import { initScramble }                            from './utils/scramble.js';
 import { initTransition }                          from './utils/transition.js';
 import { initParallax }                            from './utils/parallax.js';
+import { initSpotlight }                           from './utils/spotlight.js';
 
 function render() {
   const app = document.getElementById('app');
 
   app.innerHTML = `
     ${Cursor()}
+    ${SplineBackground()}
     ${VideoBackground()}
     ${ShaderBackground()}
     ${Navbar()}
@@ -50,6 +53,7 @@ function render() {
   initTransition(); // must be first — curtain covers page on load
   initSmoothScroll();
   initCursor();
+  initSplineBackground();
   initVideoBackground();
   initShaderBackground();
   initNavbar();
@@ -64,6 +68,7 @@ function render() {
   initScramble();
   initMagnet();
   initParallax();
+  initSpotlight();
 }
 
 // Guard against DOMContentLoaded having already fired (Vite HMR)
