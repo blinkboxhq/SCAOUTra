@@ -29,6 +29,10 @@ export async function initSplineBackground() {
     return;
   }
 
+  // Move into hero so position:absolute is clipped by hero's overflow:hidden
+  const hero = document.getElementById('hero');
+  if (hero) hero.prepend(wrap);
+
   try {
     const { Application } = await import('@splinetool/runtime');
     const app = new Application(canvas);
