@@ -2,7 +2,7 @@ import './main.css';
 
 import ShaderBackground, { initShaderBackground } from './components/ShaderBackground.js';
 import VideoBackground,  { initVideoBackground }  from './components/VideoBackground.js';
-import SplineBackground, { initSplineBackground } from './components/SplineBackground.js';
+import ThreeBackground,  { initThreeBackground }  from './components/ThreeBackground.js';
 import Cursor,            { initCursor }           from './components/Cursor.js';
 import Navbar,            { initNavbar }           from './components/Navbar.js';
 import Footer                                      from './components/Footer.js';
@@ -21,7 +21,7 @@ function render() {
 
   app.innerHTML = `
     ${Cursor()}
-    ${SplineBackground()}
+    ${ThreeBackground()}
     ${VideoBackground()}
     ${ShaderBackground()}
     ${Navbar()}
@@ -35,7 +35,7 @@ function render() {
   initTransition(); // must be first — curtain covers page on load
   initSmoothScroll();
   initCursor();
-  initSplineBackground();
+  initThreeBackground();
   initVideoBackground();
   initShaderBackground();
   initNavbar();
