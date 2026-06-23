@@ -1,7 +1,6 @@
 import './main.css';
 
 import VideoBackground,  { initVideoBackground }  from './components/VideoBackground.js';
-import Cursor,            { initCursor }           from './components/Cursor.js';
 import Navbar,            { initNavbar }           from './components/Navbar.js';
 import Footer                                      from './components/Footer.js';
 import Modals,            { initModals }            from './components/Modals.js';
@@ -18,7 +17,6 @@ function render() {
   const app = document.getElementById('app');
 
   app.innerHTML = `
-    ${Cursor()}
     ${VideoBackground()}
     ${Navbar()}
     <main id="main-content" tabindex="-1">
@@ -30,7 +28,6 @@ function render() {
 
   initTransition(); // must be first — curtain covers page on load
   initSmoothScroll();
-  initCursor();
   initVideoBackground();
   initNavbar();
   initWebPricing();

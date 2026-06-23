@@ -1,7 +1,6 @@
 import './main.css';
 
 import VideoBackground,  { initVideoBackground }  from './components/VideoBackground.js';
-import Cursor,            { initCursor }           from './components/Cursor.js';
 import Navbar,            { initNavbar }           from './components/Navbar.js';
 import Hero                                        from './components/Hero.js';
 import Marquee                                     from './components/Marquee.js';
@@ -25,7 +24,6 @@ function render() {
   const app = document.getElementById('app');
 
   app.innerHTML = `
-    ${Cursor()}
     ${VideoBackground()}
     ${Navbar()}
     <main id="main-content" tabindex="-1">
@@ -48,7 +46,6 @@ function render() {
   // Initialise interactive modules (order matters)
   initTransition(); // must be first — curtain covers page on load
   initSmoothScroll();
-  initCursor();
   initVideoBackground();
   initNavbar();
   initContainerScroll();
