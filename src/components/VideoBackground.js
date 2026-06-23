@@ -12,11 +12,15 @@ export function initVideoBackground() {
   const wrap = document.getElementById('video-bg');
   if (!wrap) return;
 
-  // Mobile: skip — too heavy, shader takes over
+  // Mobile: skip
   if (window.matchMedia('(max-width: 768px)').matches) {
     wrap.remove();
     return;
   }
+
+  // Contain inside hero so it's clipped by hero's overflow:hidden
+  const hero = document.getElementById('hero');
+  if (hero) hero.prepend(wrap);
 
   const vA = document.getElementById('vbg-a');
   const vB = document.getElementById('vbg-b');

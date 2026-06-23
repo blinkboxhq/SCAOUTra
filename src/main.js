@@ -1,8 +1,6 @@
 import './main.css';
 
-import ShaderBackground, { initShaderBackground } from './components/ShaderBackground.js';
 import VideoBackground,  { initVideoBackground }  from './components/VideoBackground.js';
-import ThreeBackground,  { initThreeBackground }  from './components/ThreeBackground.js';
 import Cursor,            { initCursor }           from './components/Cursor.js';
 import Navbar,            { initNavbar }           from './components/Navbar.js';
 import Hero                                        from './components/Hero.js';
@@ -28,9 +26,7 @@ function render() {
 
   app.innerHTML = `
     ${Cursor()}
-    ${ThreeBackground()}
     ${VideoBackground()}
-    ${ShaderBackground()}
     ${Navbar()}
     <main id="main-content" tabindex="-1">
       ${Hero()}
@@ -53,9 +49,7 @@ function render() {
   initTransition(); // must be first — curtain covers page on load
   initSmoothScroll();
   initCursor();
-  initThreeBackground();
   initVideoBackground();
-  initShaderBackground();
   initNavbar();
   initContainerScroll();
   initTextReveal();
