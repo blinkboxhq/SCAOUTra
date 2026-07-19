@@ -32,11 +32,10 @@ export default function Navbar() {
             role="list"
           >
             <li><a href="/" class="hover:text-ink-primary transition-colors duration-150">Home</a></li>
-            <li><a href="#results" class="hover:text-ink-primary transition-colors duration-150">Results</a></li>
-            <li><a href="#protocol" class="hover:text-ink-primary transition-colors duration-150">Our Process</a></li>
             <li><a href="#systems" class="hover:text-ink-primary transition-colors duration-150">Systems</a></li>
-            <li><a href="#value-prop" class="hover:text-ink-primary transition-colors duration-150">Approach</a></li>
             <li><a href="/web" class="hover:text-ink-primary transition-colors duration-150">Services</a></li>
+            <li><a href="#results" class="hover:text-ink-primary transition-colors duration-150">Results</a></li>
+            <li><a href="/about" class="hover:text-ink-primary transition-colors duration-150">About</a></li>
           </ul>
 
           <!-- CTA + mobile toggle -->
@@ -74,28 +73,23 @@ export default function Navbar() {
             </a>
           </li>
           <li>
-            <a href="#results" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
-              Results
-            </a>
-          </li>
-          <li>
-            <a href="#protocol" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
-              Our Process
-            </a>
-          </li>
-          <li>
             <a href="#systems" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
               Systems
             </a>
           </li>
           <li>
-            <a href="#value-prop" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
-              Approach
+            <a href="/web" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
+              Services
             </a>
           </li>
           <li>
-            <a href="/web" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
-              Services
+            <a href="#results" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
+              Results
+            </a>
+          </li>
+          <li>
+            <a href="/about" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
+              About
             </a>
           </li>
         </ul>
@@ -175,9 +169,12 @@ export function initNavbar() {
     if (e.key === 'Escape' && isOpen) closeNav();
   });
 
-  // Fix anchor links on /web page — section anchors don't exist there,
-  // so rewrite them to absolute home-page links (e.g. #results → /#results).
-  if (window.location.pathname.startsWith('/web')) {
+  // Fix anchor links on sub-pages (/web, /about) — homepage section anchors
+  // don't exist there, so rewrite them to absolute home-page links
+  // (e.g. #results → /#results) so they navigate home and scroll.
+  const path = window.location.pathname;
+  const onHome = path === '/' || path === '/index.html';
+  if (!onHome) {
     const anchorMap = {
       '#results':    '/#results',
       '#protocol':   '/#protocol',
