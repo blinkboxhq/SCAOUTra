@@ -7,6 +7,7 @@ import Results                                     from './components/Results.js
 import ContainerScroll,   { initContainerScroll }  from './components/ContainerScroll.js';
 import TextReveal,        { initTextReveal }        from './components/TextReveal.js';
 import Protocol                                    from './components/Protocol.js';
+import Systems                                     from './components/Systems.js';
 import LeadForm,          { initLeadForm }          from './components/LeadForm.js';
 import Footer                                      from './components/Footer.js';
 import Modals,            { initModals }            from './components/Modals.js';
@@ -35,6 +36,7 @@ function render() {
         badge: 'The Scoutra Approach',
       })}
       ${Protocol()}
+      ${Systems()}
       ${LeadForm()}
     </main>
     ${Footer()}

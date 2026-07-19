@@ -34,6 +34,7 @@ export default function Navbar() {
             <li><a href="/" class="hover:text-ink-primary transition-colors duration-150">Home</a></li>
             <li><a href="#results" class="hover:text-ink-primary transition-colors duration-150">Results</a></li>
             <li><a href="#protocol" class="hover:text-ink-primary transition-colors duration-150">Our Process</a></li>
+            <li><a href="#systems" class="hover:text-ink-primary transition-colors duration-150">Systems</a></li>
             <li><a href="#value-prop" class="hover:text-ink-primary transition-colors duration-150">Approach</a></li>
             <li><a href="/web" class="hover:text-ink-primary transition-colors duration-150">Services</a></li>
           </ul>
@@ -80,6 +81,11 @@ export default function Navbar() {
           <li>
             <a href="#protocol" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
               Our Process
+            </a>
+          </li>
+          <li>
+            <a href="#systems" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
+              Systems
             </a>
           </li>
           <li>
@@ -175,6 +181,7 @@ export function initNavbar() {
     const anchorMap = {
       '#results':    '/#results',
       '#protocol':   '/#protocol',
+      '#systems':    '/#systems',
       '#value-prop': '/#value-prop',
       '#apply':      '/#apply',
     };
