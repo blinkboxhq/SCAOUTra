@@ -376,7 +376,7 @@ export default function WebPricing() {
           data-reveal-delay="1"
         >
           Websites that make your business
-          <span class="block" style="color: var(--accent); font-style: italic;">impossible to ignore</span>
+          <span class="block text-transparent bg-clip-text" style="background-image: linear-gradient(135deg, #4ade80 0%, #22d3ee 60%, #38bdf8 100%); font-style: italic;">impossible to ignore</span>
         </h1>
 
         <p

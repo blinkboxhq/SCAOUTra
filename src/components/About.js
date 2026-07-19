@@ -2,7 +2,7 @@ const PRINCIPLES = [
   {
     number: '01',
     title: 'Infrastructure, not decoration',
-    body: "A site that looks good but doesn't capture leads is a brochure. I build systems that answer, qualify, and follow up — so the work continues after someone lands on your page.",
+    body: "A pretty site that doesn't capture leads is just a brochure. I build systems that answer, qualify, and follow up automatically.",
     color: '#4ade80',
     bg: 'rgba(74, 222, 128, 0.08)',
     icon: `
@@ -17,7 +17,7 @@ const PRINCIPLES = [
   {
     number: '02',
     title: 'You own everything',
-    body: "Code, domain, automations — all yours. No lock-in, no hostage retainers, no platform you can't leave. If we ever stop working together, you walk away with a machine that still runs.",
+    body: "Code, domain, automations — all yours. No lock-in, no hostage retainers. If we ever part ways, you keep a machine that still runs.",
     color: '#22d3ee',
     bg: 'rgba(34, 211, 238, 0.08)',
     icon: `
@@ -30,7 +30,7 @@ const PRINCIPLES = [
   {
     number: '03',
     title: 'Proof before payment',
-    body: "You see a live preview before you pay a euro beyond the deposit. If the first preview doesn't land, I refund it in full. I take that risk so you don't have to.",
+    body: "You approve a live preview before you pay beyond the deposit. If it doesn't land, I refund it in full — I take that risk, not you.",
     color: '#86efac',
     bg: 'rgba(134, 239, 172, 0.08)',
     icon: `
@@ -43,7 +43,7 @@ const PRINCIPLES = [
   {
     number: '04',
     title: 'One person, fully accountable',
-    body: "You talk to the person building it — not an account manager relaying messages. Fewer hand-offs, faster decisions, and a single name on the line when it matters.",
+    body: "You talk to the person building it — not an account manager. Fewer hand-offs, faster decisions, one name on the line.",
     color: '#4ade80',
     bg: 'rgba(74, 222, 128, 0.08)',
     icon: `
@@ -105,7 +105,7 @@ export default function About() {
           data-reveal-delay="1"
         >
           I build the systems that make small businesses
-          <span class="block" style="color: var(--accent);">impossible to compete with.</span>
+          <span class="block text-transparent bg-clip-text" style="background-image: linear-gradient(135deg, #4ade80 0%, #22d3ee 60%, #38bdf8 100%);">impossible to compete with.</span>
         </h1>
 
         <p
@@ -130,10 +130,17 @@ export default function About() {
 
         <div class="flex flex-col items-center gap-3" data-reveal>
           <div
-            class="w-28 h-28 rounded-2xl flex items-center justify-center font-display font-black text-4xl select-none"
+            class="w-32 h-40 rounded-2xl flex items-center justify-center font-display font-black text-5xl select-none overflow-hidden relative"
             style="background: rgba(74,222,128,0.10); color: var(--accent); border: 1px solid var(--border);"
-            aria-hidden="true"
-          >S</div>
+          >
+            <span aria-hidden="true">S</span>
+            <img
+              src="/founder.jpg"
+              alt="Founder of Scoutra"
+              class="absolute inset-0 w-full h-full object-cover"
+              onerror="this.remove()"
+            />
+          </div>
           <span class="text-xs text-ink-muted uppercase tracking-widest">Founder, Scoutra</span>
         </div>
 
@@ -143,19 +150,14 @@ export default function About() {
           </h2>
           <div class="space-y-4 text-ink-secondary leading-relaxed">
             <p>
-              I got into this because I kept watching good businesses lose clients they'd
-              already won — to a reply that came a day too late, a follow-up nobody sent,
-              a no-show nobody chased.
+              I kept watching good businesses lose clients they'd already won — to a reply
+              that came a day late, a follow-up nobody sent, a no-show nobody chased.
+              That's not a talent problem. It's an infrastructure problem.
             </p>
             <p>
-              That's not a talent problem. It's an infrastructure problem. You don't need
-              to be a better closer. You need systems that never forget, never sleep, and
-              never let a lead go cold.
-            </p>
-            <p>
-              So that's what I build. A site that looks like the market leader, wired to
-              the automation that makes it actually sell — delivered in days, owned entirely
-              by you, and backed by a preview you approve before you pay.
+              So that's what I build: a site that looks like the market leader, wired to the
+              automation that makes it sell — delivered in days, owned entirely by you, and
+              backed by a preview you approve before you pay.
             </p>
           </div>
         </div>

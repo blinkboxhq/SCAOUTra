@@ -2,7 +2,7 @@ const CORE = [
   {
     number: '01',
     title: 'Speed-to-Lead',
-    body: "You're not losing clients because you're not good enough. You're losing them because you replied Tuesday to a Monday inquiry. Every inbound gets logged and answered within minutes, then routed to book a call or into nurture — automatically.",
+    body: "You're not losing clients because you're not good enough — you're losing them because you replied Tuesday to a Monday inquiry. Every inbound gets answered within minutes and routed to book or nurture, automatically.",
     color: '#4ade80',
     bg: 'rgba(74, 222, 128, 0.08)',
     icon: `
