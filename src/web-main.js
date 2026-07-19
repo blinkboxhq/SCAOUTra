@@ -1,6 +1,5 @@
 import './main.css';
 
-import VideoBackground,  { initVideoBackground }  from './components/VideoBackground.js';
 import Navbar,            { initNavbar }           from './components/Navbar.js';
 import Footer                                      from './components/Footer.js';
 import Modals,            { initModals }            from './components/Modals.js';
@@ -17,7 +16,6 @@ function render() {
   const app = document.getElementById('app');
 
   app.innerHTML = `
-    ${VideoBackground()}
     ${Navbar()}
     <main id="main-content" tabindex="-1">
       ${WebPricing()}
@@ -28,7 +26,6 @@ function render() {
 
   initTransition(); // must be first — curtain covers page on load
   initSmoothScroll();
-  initVideoBackground();
   initNavbar();
   initWebPricing();
   initModals();

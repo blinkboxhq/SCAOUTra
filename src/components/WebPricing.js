@@ -358,6 +358,7 @@ export default function WebPricing() {
       class="relative pt-36 pb-20 md:pt-52 md:pb-24 flex flex-col items-center text-center px-6 overflow-hidden"
       aria-labelledby="web-pricing-heading"
     >
+      <div class="hero-aurora" aria-hidden="true"></div>
       <div class="hero-orb hero-orb-1" aria-hidden="true"></div>
       <div class="hero-orb hero-orb-2" aria-hidden="true"></div>
 
