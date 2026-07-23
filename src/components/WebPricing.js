@@ -17,7 +17,7 @@ const PLANS = [
     id: 'launchpad',
     tier: 'Starter',
     name: 'The Launchpad',
-    desc: 'For businesses that need to show up online and look credible — fast.',
+    desc: 'For coaches who need to show up online and look credible — fast.',
     price: '500',
     priceNote: 'One-time payment',
     valueBadge: '€1,200 value — launch price',
@@ -49,7 +49,7 @@ const PLANS = [
     id: 'authority',
     tier: 'Growth',
     name: 'The Authority Site',
-    desc: 'A cinematic site that makes you look like the market leader — with automation built in.',
+    desc: 'A cinematic site that makes you look like the go-to expert in your niche — with automation built in.',
     price: '1,200',
     priceNote: 'One-time payment',
     valueBadge: '€2,800 value — launch price',
@@ -79,7 +79,7 @@ const PLANS = [
     id: 'growth',
     tier: 'Premium',
     name: 'The Growth Machine',
-    desc: 'Your website becomes a full sales system. Leads captured, qualified, and followed up — automatically.',
+    desc: 'Your website becomes a full client-booking system. Inquiries captured, qualified, and followed up — automatically.',
     price: '2,500',
     priceNote: 'One-time payment',
     valueBadge: '€5,500 value — launch price',
@@ -108,7 +108,7 @@ const PLANS = [
     id: 'flagship',
     tier: 'Elite',
     name: 'The Flagship',
-    desc: 'A bespoke digital flagship. One-of-a-kind. Built for brands that demand Awwwards-level craft.',
+    desc: 'A bespoke digital flagship. One-of-a-kind. Built for coaching brands that demand Awwwards-level craft.',
     price: '6,000',
     priceNote: 'Starting price — scoped per project',
     valueBadge: '€14,000+ agency equivalent',
@@ -366,7 +366,7 @@ export default function WebPricing() {
 
         <div class="badge mb-8" data-reveal>
           <span class="badge__dot" aria-hidden="true"></span>
-          Scoutra · Web Design Service
+          Scoutra · Web Design for Coaches
         </div>
 
         <h1
@@ -375,7 +375,7 @@ export default function WebPricing() {
           data-reveal
           data-reveal-delay="1"
         >
-          Websites that make your business
+          Websites that make your coaching practice
           <span class="block text-transparent bg-clip-text" style="background-image: linear-gradient(135deg, #4ade80 0%, #22d3ee 60%, #38bdf8 100%); font-style: italic;">impossible to ignore</span>
         </h1>
 
@@ -385,7 +385,7 @@ export default function WebPricing() {
           data-reveal-delay="2"
         >
           Cinematic design. Built with AI precision. Delivered in days — not months.
-          Every site is engineered to turn visitors into enquiries.
+          Every site is engineered to turn visitors into booked discovery calls.
         </p>
 
         <div class="wp-trust-bar" data-reveal data-reveal-delay="3" aria-label="Trust signals">

@@ -8,7 +8,7 @@ const PLANS = [
   {
     name: 'Starter',
     description:
-      'Ideal for businesses ready to identify and eliminate their #1 manual bottleneck.',
+      'Ideal for coaches ready to identify and eliminate their #1 manual bottleneck.',
     monthly: 997,
     yearly: 797,
     cta: 'Apply Now',
@@ -26,7 +26,7 @@ const PLANS = [
   {
     name: 'Growth',
     description:
-      'For scaling businesses that need multiple automation flows and ongoing strategy.',
+      'For scaling coaching practices that need multiple automation flows and ongoing strategy.',
     monthly: 2497,
     yearly: 1997,
     cta: 'Apply Now',
@@ -78,7 +78,7 @@ function priceBlock(plan) {
     return `<span class="pricing-amount-custom">Custom</span>`;
   }
   return `
-    <span class="pricing-currency">$</span>
+    <span class="pricing-currency">€</span>
     <span
       class="pricing-amount"
       data-monthly="${plan.monthly}"

@@ -104,7 +104,7 @@ export default function About() {
           data-reveal
           data-reveal-delay="1"
         >
-          I build the systems that make small businesses
+          I build the systems that make health & wellness coaches
           <span class="block text-transparent bg-clip-text" style="background-image: linear-gradient(135deg, #4ade80 0%, #22d3ee 60%, #38bdf8 100%);">impossible to compete with.</span>
         </h1>
 
@@ -113,9 +113,9 @@ export default function About() {
           data-reveal
           data-reveal-delay="2"
         >
-          Scoutra is a one-person automation and web studio. No account managers,
-          no hand-offs, no bloat — just the infrastructure that turns your website
-          into a machine that captures, qualifies, and follows up while you sleep.
+          Scoutra is a one-person automation and web studio for coaches. No account
+          managers, no hand-offs, no bloat — just the infrastructure that turns your
+          website into a machine that captures, qualifies, and follows up while you sleep.
         </p>
       </div>
     </section>
@@ -150,14 +150,15 @@ export default function About() {
           </h2>
           <div class="space-y-4 text-ink-secondary leading-relaxed">
             <p>
-              I kept watching good businesses lose clients they'd already won — to a reply
-              that came a day late, a follow-up nobody sent, a no-show nobody chased.
-              That's not a talent problem. It's an infrastructure problem.
+              I kept watching good coaches lose clients they'd already won — to a reply
+              that came a day late, a follow-up nobody sent, a session nobody chased
+              after a no-show. That's not a coaching problem. It's an infrastructure problem.
             </p>
             <p>
-              So that's what I build: a site that looks like the market leader, wired to the
-              automation that makes it sell — delivered in days, owned entirely by you, and
-              backed by a preview you approve before you pay.
+              So that's what I build: a site that looks like the go-to expert in your niche,
+              wired to the automation that turns inquiries into booked, paying clients —
+              delivered in days, owned entirely by you, and backed by a preview you approve
+              before you pay.
             </p>
           </div>
         </div>

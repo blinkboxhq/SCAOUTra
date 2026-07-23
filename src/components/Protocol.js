@@ -97,9 +97,9 @@ export default function Protocol() {
             The Deployment Protocol
           </h2>
           <p class="text-ink-secondary leading-relaxed">
-            We don't do "consulting." We build and install automation
-            infrastructure. Our three-step protocol ensures rapid ROI
-            without disrupting your day-to-day operations.
+            We don't do "consulting." We build and install the booking, follow-up,
+            and payment infrastructure coaches need to stop losing clients to
+            slow replies — without disrupting your day-to-day practice.
           </p>
         </div>
 

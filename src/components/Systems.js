@@ -2,7 +2,7 @@ const CORE = [
   {
     number: '01',
     title: 'Speed-to-Lead',
-    body: "You're not losing clients because you're not good enough — you're losing them because you replied Tuesday to a Monday inquiry. Every inbound gets answered within minutes and routed to book or nurture, automatically.",
+    body: "You're not losing clients because your program isn't good enough — you're losing them because you replied Tuesday to a Monday DM. Every inquiry gets answered within minutes and routed to book a discovery call or nurture, automatically.",
     color: '#4ade80',
     bg: 'rgba(74, 222, 128, 0.08)',
     icon: `
@@ -14,7 +14,7 @@ const CORE = [
   {
     number: '02',
     title: 'Never-Go-Cold Nurture',
-    body: "Most leads don't say no — they just go quiet, and nobody follows up. This re-touches every lead who didn't convert at 30, 60, and 90 days, and reaches back to past clients for renewals and referrals.",
+    body: "Most leads don't say no — they ask about your program, go quiet, and nobody follows up. This re-touches every lead who didn't book at 30, 60, and 90 days, and reaches back to past clients for renewals and referrals.",
     color: '#22d3ee',
     bg: 'rgba(34, 211, 238, 0.08)',
     icon: `
@@ -27,7 +27,7 @@ const CORE = [
   {
     number: '03',
     title: 'Payment Automation',
-    body: "A booked call means nothing if the client doesn't show. The moment someone books, a deposit or payment link goes out automatically — recovering revenue you'd otherwise lose to no-shows.",
+    body: "A booked discovery call means nothing if the client no-shows. The moment someone books a session, a deposit or payment link goes out automatically — recovering revenue you'd otherwise lose to no-shows.",
     color: '#86efac',
     bg: 'rgba(134, 239, 172, 0.08)',
     icon: `
@@ -43,7 +43,7 @@ const FULL = [
   {
     number: '04',
     title: 'AI-Qualified Intake',
-    body: "The first call shouldn't be where you find out the lead isn't a fit. An AI intake gathers context before you ever speak, filters out mismatches, and hands you a briefing — so the conversation starts warm.",
+    body: "The first call shouldn't be where you find out this person isn't ready to invest in coaching. An AI intake gathers context on their goals before you ever speak, filters out mismatches, and hands you a briefing — so the conversation starts warm.",
     color: '#4ade80',
     bg: 'rgba(74, 222, 128, 0.08)',
     icon: `
@@ -57,7 +57,7 @@ const FULL = [
   {
     number: '05',
     title: 'Testimonial Engine',
-    body: "Good testimonials don't happen because you remembered to ask. This triggers the request at the right moment, formats the response, and publishes it to your site — no manual follow-up required.",
+    body: "Good testimonials don't happen because you remembered to ask after a client hits their goal. This triggers the request at the right moment, formats the response, and publishes it to your site — no manual follow-up required.",
     color: '#22d3ee',
     bg: 'rgba(34, 211, 238, 0.08)',
     icon: `
@@ -69,7 +69,7 @@ const FULL = [
   {
     number: '06',
     title: 'Content Repurposing',
-    body: "One podcast or talk shouldn't die after one listen. It gets sliced into weeks of LinkedIn posts, newsletter content, and quote graphics — content you'd otherwise pay someone to write from scratch.",
+    body: "One podcast appearance or client transformation shouldn't die after one post. It gets sliced into weeks of LinkedIn posts, newsletter content, and quote graphics — content you'd otherwise pay someone to write from scratch.",
     color: '#86efac',
     bg: 'rgba(134, 239, 172, 0.08)',
     icon: `
@@ -135,12 +135,12 @@ export default function Systems() {
             id="systems-heading"
             class="text-3xl md:text-4xl font-display font-bold text-ink-primary mb-4"
           >
-            Your website gets you found. These systems make sure you never lose who finds you.
+            Your website gets your practice found. These systems make sure you never lose who finds you.
           </h2>
           <p class="text-ink-secondary leading-relaxed">
-            You don't lose revenue to bad traffic. You lose it to slow replies,
-            follow-up that never happens, and clients who no-show without a deposit.
-            Each system below plugs one specific leak.
+            As a health, wellness or nutrition coach, you don't lose revenue to bad traffic.
+            You lose it to slow replies, follow-up that never happens, and clients who
+            no-show without a deposit. Each system below plugs one specific leak.
           </p>
         </div>
 

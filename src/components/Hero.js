@@ -16,10 +16,10 @@ export default function Hero() {
           class="badge mb-8"
           data-reveal
           data-parallax="-0.04"
-          aria-label="Now accepting five new clients this quarter"
+          aria-label="Now onboarding five wellness and nutrition coaches this quarter"
         >
           <span class="badge__dot" aria-hidden="true"></span>
-          Accepting 5 New Clients This Quarter
+          Onboarding 5 Wellness & Nutrition Coaches This Quarter
         </div>
 
         <h1
@@ -44,9 +44,9 @@ export default function Hero() {
           data-reveal-delay="2"
           data-parallax="-0.03"
         >
-          We map your operations, identify the highest-value automation
-          opportunities, and build the infrastructure to eliminate manual
-          bottlenecks — without disrupting your business.
+          We map how inquiries turn into booked sessions, identify exactly
+          where clients slip through the cracks, and build the automation
+          that captures every one — without disrupting your practice.
         </p>
 
         <div
