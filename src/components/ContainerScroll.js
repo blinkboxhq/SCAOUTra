@@ -3,6 +3,8 @@
  * A "dashboard" card starts tilted (rotateX 8°) and flattens as the user scrolls.
  */
 
+import Grainient from './Grainient.js';
+
 const METRICS = [
   { label: 'Tasks Automated', value: '2,847', color: '#4ade80' },
   { label: 'Hours Saved',     value: '438h',  color: '#22d3ee' },
@@ -25,6 +27,8 @@ export default function ContainerScroll() {
       aria-labelledby="cscroll-heading"
     >
       <div class="cscroll-sticky">
+
+        ${Grainient({ id: 'cscroll-grainient', className: 'cscroll-grainient' })}
 
         <div class="cscroll-title text-center" data-reveal>
           <div class="badge mx-auto mb-4">Live Dashboard</div>

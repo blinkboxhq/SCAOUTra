@@ -555,9 +555,30 @@
   overflow: hidden;
 }
 
-.cscroll-title { z-index: 1; }
+.grainient-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Grainient behind the dashboard card. Radially masked and held at low opacity
+   so it reads as an ambient glow rather than a coloured panel. */
+.cscroll-grainient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.38;
+  mask-image: radial-gradient(70% 60% at 50% 45%, black 0%, rgba(0, 0, 0, 0.55) 55%, transparent 88%);
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 45%, black 0%, rgba(0, 0, 0, 0.55) 55%, transparent 88%);
+}
+
+.cscroll-title { position: relative; z-index: 1; }
 
 .cscroll-card-wrap {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 56rem;
 }

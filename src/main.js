@@ -6,6 +6,7 @@ import { initSoftAurora }                          from './components/SoftAurora
 import Marquee                                     from './components/Marquee.js';
 import Results                                     from './components/Results.js';
 import ContainerScroll,   { initContainerScroll }  from './components/ContainerScroll.js';
+import { initGrainient }                           from './components/Grainient.js';
 import TextReveal,        { initTextReveal }        from './components/TextReveal.js';
 import Protocol                                    from './components/Protocol.js';
 import Systems                                     from './components/Systems.js';
@@ -50,6 +51,7 @@ function render() {
   initSmoothScroll();
   initNavbar();
   initContainerScroll();
+  initGrainient('cscroll-grainient');
   initTextReveal();
   initLeadForm();
   initModals();
