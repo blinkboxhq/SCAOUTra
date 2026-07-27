@@ -835,10 +835,13 @@ export function initAudit() {
       <ol class="audit-next-steps">
         <li>
           <strong>Right now &mdash; keep this.</strong>
-          Save a copy so you can come back to it or send it to a business partner.
-          <button type="button" class="btn btn-secondary audit-save-btn" id="audit-print-btn">
-            Save as PDF
-          </button>
+          Download a copy so you can come back to it or send it to a business partner.
+          <span class="audit-save-actions">
+            <button type="button" class="btn btn-secondary audit-save-btn" id="audit-download-btn">
+              <span id="audit-download-label">Download PDF</span>
+            </button>
+            <button type="button" class="audit-print-link" id="audit-print-btn">or print this page</button>
+          </span>
         </li>
         <li>
           <strong>Within 24 hours &mdash; the human half.</strong>
@@ -863,6 +866,36 @@ export function initAudit() {
 
     const printBtn = document.getElementById('audit-print-btn');
     if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+    // jsPDF is ~100kB gzipped, so it is only fetched if someone actually downloads.
+    const downloadBtn = document.getElementById('audit-download-btn');
+    const downloadLabel = document.getElementById('audit-download-label');
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', async () => {
+        downloadBtn.disabled = true;
+        if (downloadLabel) downloadLabel.textContent = 'Preparing...';
+        try {
+          const { downloadAuditPdf } = await import('../utils/auditPdf.js');
+          await downloadAuditPdf(r, {
+            owner: ownerName,
+            site,
+            date: today,
+            diagnosisLabel: diagnosis ? diagnosis.label : null,
+          });
+          if (downloadLabel) downloadLabel.textContent = 'Downloaded';
+        } catch (err) {
+          console.error('PDF generation failed:', err);
+          // Fall back to the print stylesheet rather than leaving them stuck.
+          if (downloadLabel) downloadLabel.textContent = 'Use print instead';
+          window.print();
+        } finally {
+          downloadBtn.disabled = false;
+          setTimeout(() => {
+            if (downloadLabel) downloadLabel.textContent = 'Download PDF';
+          }, 2500);
+        }
+      });
+    }
   }
 
   async function handleSubmit() {
