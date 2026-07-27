@@ -787,7 +787,22 @@ export function initAudit() {
       )
       .join('');
 
+    const ownerName = document.getElementById('audit-input-name').value.trim();
+    const site = document.getElementById('audit-input-website').value.trim();
+    const today = new Date().toLocaleDateString('en-GB', {
+      day: 'numeric', month: 'long', year: 'numeric',
+    });
+
     container.innerHTML = `
+      <div class="audit-print-header">
+        <div class="audit-print-brand">SCOUTRA</div>
+        <div>
+          <strong>Client-Getting Systems Audit</strong><br />
+          ${ownerName ? ownerName + ' &middot; ' : ''}${site}<br />
+          ${today}
+        </div>
+      </div>
+
       <div class="audit-score-ring" style="background: conic-gradient(#4ade80 0% ${r.score}%, var(--border) ${r.score}% 100%);">
         <div class="audit-score-inner">
           <div class="audit-score-num">${r.score}</div>
@@ -816,15 +831,38 @@ export function initAudit() {
       <p class="audit-section-title">Still to review, personally</p>
       <div class="audit-results-list">${pendingHTML}</div>
 
+      <p class="audit-section-title">What happens next</p>
+      <ol class="audit-next-steps">
+        <li>
+          <strong>Right now &mdash; keep this.</strong>
+          Save a copy so you can come back to it or send it to a business partner.
+          <button type="button" class="btn btn-secondary audit-save-btn" id="audit-print-btn">
+            Save as PDF
+          </button>
+        </li>
+        <li>
+          <strong>Within 24 hours &mdash; the human half.</strong>
+          A written review of your website and content, which is the part a form
+          genuinely cannot assess. That is a person looking at your actual site,
+          not an automated scan.
+        </li>
+        <li>
+          <strong>Then, only if you want it.</strong>
+          A 15-minute walkthrough of the priority fix. No pitch and no obligation
+          &mdash; if the report is all you needed, that is a fine outcome.
+        </li>
+      </ol>
+
       <div class="audit-cta">
         <p>
-          Your written report lands within 24 hours, including the review of your website
-          and content. If you want to talk through the priority fix, book a slot &mdash;
-          no pitch, and no obligation either way.
+          If you would rather just talk it through, book a slot directly.
         </p>
         <a class="btn btn-primary" href="/#apply">Book a 15-min walkthrough</a>
       </div>
     `;
+
+    const printBtn = document.getElementById('audit-print-btn');
+    if (printBtn) printBtn.addEventListener('click', () => window.print());
   }
 
   async function handleSubmit() {

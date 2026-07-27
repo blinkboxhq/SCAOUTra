@@ -2217,10 +2217,224 @@ html.has-cursor * {
   line-height: 1.6;
 }
 
+/* --- What happens next --- */
+.audit-next-steps {
+  list-style: none;
+  counter-reset: nextstep;
+  padding: 0;
+  margin: 0 0 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+
+.audit-next-steps li {
+  counter-increment: nextstep;
+  position: relative;
+  padding: 18px 22px 18px 60px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.audit-next-steps li::before {
+  content: counter(nextstep);
+  position: absolute;
+  left: 20px;
+  top: 18px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-muted);
+  border: 1px solid rgba(74, 222, 128, 0.28);
+}
+
+.audit-next-steps strong {
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.audit-save-btn {
+  margin-top: 12px;
+  font-size: 0.8125rem;
+  padding: 8px 16px;
+}
+
+/* Print header — hidden on screen, shown in the PDF */
+.audit-print-header { display: none; }
+
 @media (max-width: 600px) {
   .audit-projection { grid-template-columns: 1fr; }
   .audit-math-row { flex-direction: column; gap: 4px; }
   .audit-math-row > span:last-child { white-space: normal; }
+  .audit-next-steps li { padding: 16px 18px 16px 54px; }
+}
+
+/* ============================================
+   PRINT — turn the dark report into a readable PDF
+   ============================================ */
+@media print {
+  @page { margin: 16mm 14mm; }
+
+  /* Chrome needs this to honour our colours at all */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #111116 !important;
+  }
+
+  /* Strip the chrome — nav, footer, controls, inactive steps */
+  header[role="banner"],
+  .navbar,
+  .mobile-nav,
+  footer,
+  .audit-progress,
+  .audit-step:not(.is-active),
+  .audit-cta,
+  .audit-save-btn,
+  .skip-link,
+  .page-transition,
+  #custom-cursor,
+  .hero-aurora,
+  .hero-orb {
+    display: none !important;
+  }
+
+  .audit-section {
+    min-height: 0;
+    padding: 0;
+    display: block;
+  }
+
+  .audit-wrap { max-width: 100%; }
+
+  /* Print-only report header */
+  .audit-print-header {
+    display: flex !important;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 12px;
+    margin-bottom: 28px;
+    border-bottom: 2px solid #111116;
+    font-size: 10pt;
+    color: #444450;
+    text-align: right;
+  }
+
+  .audit-print-brand {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 15pt;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #111116;
+  }
+
+  .audit-print-header strong { color: #111116; }
+
+  /* Cards become outlined blocks that survive on white */
+  .audit-math,
+  .audit-result-card,
+  .audit-reflection,
+  .audit-priority,
+  .audit-projection-card,
+  .audit-next-steps li {
+    background: #ffffff !important;
+    border-color: #d4d4dd !important;
+    box-shadow: none !important;
+  }
+
+  .audit-math-row {
+    border-color: #e6e6ee !important;
+    color: #33333d !important;
+  }
+
+  .audit-math-row > span:last-child { color: #111116 !important; }
+
+  .audit-math-row--result { background: #f4f9f5 !important; }
+  .audit-math-row--result > span:last-child { color: #15803d !important; }
+
+  .audit-question,
+  .audit-next-steps strong,
+  .audit-priority-head h3,
+  .audit-reflection p,
+  .audit-result-card,
+  .audit-verdict-line {
+    color: #111116 !important;
+  }
+
+  .audit-section-title,
+  .audit-note,
+  .audit-assumption,
+  .audit-score-context,
+  .audit-projection-label,
+  .audit-reflection p span {
+    color: #5a5a68 !important;
+  }
+
+  .audit-next-steps li,
+  .audit-priority p,
+  .audit-reflection-verdict { color: #33333d !important; }
+
+  .audit-verdict-line--warn { background: #fdf3f3 !important; border-color: #e9b8b8 !important; }
+  .audit-verdict-line--ok   { background: #f2fbf4 !important; border-color: #b3e0c2 !important; }
+  .audit-verdict-line--info { background: #f1fafc !important; border-color: #a9d9e4 !important; }
+
+  /* Gradient text does not print — force solid ink */
+  .audit-score-num,
+  .audit-gradient-text,
+  .audit-verdict strong {
+    background: none !important;
+    -webkit-text-fill-color: #15803d !important;
+    color: #15803d !important;
+  }
+
+  .audit-projection-num { color: #b45309 !important; }
+  .audit-projection-card--severe .audit-projection-num { color: #b91c1c !important; }
+
+  /* The conic-gradient ring will not render reliably — show the number instead */
+  .audit-score-ring {
+    background: none !important;
+    border: 3px solid #15803d !important;
+    width: 130px;
+    height: 130px;
+  }
+  .audit-score-ring::before { display: none !important; }
+
+  .audit-pill {
+    border-width: 1px !important;
+    color: #33333d !important;
+    background: #f4f4f7 !important;
+  }
+
+  /* Keep logical blocks from splitting across pages */
+  .audit-math,
+  .audit-reflection,
+  .audit-priority,
+  .audit-projection,
+  .audit-next-steps li,
+  .audit-verdict-line {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .audit-section-title { break-after: avoid; page-break-after: avoid; }
 }
 
 @media (max-width: 640px) {
