@@ -1,3 +1,5 @@
+import SoftAurora from './SoftAurora.js';
+
 export default function Hero() {
   return `
     <section
@@ -7,6 +9,7 @@ export default function Hero() {
       data-spotlight="rgba(74,222,128,0.04)"
     >
       <div class="hero-aurora" aria-hidden="true"></div>
+      ${SoftAurora()}
       <div class="hero-orb hero-orb-1" aria-hidden="true" data-parallax="-0.08"></div>
       <div class="hero-orb hero-orb-2" aria-hidden="true" data-parallax="-0.12"></div>
 

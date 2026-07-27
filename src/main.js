@@ -2,6 +2,7 @@ import './main.css';
 
 import Navbar,            { initNavbar }           from './components/Navbar.js';
 import Hero                                        from './components/Hero.js';
+import { initSoftAurora }                          from './components/SoftAurora.js';
 import Marquee                                     from './components/Marquee.js';
 import Results                                     from './components/Results.js';
 import ContainerScroll,   { initContainerScroll }  from './components/ContainerScroll.js';
@@ -45,6 +46,7 @@ function render() {
 
   // Initialise interactive modules (order matters)
   initTransition(); // must be first — curtain covers page on load
+  initSoftAurora();
   initSmoothScroll();
   initNavbar();
   initContainerScroll();
