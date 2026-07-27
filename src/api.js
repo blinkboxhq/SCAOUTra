@@ -63,3 +63,59 @@ export async function submitAudit(data) {
     return { success: false };
   }
 }
+
+/**
+ * Submit a completed Client-Getting Systems Audit quiz.
+ * Same primary/fallback pattern as submitAudit(), but carries the full
+ * answer breakdown + computed score/leak so the recipient email is
+ * everything needed to complete the manual half of the audit (Digital
+ * Presence + Content Systems) and send the full report.
+ */
+export async function submitAuditQuiz(data) {
+  const payload = {
+    name:              data.name,
+    email:             data.email,
+    website:           data.website,
+    instagram:         data.instagram || '(not provided)',
+    score:             `${data.score}/100`,
+    estimated_leak:    `€${data.leakEstimate}/month`,
+    monthly_inquiries: data.monthlyInquiries,
+    avg_client_value:  `€${data.avgClientValue}`,
+    ...data.answers,
+    _subject: 'New Systems Audit Quiz Submission',
+    _captcha: 'false',
+  };
+
+  // --- Primary: FormSubmit.co ---
+  try {
+    const res = await fetch(FORMSUBMIT_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      const json = await res.json().catch(() => null);
+      if (json && (json.success === true || json.success === 'true')) {
+        return { success: true };
+      }
+    }
+  } catch (err) {
+    console.warn('FormSubmit.co failed, trying n8n fallback:', err);
+  }
+
+  // --- Fallback: n8n webhook ---
+  try {
+    const res = await fetch(CONFIG.WEBHOOK_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+
+    if (res.ok) return { success: true };
+    return { success: false };
+  } catch (err) {
+    console.error('Audit quiz submission failed on both endpoints:', err);
+    return { success: false };
+  }
+}

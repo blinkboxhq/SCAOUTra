@@ -12,6 +12,7 @@ export default defineConfig({
         main:  resolve(__dirname, 'index.html'),
         web:   resolve(__dirname, 'web/index.html'),
         about: resolve(__dirname, 'about/index.html'),
+        audit: resolve(__dirname, 'audit/index.html'),
       },
       output: {
         manualChunks: { three: ['three'] },
