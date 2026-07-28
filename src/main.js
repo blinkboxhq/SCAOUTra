@@ -10,6 +10,7 @@ import { initGrainient }                           from './components/Grainient.
 import TextReveal,        { initTextReveal }        from './components/TextReveal.js';
 import Protocol                                    from './components/Protocol.js';
 import Systems                                     from './components/Systems.js';
+import { initMagicBento }                          from './components/MagicBento.js';
 import LeadForm,          { initLeadForm }          from './components/LeadForm.js';
 import Footer                                      from './components/Footer.js';
 import Modals,            { initModals }            from './components/Modals.js';
@@ -52,6 +53,7 @@ function render() {
   initNavbar();
   initContainerScroll();
   initGrainient('cscroll-grainient');
+  initMagicBento('systems-bento');
   initTextReveal();
   initLeadForm();
   initModals();

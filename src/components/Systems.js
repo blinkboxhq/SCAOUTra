@@ -1,3 +1,5 @@
+import MagicBento from './MagicBento.js';
+
 const CORE = [
   {
     number: '01',
@@ -81,44 +83,13 @@ const FULL = [
   },
 ];
 
-function renderCards(items, { accentBorder = false } = {}) {
-  return items
-    .map(
-      (item, i) => `
-      <article
-        class="card p-8 relative overflow-hidden"
-        data-reveal
-        data-reveal-delay="${(i % 3) + 1}"
-        aria-labelledby="system-title-${item.number}"
-        ${accentBorder ? 'style="border-color: rgba(74, 222, 128, 0.24);"' : ''}
-      >
-        <span
-          class="absolute top-4 right-6 font-display font-black text-7xl leading-none select-none pointer-events-none"
-          style="color: ${item.color}; opacity: 0.06;"
-          aria-hidden="true"
-        >${item.number}</span>
-
-        <div
-          class="w-11 h-11 rounded-xl flex items-center justify-center mb-6"
-          style="background: ${item.bg}; color: ${item.color};"
-        >
-          ${item.icon}
-        </div>
-
-        <h3
-          id="system-title-${item.number}"
-          class="text-lg font-display font-bold text-ink-primary mb-3"
-        >
-          ${item.title}
-        </h3>
-        <p class="text-sm text-ink-secondary leading-relaxed">
-          ${item.body}
-        </p>
-      </article>
-    `
-    )
-    .join('');
-}
+/* The two tiers now live on each card as a label rather than as separate
+   sub-headed grids, so the bento reads as one composition without losing the
+   Core / Full distinction the pricing depends on. */
+const BENTO_CARDS = [
+  ...CORE.map(c => ({ ...c, label: 'Evergreen Core' })),
+  ...FULL.map(c => ({ ...c, label: 'Evergreen Full' })),
+];
 
 export default function Systems() {
   return `
@@ -144,26 +115,7 @@ export default function Systems() {
           </p>
         </div>
 
-        <div class="mb-12">
-          <div class="flex items-center gap-3 mb-6">
-            <span class="text-sm font-display font-bold text-ink-primary uppercase tracking-[0.14em]">Evergreen Core</span>
-            <span class="h-px flex-1 bg-ink-border"></span>
-          </div>
-          <div class="grid md:grid-cols-3 gap-6" role="list">
-            ${renderCards(CORE)}
-          </div>
-        </div>
-
-        <div>
-          <div class="flex items-center gap-3 mb-6">
-            <span class="text-sm font-display font-bold text-ink-primary uppercase tracking-[0.14em]">Evergreen Full</span>
-            <span class="text-xs font-medium text-accent uppercase tracking-widest">Core + Growth</span>
-            <span class="h-px flex-1 bg-ink-border"></span>
-          </div>
-          <div class="grid md:grid-cols-3 gap-6" role="list">
-            ${renderCards(FULL, { accentBorder: true })}
-          </div>
-        </div>
+        ${MagicBento(BENTO_CARDS, { id: 'systems-bento' })}
 
       </div>
     </section>
