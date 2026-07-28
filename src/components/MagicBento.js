@@ -28,12 +28,24 @@ const DEFAULTS = {
   enableTilt: true,
   enableMagnetism: true,
   clickEffect: true,
+  enableFlip: false,
   disableAnimations: false,
   spotlightRadius: DEFAULT_SPOTLIGHT_RADIUS,
   particleCount: DEFAULT_PARTICLE_COUNT,
   glowColor: DEFAULT_GLOW_COLOR,
   tiltMax: 6, // degrees; the original uses 10, softened here for readability
 };
+
+/* Flip and tilt both drive rotateY, and the click ripple duplicates the
+   feedback the flip already gives — so turning flip on turns both off. */
+function resolveOptions(options) {
+  const o = { ...DEFAULTS, ...options };
+  if (o.enableFlip) {
+    o.enableTilt = false;
+    o.clickEffect = false;
+  }
+  return o;
+}
 
 /* ---------------------------------------------------------------- markup -- */
 
@@ -46,7 +58,9 @@ export default function MagicBento(cards, options = {}) {
     id = 'magic-bento',
     textAutoHide = DEFAULTS.textAutoHide,
     enableBorderGlow = DEFAULTS.enableBorderGlow,
+    enableFlip = DEFAULTS.enableFlip,
     glowColor = DEFAULTS.glowColor,
+    detailHref = '/systems',
   } = options;
 
   const cardMarkup = cards
@@ -56,19 +70,12 @@ export default function MagicBento(cards, options = {}) {
         'particle-container',
         textAutoHide ? 'magic-bento-card--text-autohide' : '',
         enableBorderGlow ? 'magic-bento-card--border-glow' : '',
+        enableFlip ? 'magic-bento-card--flip' : '',
       ]
         .filter(Boolean)
         .join(' ');
 
-      return `
-      <article
-        class="${cls}"
-        role="listitem"
-        style="--glow-color: ${card.color ? hexToRgbString(card.color) : glowColor};"
-        aria-labelledby="bento-title-${card.number}"
-        data-reveal
-        data-reveal-delay="${(i % 3) + 1}"
-      >
+      const face = `
         <span class="magic-bento-card__watermark" style="color:${card.color};" aria-hidden="true">${card.number}</span>
 
         <div class="magic-bento-card__header">
@@ -77,18 +84,62 @@ export default function MagicBento(cards, options = {}) {
             style="background:${card.bg}; color:${card.color};"
             aria-hidden="true"
           >${card.icon}</div>
-          <div class="magic-bento-card__label">${card.label}</div>
-        </div>
+          <div class="magic-bento-card__label">${card.tier || card.label || ''}</div>
+        </div>`;
 
+      const shared = `
+        class="${cls}"
+        role="listitem"
+        style="--glow-color: ${card.color ? hexToRgbString(card.color) : glowColor};"
+        aria-labelledby="bento-title-${card.number}"
+        data-reveal
+        data-reveal-delay="${(i % 3) + 1}"`;
+
+      if (!enableFlip) {
+        return `
+      <article ${shared}>
+        ${face}
         <div class="magic-bento-card__content">
           <h3 id="bento-title-${card.number}" class="magic-bento-card__title">${card.title}</h3>
           <p class="magic-bento-card__description">${card.body}</p>
         </div>
       </article>`;
+      }
+
+      return `
+      <article ${shared} data-flip tabindex="0" aria-expanded="false">
+        <div class="magic-bento-card__inner">
+
+          <div class="magic-bento-card__face magic-bento-card__face--front">
+            ${face}
+            <div class="magic-bento-card__content">
+              <h3 id="bento-title-${card.number}" class="magic-bento-card__title">${card.title}</h3>
+              <p class="magic-bento-card__description">${card.short}</p>
+              <span class="magic-bento-card__hint" aria-hidden="true">Tap to read more</span>
+            </div>
+          </div>
+
+          <div class="magic-bento-card__face magic-bento-card__face--back" aria-hidden="true">
+            <div class="magic-bento-card__content">
+              <h3 class="magic-bento-card__title">${card.title}</h3>
+              <p class="magic-bento-card__description">${card.body}</p>
+            </div>
+            <a
+              class="magic-bento-card__link"
+              href="${detailHref}#${card.slug}"
+              tabindex="-1"
+            >Full breakdown &rarr;</a>
+          </div>
+
+        </div>
+      </article>`;
     })
     .join('');
 
-  return `<div id="${id}" class="card-grid bento-section" role="list">${cardMarkup}</div>`;
+  // The asymmetric 2x2 layout only earns its keep with long copy on the face;
+  // with one-line fronts the big cells read as empty, so flip mode goes uniform.
+  const gridCls = `card-grid bento-section${enableFlip ? ' card-grid--uniform' : ''}`;
+  return `<div id="${id}" class="${gridCls}" role="list">${cardMarkup}</div>`;
 }
 
 function hexToRgbString(hex) {
@@ -409,7 +460,50 @@ function attachGlobalSpotlight(grid, o) {
   };
 }
 
+/**
+ * Click / Enter / Space turns the card over. Deliberately CSS-only and free of
+ * gsap, so it still works on touch devices and under reduced motion — where the
+ * rest of the effects are skipped but the detail must stay reachable.
+ */
+function attachFlip(card) {
+  const front = card.querySelector('.magic-bento-card__face--front');
+  const back = card.querySelector('.magic-bento-card__face--back');
+  const link = back?.querySelector('.magic-bento-card__link');
+  if (!front || !back) return () => {};
+
+  function setFlipped(flipped) {
+    card.classList.toggle('is-flipped', flipped);
+    card.setAttribute('aria-expanded', String(flipped));
+    front.setAttribute('aria-hidden', String(flipped));
+    back.setAttribute('aria-hidden', String(!flipped));
+    if (link) link.tabIndex = flipped ? 0 : -1;
+  }
+
+  function toggle(e) {
+    // Let the detail link do its job instead of turning the card back over.
+    if (e.target.closest('.magic-bento-card__link')) return;
+    setFlipped(!card.classList.contains('is-flipped'));
+  }
+
+  function onKeydown(e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    if (e.target !== card) return;
+    e.preventDefault();
+    toggle(e);
+  }
+
+  card.addEventListener('click', toggle);
+  card.addEventListener('keydown', onKeydown);
+
+  return function detach() {
+    card.removeEventListener('click', toggle);
+    card.removeEventListener('keydown', onKeydown);
+    setFlipped(false);
+  };
+}
+
 let teardown = null;
+let flipTeardown = null;
 
 function attachAll(grid, o) {
   const detachers = [...grid.querySelectorAll('.magic-bento-card')].map(card =>
@@ -424,11 +518,20 @@ export function initMagicBento(id = 'magic-bento', options = {}) {
     teardown();
     teardown = null;
   }
+  if (flipTeardown) {
+    flipTeardown();
+    flipTeardown = null;
+  }
 
   const grid = document.getElementById(id);
   if (!grid) return;
 
-  const o = { ...DEFAULTS, ...options };
+  const o = resolveOptions(options);
+
+  if (o.enableFlip) {
+    const detachers = [...grid.querySelectorAll('[data-flip]')].map(attachFlip);
+    flipTeardown = () => detachers.forEach(fn => fn());
+  }
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isCoarse = window.matchMedia('(hover: none)').matches;
