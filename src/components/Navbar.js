@@ -34,6 +34,7 @@ export default function Navbar() {
             <li><a href="/" class="hover:text-ink-primary transition-colors duration-150">Home</a></li>
             <li><a href="/systems" class="hover:text-ink-primary transition-colors duration-150">Systems</a></li>
             <li><a href="/web" class="hover:text-ink-primary transition-colors duration-150">Services</a></li>
+            <li><a href="/audit" class="hover:text-ink-primary transition-colors duration-150">Free Audit</a></li>
             <li><a href="#results" class="hover:text-ink-primary transition-colors duration-150">Results</a></li>
             <li><a href="/about" class="hover:text-ink-primary transition-colors duration-150">About</a></li>
           </ul>
@@ -80,6 +81,11 @@ export default function Navbar() {
           <li>
             <a href="/web" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
               Services
+            </a>
+          </li>
+          <li>
+            <a href="/audit" class="block py-3 px-4 text-xl font-display font-semibold text-ink-primary rounded-lg hover:bg-surface-elevated transition-colors mobile-nav-link">
+              Free Audit
             </a>
           </li>
           <li>

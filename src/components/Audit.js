@@ -196,17 +196,17 @@ export default function Audit() {
         <div class="audit-step is-active" data-step="0">
           <div class="badge mb-6"><span class="badge__dot"></span>3-Minute Audit</div>
           <h1 id="audit-heading" class="audit-hero-title">
-            Can your business actually
-            <span class="audit-gradient-text">reach your goal?</span>
+            Can your practice actually
+            <span class="audit-gradient-text">hit your number?</span>
           </h1>
           <p class="audit-hero-sub">
-            Most owners assume they need more leads. Usually the maths says otherwise.
-            Answer a few honest questions and you will see exactly what your current
-            model can and cannot deliver &mdash; and what it is quietly costing you
+            Most practitioners assume they need more enquiries. Usually the maths says
+            otherwise. Answer a few honest questions and you will see exactly what your
+            current setup can and cannot deliver &mdash; and what it quietly costs you
             every month it stays the same.
           </p>
           <ul class="audit-intro-list">
-            <li>Whether your current pricing and conversion rate can mathematically hit your target</li>
+            <li>Whether your prices and your booking rate can mathematically reach your target</li>
             <li>Your revenue leak, itemised, with every assumption shown</li>
             <li>What it compounds to over the next 12 and 36 months</li>
             <li>The one fix worth doing first</li>
