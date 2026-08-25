@@ -514,9 +514,12 @@ export function initAudit() {
     // Capacity gap: can the current model reach the goal at all?
     const clientsNeeded = price > 0 ? goalRev / price : 0;
     const inquiriesNeededNow = conversion > 0 ? clientsNeeded / conversion : Infinity;
-    const improvedConversion = Math.min(
-      BEST_PRACTICE_CONVERSION,
-      Math.max(conversion + lostShare, conversion)
+    // Never model an "improved" conversion that is worse than what she already
+    // achieves. Debbie Graham converts at 66.7%; capping her at the 25% benchmark
+    // told her to fix the one thing she is already best at.
+    const improvedConversion = Math.max(
+      conversion,
+      Math.min(BEST_PRACTICE_CONVERSION, conversion + lostShare)
     );
     const inquiriesNeededFixed = improvedConversion > 0 ? clientsNeeded / improvedConversion : Infinity;
     const reachableNow = Number.isFinite(inquiriesNeededNow) && inquiriesNeededNow <= inquiries;
@@ -529,13 +532,24 @@ export function initAudit() {
     // rather than a priority cascade that always lands on the same answer.
     const clamp = (n) => Math.max(0, Math.min(1, n));
     const retentionPts = answers.retention ? answers.retention.pts : 0;
+    // A hard ceiling no amount of conversion work can cross: you cannot win more
+    // clients than you get inquiries. If the goal needs more clients than she has
+    // inquiries, lead volume is the constraint by arithmetic, not by judgement.
+    const cappedByVolume = clientsNeeded > inquiries;
+    // Conversion cannot be the headline problem for someone already converting
+    // at or above best practice. Damp it by how much headroom actually remains.
+    const conversionHeadroom = conversion >= BEST_PRACTICE_CONVERSION
+      ? clamp((1 - conversion) / (1 - BEST_PRACTICE_CONVERSION))
+      : 1;
     const severities = {
       // Even at best-practice conversion, how far short is lead volume?
-      leads: Number.isFinite(inquiriesNeededFixed) && inquiriesNeededFixed > inquiries
-        ? clamp((inquiriesNeededFixed - inquiries) / inquiriesNeededFixed)
-        : 0,
+      leads: cappedByVolume
+        ? 1
+        : Number.isFinite(inquiriesNeededFixed) && inquiriesNeededFixed > inquiries
+          ? clamp((inquiriesNeededFixed - inquiries) / inquiriesNeededFixed)
+          : 0,
       // How much is leaking between inquiry and sale?
-      conversion: clamp(lostShare / 0.20),
+      conversion: clamp(lostShare / 0.20) * conversionHeadroom,
       // Renewals specifically
       retention: retentionPts === 0 ? 0.8 : retentionPts === 1 ? 0.4 : 0,
       // Admin load as a capacity ceiling
