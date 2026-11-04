@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Still Water</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a quiet rail of kanji marks (a chip strip on phones) beside one reading column per view; the sitting stage with its ensō is the single bold moment. */
+:root{
+  --bg:#E6E9E3; --surface:#F2F4EF; --ink:#1B2321; --muted:#56625D; --line:#C6CDC4;
+  --accent:#2E3E7A; --accent-ink:#F2F4EF; --gold:#8E6A1F; --wash:rgba(46,62,122,.07);
+  --display:'Shippori Mincho','Hiragino Mincho ProN','Yu Mincho',Georgia,serif;
+  --body:'Zen Kaku Gothic New','Hiragino Sans',system-ui,-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1214; --surface:#151C1F; --ink:#E3E7E0; --muted:#8D9893; --line:#27323A;
+  --accent:#A3B3F2; --accent-ink:#0D1214; --gold:#D9BA6A; --wash:rgba(163,179,242,.08); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D1214; --surface:#151C1F; --ink:#E3E7E0; --muted:#8D9893; --line:#27323A;
+  --accent:#A3B3F2; --accent-ink:#0D1214; --gold:#D9BA6A; --wash:rgba(163,179,242,.08); color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65;margin:0;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.25;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:.01em}
+h2{font-size:1.6rem}
+h3{font-size:1.2rem}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.prose{max-width:65ch;display:grid;gap:1em}
+.prose p{font-size:1.04rem}
+
+/* shell */
+.shell{display:grid;grid-template-columns:88px minmax(0,1fr);min-height:100%}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);height:100vh;display:flex;flex-direction:column;align-items:center;gap:4px;padding-block:22px;border-right:1px solid var(--line)}
+.brand{font-family:var(--display);font-weight:800;font-size:1.5rem;margin-bottom:14px;writing-mode:vertical-rl;letter-spacing:.2em}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:2px;width:68px;padding:8px 0;border-radius:var(--r);text-decoration:none;color:var(--muted);transition:background .2s,color .2s}
+.nav a .k{font-family:var(--display);font-size:1.45rem;line-height:1.1;font-weight:600}
+.nav a .l{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase}
+.nav a:hover{color:var(--ink);background:var(--wash)}
+.nav a[aria-current="page"]{color:var(--accent);background:var(--wash)}
+.nav{display:flex;flex-direction:column;gap:4px}
+main{padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px));padding-block:40px 80px;min-width:0}
+.view{max-width:1040px;margin:0 auto;display:grid;gap:32px;animation:rise .5s ease both}
+@keyframes rise{from{transform:translateY(6px)}to{transform:none}}
+.head{display:grid;gap:10px;max-width:68ch}
+.lede{font-size:1.1rem;color:var(--muted)}
+
+@media (max-width:760px){
+  .shell{grid-template-columns:1fr}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+  .rail{height:auto;flex-direction:row;padding-block:8px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));border-right:0;border-bottom:1px solid var(--line);background:var(--bg);z-index:5;overflow-x:auto;scrollbar-width:none}
+  .rail::-webkit-scrollbar{display:none}
+  .brand{writing-mode:horizontal-tb;margin:0 10px 0 4px;font-size:1.15rem;letter-spacing:.06em;white-space:nowrap}
+  .nav{flex-direction:row}
+  .nav a{width:58px;padding:6px 0}
+  .nav a .k{font-size:1.2rem}
+  main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 64px}
+}
+
+/* generic pieces */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);padding:10px 18px;border-radius:999px;cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none;color:var(--ink);font-weight:500}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:6px 14px;font-size:.9rem}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:6px 14px;cursor:pointer;font-size:.92rem}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:8px;align-content:start;text-align:left;cursor:pointer;transition:border-color .2s,transform .2s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .meta{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.card .tick{font-family:var(--mono);font-size:.75rem;color:var(--gold)}
+.label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:6px}
+select,input[type=text],input[type=number],textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px;width:100%}
+textarea{min-height:140px;resize:vertical;line-height:1.6}
+.field{display:grid;gap:4px}
+
+/* today */
+.teaching{display:grid;gap:14px;padding-block:8px;border-left:2px solid var(--gold);padding-left:22px}
+.teaching blockquote{margin:0;font-family:var(--display);font-size:clamp(1.35rem,3vw,1.9rem);line-height:1.45;text-wrap:balance}
+.teaching cite{font-style:normal;color:var(--muted);font-size:.95rem}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.stat{background:var(--surface);padding:16px 18px;display:grid;gap:2px}
+.stat b{font-family:var(--mono);font-weight:500;font-size:1.6rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.8rem;color:var(--muted)}
+@media (max-width:560px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+
+/* sit */
+.sit{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:900px){.sit{grid-template-columns:1fr}}
+.controls{display:grid;gap:20px}
+.stage{position:relative;aspect-ratio:1/1;max-width:100%;width:100%;max-height:78vh;margin:0 auto;border-radius:var(--r);background:radial-gradient(circle at 50% 45%,var(--surface),var(--bg) 72%);border:1px solid var(--line);overflow:hidden}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%}
+.stage .hud{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;text-align:center}
+.hud .time{font-family:var(--mono);font-size:clamp(2rem,6vw,3.4rem);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.hud .phase{font-family:var(--display);font-size:1.15rem;color:var(--muted);min-height:1.6em}
+.hud-inner{display:grid;gap:4px}
+.cue{position:absolute;left:0;right:0;bottom:22px;padding-inline:24px;text-align:center;font-family:var(--display);font-size:1.08rem;line-height:1.5;color:var(--ink);transition:opacity 1.2s;text-wrap:balance}
+.sit-actions{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+body.focus .rail{opacity:.15;transition:opacity 1s}
+body.focus .rail:hover{opacity:1}
+body.focus .controls{opacity:.35;transition:opacity 1s}
+body.focus .controls:hover{opacity:1}
+.done{text-align:center;display:grid;gap:8px;padding:12px}
+
+/* temple */
+.temple{position:relative;border-radius:var(--r);border:1px solid var(--line);overflow:hidden;background:linear-gradient(to bottom,var(--surface),var(--bg));aspect-ratio:16/10;max-width:100%}
+@media (max-width:560px){.temple{aspect-ratio:4/5}}
+.temple svg.hall{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,760px);height:auto;color:var(--ink);opacity:.9}
+.temple canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.censer{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);display:grid;justify-items:center}
+.stick{width:3px;background:linear-gradient(var(--gold),#7a5a2a);border-radius:2px;transition:height 1s linear;height:90px;position:relative}
+.stick .ember{position:absolute;top:-3px;left:-2px;width:7px;height:7px;border-radius:50%;background:#ff7a3a;box-shadow:0 0 10px 3px rgba(255,122,58,.6);opacity:0;transition:opacity .6s}
+.stick.lit .ember{opacity:1;animation:glow 2.4s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 16px 5px rgba(255,122,58,.75)}}
+.bowl{width:86px;height:30px;background:var(--ink);border-radius:0 0 46px 46px/0 0 30px 30px;opacity:.85}
+.temple-ui{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.temple-ui{grid-template-columns:1fr}}
+.counter{font-family:var(--mono);font-size:2rem;font-variant-numeric:tabular-nums}
+.omikuji{font-family:var(--display);font-size:1.25rem;line-height:1.5;min-height:3em}
+
+/* reader */
+.reader{display:grid;gap:22px;max-width:70ch}
+.reader .back{justify-self:start}
+.reader .body p{font-size:1.08rem;margin-bottom:1em}
+.reflect{border-top:1px solid var(--line);padding-top:18px;display:grid;gap:8px}
+.reflect p{font-family:var(--display);font-size:1.15rem}
+.steps{margin:0;padding-left:1.3em;display:grid;gap:8px}
+.steps li::marker{font-family:var(--mono);color:var(--gold)}
+
+/* cosmos */
+.scale{display:grid;gap:18px}
+.scale input[type=range]{width:100%;accent-color:var(--accent)}
+.scale .big{font-family:var(--mono);font-size:clamp(1.6rem,4vw,2.4rem);font-variant-numeric:tabular-nums}
+.scale .obj{font-family:var(--display);font-size:1.5rem}
+.ticks{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.cal{display:grid;gap:0;border-top:1px solid var(--line)}
+.cal-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.cal-row .when{font-family:var(--mono);font-size:.9rem;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.cal-row .what small{display:block;color:var(--muted);font-size:.82rem}
+.cal-row.you{color:var(--accent)}
+.truths{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.truth{border-top:2px solid var(--ink);padding-top:14px;display:grid;gap:8px;align-content:start}
+.truth .fact{font-family:var(--display);font-size:1.18rem;line-height:1.45}
+.truth .tag{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+.truth .tag.sci{color:var(--accent)} .truth .tag.con{color:var(--gold)}
+
+/* source */
+.return{min-height:280px;display:grid;place-items:center;text-align:center;padding:28px}
+.return .line{font-family:var(--display);font-size:clamp(1.4rem,3.4vw,2rem);line-height:1.5;max-width:30ch;transition:opacity 1.4s;text-wrap:balance}
+.progress{height:2px;background:var(--line);border-radius:2px;overflow:hidden;width:100%;max-width:360px;margin:18px auto 0}
+.progress i{display:block;height:100%;background:var(--gold);width:0;transition:width .4s linear}
+.entries{display:grid;gap:12px}
+.entry{border-bottom:1px solid var(--line);padding-bottom:12px;display:grid;gap:4px}
+.entry .when{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+.entry .q{font-size:.88rem;color:var(--gold)}
+.entry p{white-space:pre-wrap}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;opacity:0;transition:.3s;pointer-events:none;z-index:20;font-size:.92rem}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.note{font-size:.85rem;color:var(--muted);max-width:68ch}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="rail">
+    <div class="brand" aria-label="Still Water">静水</div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#today"><span class="k">今</span><span class="l">Today</span></a>
+      <a href="#sit"><span class="k">坐</span><span class="l">Sit</span></a>
+      <a href="#temple"><span class="k">寺</span><span class="l">Temple</span></a>
+      <a href="#practices"><span class="k">行</span><span class="l">Practice</span></a>
+      <a href="#learn"><span class="k">学</span><span class="l">Learn</span></a>
+      <a href="#stories"><span class="k">話</span><span class="l">Stories</span></a>
+      <a href="#cosmos"><span class="k">宙</span><span class="l">Cosmos</span></a>
+      <a href="#source"><span class="k">源</span><span class="l">Source</span></a>
+    </nav>
+  </aside>
+
+  <main>
+    <!-- TODAY -->
+    <section class="view" data-view="today">
+      <div class="head">
+        <span class="eyebrow" id="greet-eyebrow">Today</span>
+        <h1 id="greet">Sit down. Breathe. You are already here.</h1>
+        <p class="lede">Still Water is a small sanctuary for practice: a meditation timer with a brushed ensō, a quiet temple, the Zen path taught in plain words, the old stories, and the plain facts of the cosmos you belong to.</p>
+      </div>
+      <div class="teaching">
+        <span class="eyebrow">Teaching of the day</span>
+        <blockquote id="daily-quote"></blockquote>
+        <cite id="daily-cite"></cite>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="split">
+        <div class="panel" style="display:grid;gap:14px">
+          <span class="eyebrow">Begin a sit</span>
+          <h3>Choose a doorway</h3>
+          <div class="row" id="quick"></div>
+          <p class="note">Each sit opens and closes with a temple bell. Your sessions stay in this browser only.</p>
+        </div>
+        <div class="panel" style="display:grid;gap:10px">
+          <span class="eyebrow">Koan for today</span>
+          <p class="omikuji" id="daily-koan"></p>
+          <p class="note">Carry it through the day. Don't solve it; let it work on you.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIT -->
+    <section class="view" data-view="sit" hidden>
+      <div class="head">
+        <span class="eyebrow">坐 · Zazen</span>
+        <h1>Sit</h1>
+        <p class="lede">Pick a practice and a length. The brush draws one ensō across the whole sit. When it closes, the bell rings three times.</p>
+      </div>
+      <div class="sit">
+        <div class="controls">
+          <div class="field">
+            <label class="label" for="tech">Practice</label>
+            <select id="tech"></select>
+            <p class="note" id="tech-note"></p>
+          </div>
+          <div class="field">
+            <span class="label">Length</span>
+            <div class="chips" id="dur"></div>
+            <div class="row" style="margin-top:6px"><label class="label" for="custom-min" style="margin:0">Custom minutes</label><input type="number" id="custom-min" min="1" max="180" style="width:90px" placeholder="45"></div>
+          </div>
+          <div class="field">
+            <span class="label">Breath guide</span>
+            <div class="chips" id="breath"></div>
+          </div>
+          <div class="field">
+            <label class="label" for="interval">Interval bell</label>
+            <select id="interval">
+              <option value="0">None</option><option value="5">Every 5 minutes</option><option value="10">Every 10 minutes</option><option value="half">At the halfway point</option>
+            </select>
+          </div>
+          <div class="field">
+            <span class="label">Ambient sound</span>
+            <div class="chips" id="amb"></div>
+          </div>
+        </div>
+        <div>
+          <div class="stage" id="stage">
+            <canvas id="enso"></canvas>
+            <div class="hud"><div class="hud-inner"><div class="time" id="clock">10:00</div><div class="phase" id="phase">Ready</div></div></div>
+            <div class="cue" id="cue">Settle the body. Let the eyes rest, half open, on the floor ahead.</div>
+          </div>
+          <div class="sit-actions">
+            <button class="btn primary" id="start">Begin</button>
+            <button class="btn" id="pause" hidden>Pause</button>
+            <button class="btn ghost" id="end" hidden>End sit</button>
+            <button class="btn ghost" id="ring">Ring bell</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEMPLE -->
+    <section class="view" data-view="temple" hidden>
+      <div class="head">
+        <span class="eyebrow">寺 · The hall</span>
+        <h1>Temple</h1>
+        <p class="lede">A quiet hall you can return to. Light a stick of incense and sit until it burns down, ring the great bell, bow, and set an intention for the day.</p>
+      </div>
+      <div class="temple" id="temple">
+        <svg class="hall" viewBox="0 0 760 420" aria-hidden="true">
+          <g fill="currentColor">
+            <path d="M40 150 Q380 60 720 150 Q640 135 600 150 L160 150 Q120 135 40 150Z" opacity=".95"/>
+            <path d="M120 150 L640 150 L630 170 L130 170Z" opacity=".75"/>
+            <path d="M180 120 Q380 30 580 120 Q520 110 500 118 L260 118 Q240 110 180 120Z" opacity=".85"/>
+            <rect x="372" y="20" width="16" height="40" opacity=".8"/>
+            <rect x="170" y="170" width="14" height="190" opacity=".7"/>
+            <rect x="290" y="170" width="12" height="190" opacity=".55"/>
+            <rect x="458" y="170" width="12" height="190" opacity=".55"/>
+            <rect x="576" y="170" width="14" height="190" opacity=".7"/>
+            <rect x="130" y="360" width="500" height="18" opacity=".8"/>
+            <rect x="100" y="378" width="560" height="42" opacity=".9"/>
+          </g>
+          <g fill="none" stroke="currentColor" opacity=".25"><path d="M302 200 H458 M302 240 H458 M302 280 H458 M302 320 H458"/></g>
+        </svg>
+        <canvas id="smoke"></canvas>
+        <div class="censer"><div class="stick" id="stick"><i class="ember"></i></div><div class="bowl"></div></div>
+      </div>
+      <div class="temple-ui">
+        <div class="panel" style="display:grid;gap:10px">
+          <span class="eyebrow">Incense · 線香</span>
+          <p class="muted" id="incense-status">One stick burns for ten minutes. Sit with it.</p>
+          <div class="row"><button class="btn primary" id="light">Light incense</button><button class="btn ghost sm" id="snuff" hidden>Put out</button></div>
+        </div>
+        <div class="panel" style="display:grid;gap:10px">
+          <span class="eyebrow">Bell · 梵鐘</span>
+          <div class="counter"><span id="bell-count">0</span><span class="muted" style="font-size:1rem"> / 108</span></div>
+          <p class="note">At New Year, temples in Japan ring the bell 108 times, once for each of the worldly passions.</p>
+          <div class="row"><button class="btn primary" id="strike">Strike the bell</button><button class="btn ghost sm" id="bell-reset">Reset</button></div>
+        </div>
+        <div class="panel" style="display:grid;gap:10px">
+          <span class="eyebrow">Gasshō · Bows</span>
+          <div class="counter"><span id="bow-count">0</span><span class="muted" style="font-size:1rem"> today</span></div>
+          <p class="note">Palms together at the chest. Bow to the Buddha, to the teaching, to everyone who practices.</p>
+          <button class="btn primary" id="bow">Bow</button>
+        </div>
+      </div>
+      <div class="split">
+        <div class="panel" style="display:grid;gap:12px">
+          <span class="eyebrow">Intention</span>
+          <label class="label" for="intent" style="margin:0">What do you vow to bring into today?</label>
+          <input type="text" id="intent" placeholder="Patience with my mother. Full attention while I cook.">
+          <div class="row"><button class="btn sm" id="save-intent">Set intention</button><span class="note" id="intent-shown"></span></div>
+        </div>
+        <div class="panel" style="display:grid;gap:12px">
+          <span class="eyebrow">Omikuji · Draw a teaching</span>
+          <p class="omikuji" id="omikuji">Shake the box. One slip comes out.</p>
+          <button class="btn sm" id="draw">Draw a slip</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRACTICES -->
+    <section class="view" data-view="practices" hidden>
+      <div class="head">
+        <span class="eyebrow">行 · Practice</span>
+        <h1>Practices</h1>
+        <p class="lede">Eight ways to sit, walk and open the heart, from the Zen hall and the wider Buddhist traditions. Read the steps, then begin; the timer will guide you with cues.</p>
+      </div>
+      <div id="practice-list" class="grid"></div>
+      <div id="practice-read" class="reader" hidden></div>
+    </section>
+
+    <!-- LEARN -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head">
+        <span class="eyebrow">学 · The path</span>
+        <h1>Learning Zen</h1>
+        <p class="lede">Ten short lessons, in order, from beginner's mind to your original face. Each ends with a question to sit with. Mark a lesson when it has become yours.</p>
+        <p class="note" id="learn-progress"></p>
+      </div>
+      <div id="lesson-list" class="grid"></div>
+      <div id="lesson-read" class="reader" hidden></div>
+    </section>
+
+    <!-- STORIES -->
+    <section class="view" data-view="stories" hidden>
+      <div class="head">
+        <span class="eyebrow">話 · Told around the fire</span>
+        <h1>Stories</h1>
+        <p class="lede">The history of the teaching travels in stories: a prince under a fig tree, a flower held up in silence, a monk who would not explain. Read one slowly.</p>
+      </div>
+      <div id="story-list" class="grid"></div>
+      <div id="story-read" class="reader" hidden></div>
+    </section>
+
+    <!-- COSMOS -->
+    <section class="view" data-view="cosmos" hidden>
+      <div class="head">
+        <span class="eyebrow">宙 · Universe and self</span>
+        <h1>The cosmos you are made of</h1>
+        <p class="lede">The deepest "secrets" turn out to be plain facts looked at slowly. Each one below is marked as science, measured and checkable, or as contemplation, a way of seeing that the traditions offer.</p>
+      </div>
+      <div class="panel scale">
+        <span class="eyebrow">Powers of ten · Drag through every scale of things</span>
+        <div class="row" style="justify-content:space-between;align-items:baseline">
+          <span class="obj" id="scale-obj">You</span>
+          <span class="big" id="scale-num">10⁰ m</span>
+        </div>
+        <input type="range" id="scale" min="-15" max="27" step="0.1" value="0.2" aria-label="Scale in powers of ten metres">
+        <div class="ticks"><span>proton</span><span>atom</span><span>cell</span><span>you</span><span>Earth</span><span>light-year</span><span>galaxy</span><span>all we can see</span></div>
+        <p class="muted" id="scale-note"></p>
+      </div>
+      <div class="split">
+        <div class="panel" style="display:grid;gap:14px">
+          <span class="eyebrow">The cosmic year</span>
+          <h3>All 13.8 billion years, folded into one calendar year</h3>
+          <div class="row"><label class="label" for="age" style="margin:0">Your age</label><input type="number" id="age" min="1" max="120" value="30" style="width:90px"></div>
+          <div class="cal" id="cal"></div>
+        </div>
+        <div class="prose">
+          <span class="eyebrow">Reading the calendar</span>
+          <p>If the Big Bang is the first instant of January 1st, the Sun does not ignite until the end of August. Life appears in late September. Every human who ever lived arrives in the last minutes of December 31st.</p>
+          <p>The Buddha sat under the Bodhi tree about six seconds before midnight. Your whole life so far is a fraction of a second.</p>
+          <p>This is not a reason to feel small. It is the reason each breath counts. The universe took the whole year to arrive at this one: yours.</p>
+        </div>
+      </div>
+      <div class="truths" id="truths"></div>
+    </section>
+
+    <!-- SOURCE -->
+    <section class="view" data-view="source" hidden>
+      <div class="head">
+        <span class="eyebrow">源 · Source</span>
+        <h1>Return to Source</h1>
+        <p class="lede">Zen asks: what was your original face, before your parents were born? Every tradition points to the same ground, the awareness that is here before any thought of "me". This practice turns the light around to look for it.</p>
+      </div>
+      <div class="panel">
+        <div class="return">
+          <div style="width:100%">
+            <p class="line" id="return-line">A guided return, about six minutes. Find a seat, and press Begin.</p>
+            <div class="progress"><i id="return-bar"></i></div>
+            <div class="row" style="justify-content:center;margin-top:18px"><button class="btn primary" id="return-start">Begin</button><button class="btn ghost" id="return-stop" hidden>Stop</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="split">
+        <div class="panel" style="display:grid;gap:12px">
+          <span class="eyebrow">Journal</span>
+          <p class="omikuji" id="prompt" style="min-height:0"></p>
+          <label class="label" for="journal" style="margin:0">Write without editing. No one reads this but you.</label>
+          <textarea id="journal" placeholder="Begin anywhere…"></textarea>
+          <div class="row"><button class="btn primary sm" id="save-entry">Save entry</button><button class="btn ghost sm" id="new-prompt">Another question</button></div>
+        </div>
+        <div style="display:grid;gap:12px;align-content:start">
+          <span class="eyebrow">Your entries</span>
+          <div class="entries" id="entries"></div>
+        </div>
+      </div>
+      <p class="note">Meditation and contemplation support wellbeing; they are not a substitute for care from a doctor or therapist. If practice stirs up something heavy, it is wise to talk with someone you trust.</p>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem('stillwater:'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('stillwater:'+k,JSON.stringify(v))}catch(e){}}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const dayOfYear=()=>{const d=new Date();return Math.floor((d-new Date(d.getFullYear(),0,0))/864e5)};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2200)}
+
+/* ---------------- content ---------------- */
+const QUOTES=[
+ ["In the beginner's mind there are many possibilities, but in the expert's there are few.","Shunryu Suzuki, Zen Mind, Beginner's Mind"],
+ ["To study the Buddha way is to study the self. To study the self is to forget the self. To forget the self is to be actualized by myriad things.","Eihei Dōgen, Genjōkōan"],
+ ["Form is emptiness; emptiness is form.","The Heart Sutra"],
+ ["Breathing in, I calm body and mind. Breathing out, I smile.","Thich Nhat Hanh"],
+ ["The thief left it behind: the moon at my window.","Ryōkan"],
+ ["An old pond. A frog jumps in. The sound of water.","Matsuo Bashō"],
+ ["Hatred does not cease by hatred, but only by love. This is the eternal rule.","The Dhammapada, verse 5"],
+ ["Be a lamp unto yourself. Be a refuge unto yourself.","The Buddha, Mahāparinibbāna Sutta"],
+ ["Before enlightenment, chop wood, carry water. After enlightenment, chop wood, carry water.","Zen saying"],
+ ["Do not seek the truth. Only cease to cherish opinions.","Sengcan, Faith in Mind"],
+ ["The Great Way is not difficult for those who have no preferences.","Sengcan, Faith in Mind"],
+ ["We are a way for the cosmos to know itself.","Carl Sagan, Cosmos"],
+ ["When you do something, you should burn yourself up completely, like a good bonfire, leaving no trace of yourself.","Shunryu Suzuki"],
+ ["If you cannot find the truth right where you are, where else do you expect to find it?","Dōgen"],
+ ["Every day is a good day.","Yunmen"],
+ ["Sitting quietly, doing nothing, spring comes, and the grass grows by itself.","Zenrin Kushū"],
+ ["Wherever you are, if you are there completely, that is the center of the universe.","Zen saying"],
+ ["All conditioned things are impermanent. Work out your liberation with diligence.","The Buddha's last words"]
+];
+const KOANS=[
+ "What was your original face before your parents were born?",
+ "Two hands clap and there is a sound. What is the sound of one hand?",
+ "A monk asked Zhaozhou, \"Does a dog have Buddha-nature?\" Zhaozhou said, \"Mu.\"",
+ "Not the wind, not the flag. Mind is moving.",
+ "If you meet the Buddha on the road, what do you do?",
+ "Step forward from the top of a hundred-foot pole.",
+ "Who is it that hears this sound?",
+ "Where do you go when the fire of the cosmos burns everything away?",
+ "A monk asked, \"What is Buddha?\" Dongshan said, \"Three pounds of flax.\"",
+ "Without using words, without using silence, show me your true self.",
+ "What is this?",
+ "Everything returns to the One. To what does the One return?"
+];
+const SLIPS=[
+ "Great fortune: the moon is full in an empty bowl. Give something away today.",
+ "Middle fortune: rain on the roof. Sit by a window and listen for five breaths.",
+ "Small fortune: a door opens slowly. Begin the thing you have been avoiding, for ten minutes only.",
+ "Great fortune: the mountain does not argue with the cloud. Let one opinion go unspoken today.",
+ "Blessing: the river reaches the sea by going around stones. Be soft with an obstacle.",
+ "Middle fortune: the kettle sings when it is ready. Do one task today without hurrying.",
+ "Great fortune: the pine is green in every season. Keep one promise to yourself.",
+ "Blessing: a single lamp lights a thousand years of darkness. Tell someone what they mean to you.",
+ "Small fortune: frost on the bell. Ring it gently. Speak gently to yourself after a mistake.",
+ "Great fortune: nothing is missing. Look around the room as if for the first time."
+];
+const PROMPTS=[
+ "Before any thought of who you are, what is already here?",
+ "What did you notice today that you would have missed a year ago?",
+ "Where in your body do you feel most alive right now?",
+ "What are you holding onto that is already changing?",
+ "Who taught you kindness? Write them a letter you won't send.",
+ "Describe this exact moment with your five senses, nothing else.",
+ "What would you do today if you trusted the universe was on your side?",
+ "Which part of you is the same as when you were seven years old?",
+ "What are you made of? List what came from stars, oceans, and other people.",
+ "Where did you feel connected to something larger than yourself this week?",
+ "What is the difference between being alone and being whole?",
+ "If your awareness were the sky, what weather is passing through it today?"
+];
+
+const BREATHS={
+ none:{name:'Off',p:[]},
+ natural:{name:'Natural 5·5',p:[['in',5],['out',5]]},
+ box:{name:'Box 4·4·4·4',p:[['in',4],['hold',4],['out',4],['rest',4]]},
+ calm:{name:'Calming 4·7·8',p:[['in',4],['hold',7],['out',8]]},
+ long:{name:'Long out 4·6',p:[['in',4],['out',6]]}
+};
+const PRACTICES=[
+ {id:'zazen',name:'Zazen: counting the breath',kanji:'坐禅',origin:'Sōtō and Rinzai Zen, Japan',min:10,breath:'none',
+  summary:'The first gate of Zen practice. Count each out-breath from one to ten, and when the mind wanders, return to one.',
+  steps:['Sit on a cushion or chair with the spine upright and the chin slightly tucked. Knees lower than hips if you can.','Rest your hands in the cosmic mudra: left hand on right, palms up, thumb tips lightly touching to form an oval.','Lower your gaze to the floor about a metre ahead. Eyes half open, unfocused.','Breathe through the nose. On each out-breath, count silently: one, two, up to ten.','When you lose count, or find yourself at fourteen, smile and begin again at one. The returning is the practice.'],
+  cues:['Settle the body. Let the spine rise like smoke from incense.','Count the out-breath. One…','If you lost count, return to one. No blame.','Feel the belly rise and fall below the navel, the hara.','Thoughts are clouds. The counting is the mountain path.','Back to one, as many times as it takes.','Let the counting become light, almost a whisper.','Rest here, before the next number.']},
+ {id:'shikantaza',name:'Shikantaza: just sitting',kanji:'只管打坐',origin:'Dōgen, 13th-century Japan',min:20,breath:'none',
+  summary:'No object, no counting, no goal. Sitting itself is the awakened life expressing itself. Thoughts come and go; you neither chase nor push away.',
+  steps:['Take the zazen posture. Let it be stable, like a mountain.','Drop every technique. Do not count, do not label.','Be aware of the whole field at once: sounds, sensations, thoughts, the room.','When you notice you are lost in a thought, simply return to sitting. Do not judge the wandering.','Dōgen called it "thinking non-thinking": not suppressing thought, not following it.'],
+  cues:['Just sit.','Body like a mountain. Mind like the sky.','Nothing to attain. This is already it.','Sounds arrive and leave on their own.','Thinking non-thinking.','Sitting is sitting itself.','The whole universe is sitting here.']},
+ {id:'kinhin',name:'Kinhin: walking meditation',kanji:'経行',origin:'Zen halls, between periods of zazen',min:10,breath:'none',
+  summary:'Slow walking that carries the stillness of sitting into movement. Half a step for each full breath.',
+  steps:['Stand tall. Make a loose fist with your left hand, thumb inside, and cover it with your right hand at the chest. This is shashu.','Breathe in, and lift the foot. Breathe out, and set it down half a foot-length ahead.','Feel the heel, the sole, the toes, the floor rising to meet you.','Walk in a slow line or circle. If you are outside, let the ground be your teacher.','Thich Nhat Hanh taught: walk as if you are kissing the Earth with your feet.'],
+  cues:['Feel the weight in both feet.','Breathe in, lift. Breathe out, place.','Arriving with every step.','The Earth holds you up without being asked.','Half a step. No hurry. There is nowhere to get to.','Walk as if kissing the Earth with your feet.']},
+ {id:'metta',name:'Metta: loving-kindness',kanji:'慈',origin:'Theravāda, from the Metta Sutta',min:15,breath:'natural',
+  summary:'Warm, steady goodwill sent outward in widening circles: yourself, a loved one, a stranger, a difficult person, all beings.',
+  steps:['Sit comfortably and place a hand on your heart if you like.','Silently offer yourself the phrases: May I be safe. May I be well. May I be at ease. May I be free.','Bring to mind someone you love, and offer them the same phrases.','Then a neutral person: a cashier, a neighbour. Then someone who is difficult for you.','Finally let it expand without limit: may all beings, everywhere, be safe, well, at ease and free.'],
+  cues:['May I be safe. May I be well.','May I be at ease. May I be free.','Picture someone you love. May you be safe. May you be well.','Picture a stranger you saw this week. May you be at ease.','Someone difficult. As much as you can: may you be free from suffering.','Let it widen: this city, this Earth.','May all beings everywhere be happy and free.']},
+ {id:'body',name:'Body scan',kanji:'身',origin:'Vipassanā tradition and modern mindfulness',min:15,breath:'long',
+  summary:'A slow, kind sweep of attention from the crown of the head to the soles of the feet, feeling rather than thinking.',
+  steps:['Sit or lie down. Let the breath be natural.','Bring attention to the crown of the head. Notice tingling, warmth, pressure, or nothing.','Move slowly: face, jaw, throat, shoulders, arms, hands.','Chest, belly, back, hips, legs, feet. Spend several breaths in each region.','When you finish, feel the whole body at once, breathing as one field.'],
+  cues:['Rest attention on the crown of the head.','The forehead, the eyes, the jaw. Let the jaw soften.','Throat and shoulders. Let them drop.','Arms, hands, fingertips. Feel the pulse there.','Chest and belly rising and falling.','Hips, thighs, knees.','Calves, ankles, the soles of the feet.','Now the whole body at once, breathing.']},
+ {id:'noting',name:'Noting: seeing clearly',kanji:'観',origin:'Burmese vipassanā (Mahasi Sayadaw)',min:15,breath:'none',
+  summary:'Gently label each experience as it arises: hearing, thinking, itching, planning. Seeing how fast everything changes is insight.',
+  steps:['Rest attention on the rise and fall of the belly.','When something pulls attention away, give it a soft one-word note: "hearing", "thinking", "aching".','Note once, lightly, then return to the belly.','Do not analyse the content. Just notice its arrival and its passing.','Over time you will see the three marks directly: everything changes, nothing satisfies forever, no solid self is found.'],
+  cues:['Rising… falling…','Something arises. Note it softly. Return.','Hearing. Thinking. Feeling.','How long does any sensation last?','Note, release, return.','Who is noticing?']},
+ {id:'tonglen',name:'Tonglen: giving and taking',kanji:'施',origin:'Tibetan lojong teachings',min:10,breath:'long',
+  summary:'Breathe in the suffering of others as dark smoke, breathe out relief and light. It reverses the habit of pushing pain away and grows compassion without limit.',
+  steps:['Rest in open awareness for a few breaths.','Breathe in heaviness and heat; breathe out coolness and light. Get the texture of it.','Bring to mind one person who is suffering. Breathe in their pain. Breathe out whatever would help them.','Widen it to everyone who suffers in that same way, everywhere.','If it feels overwhelming, start with your own pain, and with people in your position.'],
+  cues:['Breathe in heavy, dark, hot. Breathe out light, cool, bright.','Think of someone who is hurting.','Breathe in their pain. Breathe out ease.','Everyone who feels this, everywhere.','Your heart is big enough. Let it be.','Rest in open sky.']},
+ {id:'source',name:'Self-inquiry: who am I?',kanji:'源',origin:'Ramana Maharshi; also the Zen koan "What is this?"',min:20,breath:'none',
+  summary:'Turn attention back on the one who is aware. Ask "Who am I?" or "What is this?", and look for the answer in direct experience, not in words.',
+  steps:['Sit quietly and let the breath settle.','Ask once, sincerely: "Who am I?" or "Who is aware right now?"','Do not answer with a thought. Look for the one who is looking.','When thoughts come, ask: "To whom does this thought arise?" The answer is "to me". Then ask: "Who am I?"','Rest in whatever remains when nothing can be found. That open, knowing stillness is what the traditions call your source.'],
+  cues:['Who is aware of this breath?','Look for the looker.','To whom does this thought arise? Who am I?','Rest as the space where thoughts appear.','What is this?','Before the word "I", what is here?','Rest in what remains.']}
+];
+const LESSONS=[
+ {id:'shoshin',title:"Beginner's mind",kanji:'初心',
+  body:["Shoshin means \"beginner's mind\". Shunryu Suzuki, who brought Sōtō Zen to San Francisco in 1959, built his teaching around it: in the beginner's mind there are many possibilities, in the expert's there are few.","Beginner's mind is not ignorance. It is the willingness to meet this breath, this cup of tea, this person as if for the first time, because in truth you never have met them before. Each moment is new.","Practice does not make you an expert at life. It returns you, again and again, to not knowing, which is where everything fresh comes from."],
+  q:"What have you stopped seeing because you think you already know it?"},
+ {id:'truths',title:'The Four Noble Truths',kanji:'四諦',
+  body:["The Buddha's first teaching, given at the Deer Park in Sarnath around 2,500 years ago, is structured like a doctor's diagnosis.","One: there is dukkha, the unsatisfactoriness that runs through life, from pain to the quiet ache that nothing lasts. Two: it has a cause, tanha, craving or clinging, the grasping after things to be other than they are. Three: there is an end to it, nirvana, the cooling of that fire. Four: there is a path to that end, the Eightfold Path.","The insight is practical. You are not asked to believe anything. You are asked to look at your own experience and see whether clinging causes suffering."],
+  q:"Where, today, did wanting things to be different make them harder?"},
+ {id:'path',title:'The Eightfold Path',kanji:'八正道',
+  body:["The path is often drawn as a wheel with eight spokes, because they all turn together. They fall into three groups.","Wisdom: right view and right intention. Ethics: right speech, right action, right livelihood. Meditation: right effort, right mindfulness, right concentration.","\"Right\" (samma) means whole, complete, fitting. It is less a rulebook than a description of a life that does not create needless suffering for yourself or anyone else. Zen adds that the path is not walked toward awakening; walking it wholeheartedly is awakening."],
+  q:"Which spoke of your wheel is weakest right now, and what is one small way to strengthen it?"},
+ {id:'marks',title:'The three marks of existence',kanji:'三法印',
+  body:["Everything that arises shares three marks. Anicca: impermanence. Dukkha: nothing conditioned can satisfy completely. Anatta: no fixed, separate self can be found.","These are not gloomy doctrines. They are freeing. If everything changes, your worst moment will pass. If nothing outside can complete you, you can stop chasing. If there is no separate self to defend, you can relax into the whole.","In noting meditation you can see these marks directly: sensations flicker, thoughts dissolve, and when you look for the one who has them, you find only more experience."],
+  q:"Look for your self right now. Where exactly is it?"},
+ {id:'empty',title:'Emptiness and interbeing',kanji:'空',
+  body:["The Heart Sutra says: form is emptiness, emptiness is form. Emptiness (shunyata) does not mean nothing exists. It means nothing exists by itself, independently.","Thich Nhat Hanh taught this with a sheet of paper. Look closely and you see a cloud in it: no cloud, no rain, no tree, no paper. You see the logger, the logger's mother, the sunlight. The paper is made entirely of non-paper elements. He called this interbeing.","You too are empty of a separate self, and therefore full of everything: air, sunlight, ancestors, food, language, stars."],
+  q:"Choose one object near you. Trace everything it is made of until you reach the stars."},
+ {id:'sitting',title:'Zazen is not a technique',kanji:'坐',
+  body:["For Dōgen, founder of Sōtō Zen in 13th-century Japan, sitting is not a means to become enlightened later. Practice and enlightenment are one. When you sit upright with wholehearted attention, you are expressing your Buddha-nature right now.","This takes away the pressure to have a good meditation. A sit full of thoughts is still a sit. You showed up, you returned, you breathed. That is complete.","Rinzai Zen places more emphasis on koans and breakthroughs called kensho. Both schools agree on the cushion: sit down, sit up straight, and pay attention."],
+  q:"Can you sit for five minutes without trying to get anywhere?"},
+ {id:'koans',title:'Koans',kanji:'公案',
+  body:["A koan is a story, a question or a phrase from the old masters that cannot be solved by reasoning. \"What is the sound of one hand?\" \"Does a dog have Buddha-nature?\" \"Mu.\"","The koan works like a splinter. You hold it in meditation and daily life until the thinking mind exhausts itself and something more direct breaks through.","Collections like the Gateless Gate (Mumonkan, 1228) and the Blue Cliff Record (1125) gather hundreds of these encounters from Tang and Song dynasty China. In Rinzai training, a student presents their response to the teacher in private interviews called dokusan."],
+  q:"Take today's koan. Don't think about it. Breathe it."},
+ {id:'ox',title:'The Ten Ox-Herding Pictures',kanji:'十牛図',
+  body:["A 12th-century Chinese teacher, Kuoan Shiyuan, drew the path of awakening as ten pictures of a herdsman and his ox. The ox is your true nature.","Searching for the ox. Finding the tracks. Glimpsing the ox. Catching it. Taming it. Riding it home. The ox forgotten, the self alone. Both ox and self forgotten, an empty circle. Returning to the source. Entering the marketplace with open hands.","The last picture matters most. The awakened one does not stay on the mountain. They come back to town, happy, ordinary, helping others. The empty circle in the eighth picture is the ensō you draw in each sit here."],
+  q:"Which picture are you in right now?"},
+ {id:'enso',title:'Ensō and wabi-sabi',kanji:'円相',
+  body:["The ensō is a circle brushed in a single breath. It cannot be corrected. Some painters leave it open, a gap where the brush lifted, to show that the circle is part of something larger and that imperfection belongs.","Wabi-sabi is the Japanese aesthetic of things impermanent, imperfect and incomplete: a cracked tea bowl repaired with gold, moss on a stone lantern, autumn.","Both point to the same thing. The moment does not need to be perfected. It is already whole, gap and all."],
+  q:"What imperfect thing in your life is actually beautiful?"},
+ {id:'face',title:'Your original face',kanji:'本来の面目',
+  body:["The Sixth Patriarch, Huineng, asked a monk: \"Without thinking of good or evil, at this very moment, what is your original face?\" It became one of Zen's great questions.","Every contemplative tradition points here. Zen calls it Buddha-nature or Big Mind. The Upanishads call it Atman, which is Brahman. Mystics call it the ground of being. Many people today call it source energy. The names differ; the pointing is the same: the aware, open presence that is here before you think of yourself.","You cannot connect to it, because you have never been disconnected from it. You can only stop looking away. That is why the final practice is so simple: sit, breathe, and notice what has been noticing all along."],
+  q:"Without thinking of good or evil, right now, what is your original face?"}
+];
+const STORIES=[
+ {id:'bodhi',title:'The night under the Bodhi tree',era:'India, c. 5th century BCE',
+  body:["Siddhartha Gautama was born a prince in the foothills of the Himalayas. His father, warned that the boy might become a holy man, surrounded him with comfort and kept suffering from his sight.","At twenty-nine, riding out of the palace, he saw four sights: an old man, a sick man, a corpse, and a wandering ascetic with a calm face. That night he left his palace, his wife and his infant son to seek an end to suffering.","For six years he starved himself with the strictest ascetics, until he was skin and bone. Then he remembered sitting under a rose-apple tree as a boy, naturally absorbed and at peace. He accepted a bowl of rice milk from a village woman named Sujata, and his companions left him in disgust.","He sat beneath a fig tree at Bodh Gaya and vowed not to rise until he understood. Through the night Mara, the tempter, sent armies, storms and beautiful daughters. Finally Mara demanded: who witnesses your right to sit here? Siddhartha touched the Earth with his right hand, and the Earth answered.","As the morning star rose, he awoke. From then on he was called the Buddha, the one who is awake."],
+  m:"The Earth is your witness too. Touch the ground before you sit."},
+ {id:'flower',title:'The Flower Sermon',era:'Vulture Peak, India',
+  body:["The Buddha's disciples gathered on Vulture Peak to hear him teach. He sat before them, and said nothing.","After a long silence he held up a single flower and turned it slowly in his fingers.","The monks waited, puzzled. Only Mahakashyapa, at the back, smiled.","The Buddha said: \"I have the treasury of the true Dharma eye, the subtle mind of nirvana, the formless form. It does not rely on words; it is a special transmission outside the scriptures. This I entrust to Mahakashyapa.\"","Zen traces its lineage to that smile. It is a teaching passed from heart to heart, pointing directly at the mind."],
+  m:"What could you understand today without a single word?"},
+ {id:'wu',title:'Bodhidharma and the Emperor',era:'China, 6th century',
+  body:["Around 520 CE a fierce-eyed monk from the south of India, Bodhidharma, arrived in China. Emperor Wu of Liang, a great patron of Buddhism, summoned him.","\"I have built temples, copied sutras, supported thousands of monks. What merit have I gained?\" \"No merit at all,\" said Bodhidharma.","\"Then what is the highest truth of the holy teaching?\" \"Vast emptiness. Nothing holy.\"","\"Who is this standing before me?\" \"I don't know.\"","Bodhidharma left, crossed the Yangtze, and it is said he sat facing a cave wall near the Shaolin temple for nine years. He is honoured as the first patriarch of Chan, which in Japan became Zen."],
+  m:"Do one good thing today and expect nothing for it."},
+ {id:'huineng',title:'The illiterate woodcutter',era:'China, 7th century',
+  body:["Huineng was a poor, illiterate woodcutter in southern China. One day he heard a man reciting the Diamond Sutra in the market, and his mind opened.","He travelled to the monastery of the Fifth Patriarch, Hongren, who put him to work threshing rice in the kitchen.","When Hongren asked his monks to write a verse showing their understanding, the head monk wrote on the wall: \"The body is the Bodhi tree, the mind a bright mirror stand. Polish it diligently, and let no dust alight.\"","Huineng asked someone to write his reply beside it: \"Bodhi has no tree, the bright mirror has no stand. From the beginning not a thing exists. Where could dust alight?\"","That night Hongren secretly gave Huineng the robe and bowl. The kitchen worker who could not read became the Sixth Patriarch, and nearly all Zen lineages today flow from him."],
+  m:"From the beginning, not a thing exists. Where could dust alight?"},
+ {id:'cup',title:'A cup of tea',era:'Japan, Meiji era',
+  body:["Nan-in, a Japanese master, received a university professor who came to inquire about Zen.","Nan-in served tea. He poured his visitor's cup full, and then kept on pouring.","The professor watched the tea spill over the table until he could no longer restrain himself. \"It is overfull. No more will go in!\"","\"Like this cup,\" Nan-in said, \"you are full of your own opinions and speculations. How can I show you Zen unless you first empty your cup?\""],
+  m:"What would you need to pour out to receive something new?"},
+ {id:'muddy',title:'Muddy road',era:'Japan',
+  body:["Two monks, Tanzan and Ekido, were walking along a muddy road in heavy rain.","At a bend they met a young woman in a silk kimono who could not cross the flooded intersection. \"Come on,\" said Tanzan, and he lifted her in his arms and carried her across.","Ekido said nothing until that night, when they reached a temple. Then he could hold it no longer. \"We monks don't go near women. Why did you do that?\"","\"I left the woman there,\" said Tanzan. \"Are you still carrying her?\""],
+  m:"What are you still carrying that you could set down?"},
+ {id:'moon',title:'The moon cannot be stolen',era:'Japan, Edo period',
+  body:["Ryōkan, a Zen hermit poet, lived in a small hut at the foot of a mountain. One evening a thief broke in and found there was nothing to steal.","Ryōkan returned and caught him. \"You have come a long way to visit me,\" he said. \"You should not go home empty-handed. Please, take my clothes as a gift.\"","The bewildered thief took the clothes and slunk away. Ryōkan sat naked, watching the moon. \"Poor fellow,\" he mused. \"I wish I could have given him this beautiful moon.\""],
+  m:"What do you have that no one can take away?"},
+ {id:'mustard',title:'The mustard seed',era:'India, time of the Buddha',
+  body:["Kisa Gotami's only child died as a toddler. Mad with grief, she carried the small body from house to house, begging for medicine to bring him back.","Someone sent her to the Buddha. He said: \"I can help. Bring me a handful of mustard seed, from a house where no one has died.\"","She went from door to door. Everyone offered mustard seed gladly. But in every house someone had lost a father, a sister, a child.","By evening she understood. She laid her son to rest in the forest and returned to the Buddha, who taught her that all that lives must pass. She became a nun, and later was known for her wisdom."],
+  m:"Grief is the price of love, and everyone pays it. You are not alone in yours."},
+ {id:'indra',title:"Indra's net",era:'The Avatamsaka Sutra; Huayan school, China',
+  body:["In the heaven of the god Indra hangs a vast net that stretches infinitely in every direction.","At every knot of the net hangs a single, perfectly polished jewel. Because the net is infinite, the jewels are infinite.","Look closely at any one jewel, and you will see reflected in its surface every other jewel in the net. And in each of those reflections, every jewel again, without end.","The Huayan teachers used this image to describe reality: each thing contains all things, and all things contain each thing. Nothing stands alone.","You are a jewel in that net. Everything shines in you, and you shine in everything."],
+  m:"Whose light do you reflect? Who reflects yours?"}
+];
+const TRUTHS=[
+ ["sci","You are made of stardust.","Apart from hydrogen, which dates to the first minutes after the Big Bang, nearly every atom in your body (the carbon, oxygen, calcium and iron) was forged inside stars and scattered when they died.","The universe made you out of itself."],
+ ["sci","The universe is about 13.8 billion years old.","Measured from the cosmic microwave background, the afterglow of the early universe, which still reaches us from every direction of the sky.","That same ancient light is falling on your skin right now."],
+ ["sci","You are mostly empty space.","An atom is roughly 100,000 times wider than its nucleus. Almost all of your mass sits in nuclei; almost all of your volume is fields and emptiness.","Form is emptiness. The Heart Sutra said it first in its own way."],
+ ["sci","You are moving fast, even while sitting still.","Earth spins at up to 1,670 km/h at the equator, orbits the Sun at about 30 km/s, and the Sun carries us around the galaxy at about 230 km/s. One lap takes about 230 million years.","Stillness is a way of attending, not a place."],
+ ["sci","You see the past, never the present.","Sunlight is about 8 minutes 20 seconds old when it reaches you. Starlight can be thousands of years old. Even your own hand is seen a few nanoseconds late.","There is only this moment, arriving."],
+ ["sci","Your body is constantly renewing.","The lining of your gut is replaced every few days and your skin every few weeks. Each breath exchanges atoms with the trees and oceans of the planet.","Anicca: you are a river, not a statue."],
+ ["con","Interdependence.","Nothing exists on its own. You depend on air, on plants, on the Sun, on countless people. Science calls this ecology; the Buddha called it dependent origination.","Breathe in what the trees breathe out."],
+ ["con","Awareness comes first.","Every experience you have ever had, including your experience of the universe, has appeared in awareness. Science cannot yet explain what consciousness is. The contemplatives ask you to look at it directly.","The cosmos is known only through this knowing. What is it?"],
+ ["con","You were never disconnected.","Practice is not about reaching a distant source. It is about noticing that the stars, the breath, and the one who knows them have never been apart.","Stop looking away, and you are home."]
+];
+const SCALE=[
+ [-15,'A proton','The heart of every atom. Quarks bound by the strongest force in nature.'],
+ [-14,'An atomic nucleus','Almost all of your mass lives in specks this small.'],
+ [-10,'A hydrogen atom','The first element, made minutes after the Big Bang. Most of your atoms by count are hydrogen.'],
+ [-8.7,'A strand of DNA','Two nanometres wide, two metres long in every cell, unfolded.'],
+ [-7,'A virus','At the edge of what we call alive.'],
+ [-5.2,'A red blood cell','You make about two million every second.'],
+ [-4,'The width of a hair','Where things become visible to the naked eye.'],
+ [-2,'An ant',''],
+ [-0.7,'A cupped hand',''],
+ [0.23,'You','About 1.7 metres of stardust, awake and wondering.'],
+ [2,'A temple hall','Around a hundred metres: the scale of the great halls at Nara and Kyoto.'],
+ [3.9,'Mount Everest','8.8 km of rock lifted by colliding continents.'],
+ [7.1,'Earth','12,742 km across. Every person who ever lived, on this one sphere.'],
+ [8.6,'The Moon\'s orbit','Light crosses it in about 1.3 seconds.'],
+ [9.1,'The Sun','1.39 million km across. A million Earths would fit inside.'],
+ [11.2,'Earth to the Sun','150 million km. One astronomical unit. Light takes 8 min 20 s.'],
+ [13,'The Solar System','Out past Neptune, about nine billion kilometres across.'],
+ [16,'A light-year','9.46 trillion km: how far light travels in one year.'],
+ [16.6,'The nearest star','Proxima Centauri, 4.2 light-years away.'],
+ [21,'The Milky Way','About 100,000 light-years across, with a hundred billion stars or more.'],
+ [22.4,'Andromeda','Our nearest large galaxy, 2.5 million light-years away. It is visible to the naked eye on a dark night.'],
+ [24.7,'Laniakea','The supercluster of about 100,000 galaxies we belong to. Its name means "immeasurable heaven" in Hawaiian.'],
+ [26.9,'The observable universe','About 93 billion light-years across. Perhaps two trillion galaxies. And here you are, looking.']
+];
+const EVENTS=[
+ [13.8e9,'Big Bang','Space, time and energy begin'],
+ [13.6e9,'First stars ignite','The first forges of heavy elements'],
+ [13.2e9,'Oldest stars of the Milky Way',''],
+ [4.6e9,'The Sun is born','From a cloud enriched by dead stars'],
+ [4.54e9,'Earth forms',''],
+ [3.8e9,'First life','Single cells in ancient seas'],
+ [2.4e9,'Oxygen fills the air','Made by bacteria learning to use sunlight'],
+ [5.4e8,'Cambrian explosion','Eyes, shells, animals'],
+ [6.6e7,'The dinosaurs end','An asteroid; the mammals inherit the Earth'],
+ [3e5,'Homo sapiens','Our species appears in Africa'],
+ [1.2e4,'Farming begins',''],
+ [2.5e3,'The Buddha awakens','Under the Bodhi tree, Bodh Gaya']
+];
+
+/* ---------------- audio ---------------- */
+let ac=null;
+function audio(){try{if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;ac=new C()}if(ac.state==='suspended')ac.resume();return ac}catch(e){return null}}
+function bell(base=174,vol=.45){const a=audio();if(!a)return;const t=a.currentTime+.02,m=a.createGain();m.gain.value=vol;m.connect(a.destination);
+ [[1,1,9],[1.004,.6,9],[2.0,.35,6],[2.76,.28,4.5],[5.4,.14,2.6],[8.93,.07,1.4]].forEach(([r,g,d])=>{const o=a.createOscillator(),gn=a.createGain();o.type='sine';o.frequency.value=base*r;gn.gain.setValueAtTime(.0001,t);gn.gain.exponentialRampToValueAtTime(g,t+.008);gn.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(gn);gn.connect(m);o.start(t);o.stop(t+d+.1)})}
+function bigBell(){const a=audio();if(!a)return;const t=a.currentTime+.02,m=a.createGain();m.gain.value=.5;m.connect(a.destination);
+ const n=a.createBufferSource(),b=a.createBuffer(1,a.sampleRate*.08,a.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);n.buffer=b;const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=600;n.connect(lp);lp.connect(m);n.start(t);
+ [[1,1,14],[1.006,.7,14],[2.1,.4,9],[2.9,.25,6],[4.1,.12,4]].forEach(([r,g,dd])=>{const o=a.createOscillator(),gn=a.createGain();o.frequency.value=64*r;gn.gain.setValueAtTime(.0001,t);gn.gain.exponentialRampToValueAtTime(g,t+.02);gn.gain.exponentialRampToValueAtTime(.0001,t+dd);o.connect(gn);gn.connect(m);o.start(t);o.stop(t+dd+.1)})}
+let amb=null;
+function ambient(kind){const a=audio();if(amb){const old=amb;try{old.g.gain.setTargetAtTime(0,a.currentTime,.6)}catch(e){}setTimeout(()=>old.src.forEach(s=>{try{s.stop()}catch(e){}}),3000);amb=null}
+ if(!a||kind==='none')return;const g=a.createGain();g.gain.value=0;g.connect(a.destination);const src=[];
+ if(kind==='rain'){const len=a.sampleRate*4,b=a.createBuffer(2,len,a.sampleRate);for(let c=0;c<2;c++){const d=b.getChannelData(c);let l=0;for(let i=0;i<len;i++){const w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5}}const s=a.createBufferSource();s.buffer=b;s.loop=true;const f=a.createBiquadFilter();f.type='lowpass';f.frequency.value=900;s.connect(f);f.connect(g);s.start();src.push(s);g.gain.setTargetAtTime(.35,a.currentTime,1.5)}
+ if(kind==='drone'){[[65.4,.5],[98.1,.3],[130.8,.18],[196.2,.06]].forEach(([fq,v],i)=>{const o=a.createOscillator(),og=a.createGain(),l=a.createOscillator(),lg=a.createGain();o.type=i?'sine':'triangle';o.frequency.value=fq;og.gain.value=v;l.frequency.value=.05+i*.03;lg.gain.value=v*.4;l.connect(lg);lg.connect(og.gain);o.connect(og);og.connect(g);o.start();l.start();src.push(o,l)});g.gain.setTargetAtTime(.22,a.currentTime,2)}
+ amb={g,src}}
+
+/* ---------------- stats ---------------- */
+function sessions(){return store.get('sessions',[])}
+function logSession(min,tech){const s=sessions();s.push({d:todayKey(),m:Math.round(min*10)/10,t:tech});store.set('sessions',s)}
+function streak(){const days=new Set(sessions().map(s=>s.d));let n=0;const d=new Date();if(!days.has(todayKey()))d.setDate(d.getDate()-1);
+ for(;;){const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(days.has(k)){n++;d.setDate(d.getDate()-1)}else break}return n}
+function renderStats(){const s=sessions(),mins=s.reduce((a,b)=>a+b.m,0),today=s.filter(x=>x.d===todayKey()).reduce((a,b)=>a+b.m,0);
+ $('#stats').innerHTML=[[Math.round(today),'minutes today'],[streak(),'day streak'],[s.length,'sits in all'],[Math.round(mins),'minutes in all']].map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('')}
+
+/* ---------------- today ---------------- */
+function renderToday(){const h=new Date().getHours();const part=h<5?'Deep night':h<12?'Morning':h<17?'Afternoon':h<21?'Evening':'Night';
+ const lines={'Deep night':'The hall is dark and quiet. A good hour to sit.','Morning':'Morning. Sit before the world asks anything of you.','Afternoon':'Afternoon. Pause. Three breaths, then begin again.','Evening':'Evening. Set the day down like a heavy bag.','Night':'Night. Let the day go back to where it came from.'};
+ $('#greet-eyebrow').textContent=part+' · '+new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});$('#greet').textContent=lines[part];
+ const q=QUOTES[dayOfYear()%QUOTES.length];$('#daily-quote').textContent='“'+q[0]+'”';$('#daily-cite').textContent='— '+q[1];
+ $('#daily-koan').textContent=KOANS[dayOfYear()%KOANS.length];
+ $('#quick').innerHTML=[['natural-5','5 min · breath'],['zazen-10','10 min · zazen'],['metta-15','15 min · loving-kindness'],['shikantaza-20','20 min · just sitting']].map(([k,l])=>`<button class="btn sm" data-quick="${k}">${l}</button>`).join('');
+ renderStats()}
+document.addEventListener('click',e=>{const q=e.target.closest('[data-quick]');if(!q)return;const[t,m]=q.dataset.quick.split('-');
+ if(t==='natural'){cfg.tech='zazen';cfg.breath='natural'}else{const p=PRACTICES.find(x=>x.id===t);cfg.tech=t;cfg.breath=p.breath}cfg.min=+m;syncSit();location.hash='sit'});
+
+/* ---------------- sit ---------------- */
+const cfg=Object.assign({tech:'zazen',min:10,breath:'none',interval:'0',amb:'none'},store.get('cfg',{}));
+const tech=()=>PRACTICES.find(p=>p.id===cfg.tech)||PRACTICES[0];
+function syncSit(){store.set('cfg',cfg);
+ $('#tech').innerHTML=PRACTICES.map(p=>`<option value="${p.id}"${p.id===cfg.tech?' selected':''}>${esc(p.name)}</option>`).join('');
+ $('#tech-note').textContent=tech().summary;
+ $('#dur').innerHTML=[5,10,15,20,30,45].map(m=>`<button class="chip" data-min="${m}" aria-pressed="${cfg.min===m}">${m} min</button>`).join('');
+ $('#breath').innerHTML=Object.entries(BREATHS).map(([k,b])=>`<button class="chip" data-breath="${k}" aria-pressed="${cfg.breath===k}">${b.name}</button>`).join('');
+ $('#amb').innerHTML=[['none','Silence'],['rain','Soft rain'],['drone','Temple drone']].map(([k,l])=>`<button class="chip" data-amb="${k}" aria-pressed="${cfg.amb===k}">${l}</button>`).join('');
+ $('#interval').value=cfg.interval;
+ if(!run.active){$('#clock').textContent=fmt(cfg.min*60);$('#phase').textContent='Ready';$('#cue').textContent=tech().cues[0];drawStage(0,0)}}
+$('#tech').addEventListener('change',e=>{cfg.tech=e.target.value;cfg.breath=tech().breath;if(!run.active)cfg.min=tech().min;syncSit()});
+$('#dur').addEventListener('click',e=>{const b=e.target.closest('[data-min]');if(!b||run.active)return;cfg.min=+b.dataset.min;$('#custom-min').value='';syncSit()});
+$('#custom-min').addEventListener('change',e=>{const v=Math.max(1,Math.min(180,+e.target.value||0));if(v&&!run.active){cfg.min=v;syncSit()}});
+$('#breath').addEventListener('click',e=>{const b=e.target.closest('[data-breath]');if(!b)return;cfg.breath=b.dataset.breath;syncSit()});
+$('#amb').addEventListener('click',e=>{const b=e.target.closest('[data-amb]');if(!b)return;cfg.amb=b.dataset.amb;syncSit();if(run.active&&!run.paused)ambient(cfg.amb)});
+$('#interval').addEventListener('change',e=>{cfg.interval=e.target.value;store.set('cfg',cfg)});
+const fmt=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+
+const cv=$('#enso'),cx=cv.getContext('2d');let W=0,H=0;
+function sizeCanvas(c){const r=c.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);c.width=Math.max(1,r.width*dpr);c.height=Math.max(1,r.height*dpr);const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);return[r.width,r.height]}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+const hash=n=>{const x=Math.sin(n*127.1)*43758.5453;return x-Math.floor(x)};
+function drawStage(p,breath){if(!W)return;const ink=css('--ink'),gold=css('--gold');cx.clearRect(0,0,W,H);const c0=W/2,c1=H/2,R=Math.min(W,H)*.36;
+ // ghost ring
+ cx.globalAlpha=.07;cx.strokeStyle=ink;cx.lineWidth=R*.08;cx.beginPath();cx.arc(c0,c1,R,0,Math.PI*2);cx.stroke();
+ // breath disk
+ if(breath!=null&&BREATHS[cfg.breath].p.length){const br=R*(.42+.4*breath);const g=cx.createRadialGradient(c0,c1,br*.2,c0,c1,br);g.addColorStop(0,gold);g.addColorStop(1,'transparent');cx.globalAlpha=.16+.12*breath;cx.fillStyle=g;cx.beginPath();cx.arc(c0,c1,br,0,Math.PI*2);cx.fill()}
+ // ensō brush stroke
+ const N=520,steps=Math.floor(N*p),start=-Math.PI*.62,span=Math.PI*2*.93;cx.fillStyle=ink;
+ for(let i=0;i<steps;i++){const f=i/N,a=start+span*f,rr=R*(1+.018*Math.sin(f*11+1)+.008*Math.sin(f*37));const x=c0+Math.cos(a)*rr,y=c1+Math.sin(a)*rr;
+  let w=R*.15*Math.min(1,f*14+.35)*(1-.72*f)*(.9+.1*Math.sin(f*80));
+  const dry=f>.62?(f-.62)/.38:0;cx.globalAlpha=.88-dry*.35;
+  for(let k=0;k<3;k++){const off=(k-1)*w*.28;const skip=dry>0&&hash(i*3+k)<dry*.55;if(skip)continue;cx.beginPath();cx.arc(x+Math.cos(a)*off,y+Math.sin(a)*off,w*.42,0,Math.PI*2);cx.fill()}}
+ cx.globalAlpha=1}
+const run={active:false,paused:false,total:0,elapsed:0,last:0,raf:0,cueIdx:-1,nextBell:0,halfRung:false,wake:null};
+function breathAt(t){const pat=BREATHS[cfg.breath].p;if(!pat.length)return[null,''];const cyc=pat.reduce((a,b)=>a+b[1],0);let x=t%cyc;
+ for(let i=0;i<pat.length;i++){const[k,d]=pat[i];if(x<d){const u=x/d,e=.5-.5*Math.cos(Math.PI*u);const prev=pat[(i-1+pat.length)%pat.length][0];
+  if(k==='in')return[e,'Breathe in'];if(k==='out')return[1-e,'Breathe out'];if(k==='hold')return[1,'Hold'];return[0,'Rest']}x-=d}return[0,'']}
+function tick(now){if(!run.active)return;if(!run.paused){run.elapsed+=(now-run.last)/1000}run.last=now;
+ const p=Math.min(1,run.elapsed/run.total),[b,ph]=breathAt(run.elapsed);$('#clock').textContent=fmt(run.total-run.elapsed);$('#phase').textContent=run.paused?'Paused':(ph||'Sitting');drawStage(p,b);
+ const cues=tech().cues,ci=Math.min(cues.length-1,Math.floor(p*cues.length));if(ci!==run.cueIdx){run.cueIdx=ci;const el=$('#cue');el.style.opacity=0;setTimeout(()=>{el.textContent=cues[ci];el.style.opacity=1},1200)}
+ if(!run.paused){if(cfg.interval==='half'&&!run.halfRung&&p>=.5){run.halfRung=true;bell(220,.3)}
+  else if(+cfg.interval&&run.elapsed>=run.nextBell){run.nextBell+= +cfg.interval*60;if(run.elapsed<run.total-5)bell(220,.3)}}
+ if(p>=1){finish(true);return}run.raf=requestAnimationFrame(tick)}
+async function wake(on){try{if(on&&navigator.wakeLock)run.wake=await navigator.wakeLock.request('screen');else if(run.wake){await run.wake.release();run.wake=null}}catch(e){}}
+function startSit(){audio();run.active=true;run.paused=false;run.total=cfg.min*60;run.elapsed=0;run.cueIdx=-1;run.halfRung=false;run.nextBell=(+cfg.interval||0)*60;run.last=performance.now();
+ bell();ambient(cfg.amb);wake(true);document.body.classList.add('focus');$('#start').hidden=true;$('#pause').hidden=false;$('#end').hidden=false;$('#pause').textContent='Pause';run.raf=requestAnimationFrame(tick)}
+function finish(complete){cancelAnimationFrame(run.raf);const mins=run.elapsed/60;run.active=false;ambient('none');wake(false);document.body.classList.remove('focus');
+ $('#start').hidden=false;$('#pause').hidden=true;$('#end').hidden=true;$('#start').textContent='Sit again';
+ if(complete){bell();setTimeout(()=>bell(),2600);setTimeout(()=>bell(),5200);drawStage(1,null);$('#clock').textContent='00:00';$('#phase').textContent='The circle is closed';$('#cue').textContent='Bow. Carry this stillness into whatever comes next.'}
+ else{$('#phase').textContent='Sit ended';$('#cue').textContent='Every return counts. Come back when you are ready.'}
+ if(mins>=1){logSession(mins,cfg.tech);toast(`${Math.round(mins)} minutes logged. Well sat.`);renderStats()}}
+$('#start').addEventListener('click',startSit);
+$('#pause').addEventListener('click',()=>{run.paused=!run.paused;$('#pause').textContent=run.paused?'Resume':'Pause';ambient(run.paused?'none':cfg.amb)});
+$('#end').addEventListener('click',()=>finish(false));
+$('#ring').addEventListener('click',()=>bell());
+
+/* ---------------- temple ---------------- */
+const temple={lit:false,start:0,dur:600,parts:[],raf:0};const sc=$('#smoke');let SW=0,SH=0;
+function stickH(){return temple.lit?Math.max(8,90*(1-(Date.now()-temple.start)/1000/temple.dur)):90}
+function smoke(){const g=sc.getContext('2d');if(!SW)[SW,SH]=sizeCanvas(sc);g.clearRect(0,0,SW,SH);const ink=css('--muted');
+ if(temple.lit){const st=$('#stick'),r=st.getBoundingClientRect(),rr=sc.getBoundingClientRect();const x=r.left-rr.left+1.5,y=r.top-rr.top;
+  if(Math.random()<.6)temple.parts.push({x,y,vx:(Math.random()-.5)*.15,vy:-.45-Math.random()*.3,life:0,ph:Math.random()*6.3});
+  const left=(Date.now()-temple.start)/1000;st.style.height=stickH()+'px';$('#incense-status').textContent=left>=temple.dur?'The incense has burned down.':`Burning · ${fmt(temple.dur-left)} remaining`;
+  if(left>=temple.dur){temple.lit=false;st.classList.remove('lit');bell();$('#light').hidden=false;$('#snuff').hidden=true;logSession(temple.dur/60,'incense');renderStats();toast('The stick has burned down. Ten minutes sat.')}}
+ temple.parts=temple.parts.filter(p=>p.life<340);g.fillStyle=ink;
+ for(const p of temple.parts){p.life++;p.y+=p.vy;p.x+=p.vx+Math.sin(p.life*.025+p.ph)*.35*(p.life/120);const a=Math.max(0,.16*(1-p.life/340));g.globalAlpha=a;g.beginPath();g.arc(p.x,p.y,2+p.life*.05,0,Math.PI*2);g.fill()}
+ g.globalAlpha=1;if((temple.lit||temple.parts.length)&&current==='temple')temple.raf=requestAnimationFrame(smoke);else temple.raf=0}
+function kickSmoke(){if(!temple.raf)temple.raf=requestAnimationFrame(smoke)}
+$('#light').addEventListener('click',()=>{audio();temple.lit=true;temple.start=Date.now();$('#stick').classList.add('lit');$('#light').hidden=true;$('#snuff').hidden=false;bell(196,.3);kickSmoke()});
+$('#snuff').addEventListener('click',()=>{temple.lit=false;$('#stick').classList.remove('lit');$('#stick').style.height='90px';$('#light').hidden=false;$('#snuff').hidden=true;$('#incense-status').textContent='One stick burns for ten minutes. Sit with it.'});
+let bells=store.get('bells',0);$('#bell-count').textContent=bells;
+$('#strike').addEventListener('click',()=>{bigBell();bells=bells>=108?1:bells+1;store.set('bells',bells);$('#bell-count').textContent=bells;if(bells===108)toast('108. Every passion rung out. A new year begins.')});
+$('#bell-reset').addEventListener('click',()=>{bells=0;store.set('bells',0);$('#bell-count').textContent=0});
+let bows=store.get('bows',{d:'',n:0});if(bows.d!==todayKey())bows={d:todayKey(),n:0};$('#bow-count').textContent=bows.n;
+$('#bow').addEventListener('click',()=>{bows.n++;store.set('bows',bows);$('#bow-count').textContent=bows.n;bell(330,.15)});
+function showIntent(){const it=store.get('intent',null);$('#intent-shown').textContent=it&&it.d===todayKey()?'Today: '+it.t:''}
+$('#save-intent').addEventListener('click',()=>{const t=$('#intent').value.trim();if(!t){toast('Write a few words first.');return}store.set('intent',{d:todayKey(),t});$('#intent').value='';showIntent();bell(262,.25);toast('Intention set.')});showIntent();
+$('#draw').addEventListener('click',()=>{const el=$('#omikuji');el.style.opacity=0;setTimeout(()=>{el.textContent=SLIPS[Math.floor(Math.random()*SLIPS.length)];el.style.opacity=1},350)});$('#omikuji').style.transition='opacity .35s';
+
+/* ---------------- lists & readers ---------------- */
+function list(container,items,meta,onOpen){container.innerHTML=items.map(it=>`<button class="card" data-id="${it.id}"><div class="meta"><span class="eyebrow">${esc(meta(it))}</span>${it.tick?'<span class="tick">read</span>':''}</div><h3>${esc(it.title||it.name)}</h3><p class="muted">${esc(it.summary||it.body[0].slice(0,120)+'…')}</p></button>`).join('');
+ container.onclick=e=>{const c=e.target.closest('.card');if(c)onOpen(c.dataset.id)}}
+function openReader(listEl,readEl,html){listEl.hidden=true;readEl.hidden=false;readEl.innerHTML=html;readEl.querySelector('.back').onclick=()=>{readEl.hidden=true;listEl.hidden=false;window.scrollTo({top:0})};window.scrollTo({top:0})}
+function renderPractices(){list($('#practice-list'),PRACTICES,p=>p.kanji+' · '+p.min+' min',id=>{const p=PRACTICES.find(x=>x.id===id);
+ openReader($('#practice-list'),$('#practice-read'),`<button class="btn ghost sm back">← All practices</button><div class="head"><span class="eyebrow">${esc(p.kanji)} · ${esc(p.origin)}</span><h1>${esc(p.name)}</h1><p class="lede">${esc(p.summary)}</p></div><ol class="steps">${p.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><div class="row"><button class="btn primary" id="begin-practice">Begin · ${p.min} minutes</button></div>`);
+ $('#begin-practice').onclick=()=>{cfg.tech=p.id;cfg.min=p.min;cfg.breath=p.breath;syncSit();location.hash='sit'}})}
+function renderLessons(){const done=store.get('learned',[]);LESSONS.forEach(l=>l.tick=done.includes(l.id));$('#learn-progress').textContent=`${done.length} of ${LESSONS.length} lessons made your own.`;
+ list($('#lesson-list'),LESSONS.map((l,i)=>Object.assign(l,{n:i+1})),l=>'Lesson '+l.n+' · '+l.kanji,id=>{const i=LESSONS.findIndex(x=>x.id===id),l=LESSONS[i],isDone=store.get('learned',[]).includes(id),nx=LESSONS[i+1];
+  openReader($('#lesson-list'),$('#lesson-read'),`<button class="btn ghost sm back">← All lessons</button><div class="head"><span class="eyebrow">Lesson ${i+1} of ${LESSONS.length} · ${esc(l.kanji)}</span><h1>${esc(l.title)}</h1></div><div class="body">${l.body.map(p=>`<p>${esc(p)}</p>`).join('')}</div><div class="reflect"><span class="eyebrow">Sit with this</span><p>${esc(l.q)}</p></div><div class="row"><button class="btn ${isDone?'':'primary'}" id="mark">${isDone?'Marked as learned':'Mark as learned'}</button>${nx?`<button class="btn ghost" id="next-lesson">Next: ${esc(nx.title)} →</button>`:''}</div>`);
+  $('#mark').onclick=()=>{let d=store.get('learned',[]);d=d.includes(id)?d.filter(x=>x!==id):d.concat(id);store.set('learned',d);const on=d.includes(id);$('#mark').textContent=on?'Marked as learned':'Mark as learned';$('#mark').classList.toggle('primary',!on);if(on){bell(262,.2);toast('Lesson marked.')}renderLessonsQuiet()};
+  if(nx)$('#next-lesson').onclick=()=>$(`#lesson-list .card[data-id="${nx.id}"]`).click()})}
+function renderLessonsQuiet(){const done=store.get('learned',[]);$('#learn-progress').textContent=`${done.length} of ${LESSONS.length} lessons made your own.`;$$('#lesson-list .card').forEach(c=>{const m=c.querySelector('.meta');const t=m.querySelector('.tick');if(done.includes(c.dataset.id)&&!t)m.insertAdjacentHTML('beforeend','<span class="tick">read</span>');if(!done.includes(c.dataset.id)&&t)t.remove()})}
+function renderStories(){list($('#story-list'),STORIES,s=>s.era,id=>{const s=STORIES.find(x=>x.id===id);
+ openReader($('#story-list'),$('#story-read'),`<button class="btn ghost sm back">← All stories</button><div class="head"><span class="eyebrow">${esc(s.era)}</span><h1>${esc(s.title)}</h1></div><div class="body">${s.body.map(p=>`<p>${esc(p)}</p>`).join('')}</div><div class="reflect"><span class="eyebrow">To carry with you</span><p>${esc(s.m)}</p></div>`)})}
+
+/* ---------------- cosmos ---------------- */
+const SUP={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+function renderScale(){const v=+$('#scale').value;let best=SCALE[0];for(const s of SCALE)if(Math.abs(s[0]-v)<Math.abs(best[0]-v))best=s;
+ const e=Math.round(v);$('#scale-num').textContent='10'+String(e).split('').map(c=>SUP[c]).join('')+' m';$('#scale-obj').textContent=best[1];$('#scale-note').textContent=best[2]||' '}
+$('#scale').addEventListener('input',renderScale);
+function cosmicTime(yearsAgo){const T=13.8e9,yearMs=365*864e5;const frac=1-yearsAgo/T;const ms=frac*yearMs;const secBefore=(yearsAgo/T)*365*86400;
+ if(secBefore<60)return secBefore<1?'Dec 31 · '+(secBefore*1000<1?(secBefore*1e6).toFixed(0)+' µs':(secBefore*1000).toFixed(0)+' ms')+' to midnight':'Dec 31 · '+secBefore.toFixed(1)+' s to midnight';
+ const d=new Date(Date.UTC(2001,0,1)+ms);const mo=d.toLocaleString('en',{month:'short',timeZone:'UTC'}),day=d.getUTCDate();
+ if(mo==='Dec'&&day===31)return 'Dec 31 · '+String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0');return mo+' '+day}
+function renderCal(){const age=Math.max(1,Math.min(120,+$('#age').value||30));
+ $('#cal').innerHTML=EVENTS.concat([[age,'Your life so far','All of it']]).map(([y,w,s])=>`<div class="cal-row${w==='Your life so far'?' you':''}"><div class="what">${esc(w)}${s?`<small>${esc(s)}</small>`:''}</div><div class="when">${cosmicTime(y)}</div></div>`).join('')}
+$('#age').addEventListener('input',renderCal);
+function renderTruths(){$('#truths').innerHTML=TRUTHS.map(([k,f,body,c])=>`<article class="truth"><span class="tag ${k}">${k==='sci'?'Science':'Contemplation'}</span><p class="fact">${esc(f)}</p><p class="muted">${esc(body)}</p><p><em>${esc(c)}</em></p></article>`).join('')}
+
+/* ---------------- source ---------------- */
+const RETURN=["Sit comfortably. Let your hands rest. Close your eyes, or let them soften.","Take three slow breaths. Let each out-breath be a little longer than the in-breath.","Feel the weight of your body, held by the Earth. You don't need to hold yourself up.","Notice the sounds around you. They arrive on their own. You don't make them happen.","Notice sensations in the body: warmth, tingling, pressure. They too simply appear.","Notice thoughts. Like birds crossing the sky, they come and go.","Now turn around. Not toward a thought or a sound, but toward what is aware of them.","Is awareness here? Yes. Can you find its edge? Its colour? Its age?","This knowing was here when you were a child. It is here now, unchanged.","The atoms of your body were made in stars. This awareness is how the cosmos looks at itself.","There is nothing to reach. You are not separate from the source; you are the source, looking.","Rest here. Let everything be exactly as it is.","When you are ready, feel your breath again, your hands, the room.","Bring this with you: the stillness under everything. Bow, and return."];
+const ret={on:false,i:0,t:0,start:0,per:26};
+function retStep(){if(!ret.on)return;const el=$('#return-line');el.style.opacity=0;setTimeout(()=>{if(!ret.on)return;el.textContent=RETURN[ret.i];el.style.opacity=1},1400);
+ ret.t=setTimeout(()=>{ret.i++;if(ret.i>=RETURN.length){endReturn(true)}else retStep()},ret.per*1000)}
+function barLoop(){if(!ret.on)return;const tot=RETURN.length*ret.per*1000;$('#return-bar').style.width=Math.min(100,(Date.now()-ret.start)/tot*100)+'%';requestAnimationFrame(barLoop)}
+function endReturn(done){ret.on=false;clearTimeout(ret.t);$('#return-start').hidden=false;$('#return-stop').hidden=true;$('#return-start').textContent='Begin again';
+ if(done){bell();setTimeout(()=>bell(),2600);logSession(RETURN.length*ret.per/60,'source');renderStats();$('#return-line').textContent='You never left. Welcome home.';$('#return-bar').style.width='100%'}else{$('#return-line').textContent='Paused. The source is always here when you return.'}}
+$('#return-start').addEventListener('click',()=>{audio();bell();ret.on=true;ret.i=0;ret.start=Date.now();$('#return-start').hidden=true;$('#return-stop').hidden=false;retStep();barLoop()});
+$('#return-stop').addEventListener('click',()=>endReturn(false));
+let pIdx=dayOfYear()%PROMPTS.length;function showPrompt(){$('#prompt').textContent=PROMPTS[pIdx]}
+$('#new-prompt').addEventListener('click',()=>{pIdx=(pIdx+1)%PROMPTS.length;showPrompt()});
+let pendingDel=null;
+function renderEntries(){const es=store.get('journal',[]);const box=$('#entries');
+ if(!es.length){box.innerHTML='<p class="note">Nothing written yet. Your entries appear here, newest first, and stay in this browser.</p>';return}
+ box.innerHTML=es.slice().reverse().map(e=>`<div class="entry"><span class="when">${esc(new Date(e.at).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'}))}</span><span class="q">${esc(e.q)}</span><p>${esc(e.t)}</p><div><button class="btn ghost sm" data-del="${e.at}">${pendingDel===e.at?'Confirm delete':'Delete'}</button></div></div>`).join('')}
+$('#entries').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;const at=+b.dataset.del;if(pendingDel!==at){pendingDel=at;renderEntries();return}
+ store.set('journal',store.get('journal',[]).filter(x=>x.at!==at));pendingDel=null;renderEntries();toast('Entry deleted.')});
+$('#save-entry').addEventListener('click',()=>{const t=$('#journal').value.trim();if(!t){toast('Write something first.');return}const es=store.get('journal',[]);es.push({at:Date.now(),q:PROMPTS[pIdx],t});store.set('journal',es);$('#journal').value='';try{localStorage.removeItem('stillwater:draft')}catch(e){}renderEntries();toast('Saved to your journal.')});
+$('#journal').addEventListener('input',e=>store.set('draft',e.target.value));$('#journal').value=store.get('draft','');
+
+/* ---------------- router ---------------- */
+const VIEWS=['today','sit','temple','practices','learn','stories','cosmos','source'];let current='';
+function route(){const h=location.hash.slice(1);const v=VIEWS.includes(h)?h:'today';if(v===current)return;current=v;
+ $$('.view').forEach(s=>s.hidden=s.dataset.view!==v);$$('.nav a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+v?'page':'false'));
+ if(v==='today')renderToday();
+ if(v==='sit'){requestAnimationFrame(()=>{[W,H]=sizeCanvas(cv);drawStage(run.active?Math.min(1,run.elapsed/run.total):0,0)})}
+ if(v==='temple'){requestAnimationFrame(()=>{[SW,SH]=sizeCanvas(sc);kickSmoke()})}
+ ['practice','lesson','story'].forEach(k=>{const r=$('#'+k+'-read'),l=$('#'+k+'-list');r.hidden=true;l.hidden=false});
+ window.scrollTo({top:0})}
+window.addEventListener('hashchange',route);
+window.addEventListener('resize',()=>{if(current==='sit'){[W,H]=sizeCanvas(cv);drawStage(run.active?Math.min(1,run.elapsed/run.total):0,0)}if(current==='temple'){[SW,SH]=sizeCanvas(sc)}});
+
+renderPractices();renderLessons();renderStories();renderScale();renderCal();renderTruths();showPrompt();renderEntries();syncSit();route();
+})();
+</script>
+</body>
+</html>
