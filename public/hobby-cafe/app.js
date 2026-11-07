@@ -70,6 +70,14 @@ function ambienceToggle() {
   amb.t = setTimeout(clink, 2500);
 }
 
+function windChime() {
+  try { const ctx = amb.ctx || (amb.ctx = new (window.AudioContext || window.webkitAudioContext)()); ctx.resume();
+    [0, .18, .41].forEach((d, i) => { const o = ctx.createOscillator(), g = ctx.createGain(), t0 = ctx.currentTime + d;
+      o.type = 'sine'; o.frequency.value = [2093, 2637, 3136][i] * (1 + Math.random() * .01);
+      g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.08, t0 + .01); g.gain.exponentialRampToValueAtTime(.0001, t0 + 2.2);
+      o.connect(g).connect(ctx.destination); o.start(t0); o.stop(t0 + 2.3); }); } catch {}
+}
+
 /* tap sparkles */
 document.addEventListener('pointerdown', e => {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -154,6 +162,8 @@ VIEWS.cafe = () => {
   return `
   <section class="storefront tod-${t}">
     ${cafeScene(t)}
+    <div class="lights-top">${fairyLights(16, 22)}</div>
+    ${sticker('sprout', { x: '-6px', b: '-10px', size: 70, rot: -10 })}${sticker('star', { r: '-8px', y: '38%', size: 46, rot: 14 })}
     <div class="sign-board"><div class="chains"></div><div class="sign"><span>HOBBY</span> CAFÉ</div><div class="hours">est. today · fun · adventure · rest</div></div>
     <div class="hero-row">
       <button class="polaroid" data-act="poke" aria-label="Poke ${cname()}">
@@ -175,7 +185,7 @@ VIEWS.cafe = () => {
   </section>
   <div id="ideaSlot"></div>
 
-  <section class="loyalty">
+  <section class="loyalty">${sticker('peanut', { r: '-12px', y: '-22px', size: 52, rot: 18 })}
     <div class="loy-left"><div class="loy-title">Loyalty card · <b>${LEVELS[lv]}</b></div>
       <div class="cups">${Array.from({ length: 10 }, (_, i) => `<span class="${i < cups ? 'full' : ''}">☕</span>`).join('')}</div>
       <small>${S.xp} XP · level ${lv + 1} · fill the card to level up</small></div>
@@ -183,7 +193,7 @@ VIEWS.cafe = () => {
     <div class="loy-stat"><b>🎫 ${Object.keys(S.tried).length}</b><small>of ${H.length} tried</small></div>
   </section>
 
-  <section class="chalkboard">
+  <section class="chalkboard">${sticker('strawberry', { r: '-14px', y: '-18px', size: 58, rot: 12 })}${sticker('clover', { x: '-16px', b: '-16px', size: 50, rot: -16 })}
     <h2>Today's Specials <small>${new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}</small></h2>
     <ul>
       <li><button data-act="rescue"><span>🚨</span><b>Doom-scroll rescue</b><em>5-min counter-mission</em></button></li>
@@ -197,6 +207,7 @@ VIEWS.cafe = () => {
   </section>
 
   <h2 class="sec hand">Pick a room from the shelf ↓</h2>
+  <div class="shelf-top">${paperChain(24)}${fairyLights(18, 14)}<span class="vine-l">${vine(5)}</span><span class="vine-r">${vine(7, true)}</span>${sticker('moon', { r: '8%', y: '-34px', size: 48, rot: -8 })}</div>
   <section class="bookshelf">${Object.entries(C).map(([k, c], i) => {
     const tot = H.filter(h => h.cat === k).length, done = H.filter(h => h.cat === k && S.tried[h.id]).length;
     return `<a class="book" href="#menu" data-cat="${k}" style="--c:${c.color};--tilt:${[-2, 1, -1, 2, 0][i % 5]}deg">
@@ -238,6 +249,17 @@ function cafeScene(t) {
     <path d="M0,0 Q40,40 20,90 Q50,60 60,120 Q70,70 110,60" stroke="#3E7A4A" stroke-width="3" fill="none" opacity=".8"/>
     ${[[20, 90], [60, 120], [110, 60], [40, 40], [86, 70]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="9" ry="5" fill="#5DAA6E" transform="rotate(30 ${x} ${y})"/>`).join('')}
     ${lamp(420, 60)}${lamp(580, 40)}${lamp(160, 30)}
+    <g class="swing" style="transform-origin:665px 0px"><line x1="665" y1="0" x2="665" y2="40" stroke="#1A0F0A" stroke-width="2"/>
+      <circle cx="665" cy="88" r="60" fill="url(#lampGlow)" opacity=".7" class="glow"/>
+      <rect x="652" y="38" width="26" height="8" rx="2" fill="#2B1A10"/><ellipse cx="665" cy="88" rx="30" ry="42" fill="#C8423C"/>
+      <g stroke="#9A2A26" stroke-width="1.5" fill="none" opacity=".7"><ellipse cx="665" cy="88" rx="30" ry="12"/><ellipse cx="665" cy="88" rx="30" ry="26"/><ellipse cx="665" cy="88" rx="28" ry="38"/></g>
+      <text x="665" y="98" text-anchor="middle" font-size="28" font-weight="700" fill="#FFE9C8" font-family="serif">趣</text>
+      <rect x="652" y="128" width="26" height="8" rx="2" fill="#2B1A10"/><path d="M660 136 v14 M665 136 v18 M670 136 v14" stroke="#C9963E" stroke-width="2"/></g>
+    <g class="swing chime-g" data-act="chime" style="transform-origin:800px 0px;cursor:pointer"><line x1="800" y1="0" x2="800" y2="44" stroke="#C9C2B8" stroke-width="1.5"/>
+      <path d="M948 70 Q783 44 800 44 Q817 44 817 70Z" fill="#D7EEF7" fill-opacity=".85" stroke="#fff" stroke-width="1.5"/>
+      <path d="M788 60 q6 -8 10 0 q5 -8 12 0" stroke="#E07A93" stroke-width="2" fill="none"/><circle cx="793" cy="54" r="2" fill="#6FA8C9"/>
+      <line x1="800" y1="70" x2="800" y2="84" stroke="#C9C2B8" stroke-width="1.2"/><g class="strip" style="transform-origin:800px 84px"><rect x="790" y="84" width="20" height="56" fill="#F3E8D2"/>
+      <path d="M795 100 l3 4 3 -4 M797 116 l4 5 4 -5 M795 130 l3 4 3 -4" stroke="#6FA8C9" stroke-width="2" fill="none"/></g></g>
     <rect x="0" y="400" width="1000" height="60" fill="#5A3A22"/><rect x="0" y="396" width="1000" height="8" fill="#8A5A34"/>
     <g transform="translate(880 352)"><path d="M0,10 h40 v26 q0,14 -20,14 q-20,0 -20,-14z" fill="#FFF6E6"/><path d="M40,16 q14,0 14,10 q0,10 -14,10" stroke="#FFF6E6" stroke-width="5" fill="none"/>
       <path d="M8,6 q-6,-12 2,-22 q6,-10 0,-22" class="steam" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M22,4 q-6,-14 2,-24 q6,-10 0,-20" class="steam s2" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/></g>
@@ -267,7 +289,7 @@ const menuF = { cat: 'all', energy: 0, level: 0, q: '', fresh: false };
 VIEWS.menu = (id) => {
   if (id && byId(id)) return detail(byId(id));
   return `
-  <header class="page-head"><h1>📜 The Hobby Menu</h1><p>${H.length} hobbies, served fresh. Pick by mood, energy, or courage.</p></header>
+  <header class="page-head deco-head">${sticker('flower', { r: '2%', y: '-6px', size: 52, rot: 10 })}${sticker('clover', { r: '9%', y: '18px', size: 38, rot: -14 })}<h1>📜 The Hobby Menu</h1><p>${H.length} hobbies, served fresh. Pick by mood, energy, or courage.</p></header>
   <div class="filters">
     <input id="q" type="search" placeholder="Search hobbies… (kung fu, tea, code…)" value="${esc(menuF.q)}">
     <div class="chips scroll">${[['all', '✨ All']].concat(Object.entries(C).map(([k, c]) => [k, c.emoji + ' ' + c.name])).map(([k, l]) => `<button class="chip ${menuF.cat === k ? 'on' : ''}" data-fcat="${k}">${l}</button>`).join('')}</div>
@@ -330,8 +352,11 @@ function detail(h) {
 let mission = null;
 VIEWS.mission = (id) => {
   const h = byId(id); if (!h) return VIEWS.menu();
-  if (!mission || mission.id !== id) mission = { id, start: Date.now(), checks: [] };
-  return `
+  const fresh = !mission || mission.id !== id;
+  if (fresh) mission = { id, start: Date.now(), checks: [] };
+  const subs = { dojo: 'training in the courtyard', spy: 'a top secret operation', create: 'making something beautiful', words: 'lost in a good story', mind: 'a puzzle on the table', kitchen: 'something warm in the oven', nature: 'out among the leaves', music: 'a tune in the air', explore: 'out into the world', tinker: 'tinkering in the gadget lab', rest: 'a quiet hour' };
+  return `${fresh ? `<div class="level-card" data-act="skiplevel">${cafeShelfBg()}<div class="lights-top">${fairyLights(14, 18)}</div>
+    <div class="level-text"><small>LEVEL-${h.level} · ${C[h.cat].name.toUpperCase()}</small><h1>${esc(h.name)}</h1><p>- ${subs[h.cat]} -</p></div></div>` : ''}
   <section class="mission" style="--c:${C[h.cat].color}">
     <div class="scroll-paper">
       <div class="stamp-top">TOP SECRET</div>
@@ -360,7 +385,15 @@ VIEWS.mission = (id) => {
     </div>
   </div>`;
 };
+function cafeShelfBg() {
+  const r = seeded('lvl'), cols = ['#7A3B2E', '#3F5A7A', '#8A6A3A', '#4E6B4A', '#6B4A7A', '#9A7A4A', '#5A3A2A'];
+  let b = ''; for (const y of [120, 300, 480]) { let x = 0; while (x < 1000) { const w = 18 + r() * 26, hh = 90 + r() * 60;
+    b += `<rect x="${x}" y="${y - hh}" width="${w}" height="${hh}" rx="2" fill="${cols[Math.floor(r() * cols.length)]}"/><rect x="${x + 4}" y="${y - hh + 14}" width="${w - 8}" height="3" fill="#D9B44A" opacity=".6"/>`; x += w + 2 + (r() < .1 ? 60 : 0); }
+    b += `<rect x="0" y="${y}" width="1000" height="18" fill="#6B4226"/>`; }
+  return `<svg class="scene" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="1000" height="560" fill="#2A1A12"/>${b}<rect width="1000" height="560" fill="#1A0F0A" opacity=".55"/></svg>`;
+}
 AFTER.mission = () => {
+  const lc = $('.level-card'); if (lc) setTimeout(() => lc.classList.add('out'), 2600);
   const tick = () => { const s = Math.floor((Date.now() - mission.start) / 1000); const t = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; const c = $('#clock'); if (c) c.textContent = t; const so = $('#soClock'); if (so) so.textContent = t; };
   tick(); every(tick, 1000);
   $('.checks').onchange = e => { const i = +e.target.dataset.step; mission.checks = mission.checks.filter(x => x !== i); if (e.target.checked) mission.checks.push(i); };
@@ -369,7 +402,7 @@ AFTER.mission = () => {
 /* ── Puzzles ── */
 let ptab = 'search', ws = null, wsFound = [], wsSel = null, scr = null, scrScore = 0, rid = null;
 VIEWS.puzzles = () => `
-  <header class="page-head"><h1>🧩 Puzzle Corner</h1><p>Like the puzzle pages at the back of old magazines — but you can also make your own for friends.</p></header>
+  <header class="page-head deco-head">${sticker('frog', { r: '3%', y: '-4px', size: 64, rot: -8 })}${sticker('ticket', { r: '12%', y: '30px', size: 110, rot: 8, arg: 'PUZZLE PASS' })}<h1>🧩 Puzzle Corner</h1><p>Like the puzzle pages at the back of old magazines — but you can also make your own for friends.</p></header>
   <div class="tabs">${[['search', '🔤 Word Search'], ['scramble', '🔀 Scramble'], ['riddle', '❓ Riddles'], ['maker', '🖨️ Puzzle Maker']].map(([k, l]) => `<button class="${ptab === k ? 'on' : ''}" data-ptab="${k}">${l}</button>`).join('')}</div>
   <div id="pbody">${PZ[ptab]()}</div>`;
 const PZ = {
@@ -444,7 +477,7 @@ VIEWS.spy = (chal) => {
   const ch = chal ? readChallenge(chal) : null;
   const d = dailyIntercept(), solved = S.codes.includes(today());
   return `
-  <header class="page-head spy-head"><h1>🕵️ Spy HQ</h1><p>Codes, ciphers & secret messages to swap with friends. ${cname()} is wearing her sunglasses.</p>${avatar('cool', 'sm')}</header>
+  <header class="page-head spy-head">${sticker('peanut', { r: '90px', y: '-4px', size: 46, rot: -14 })}<h1>🕵️ Spy HQ</h1><p>Codes, ciphers & secret messages to swap with friends. ${cname()} is wearing her sunglasses.</p>${avatar('cool', 'sm')}</header>
   ${ch ? `<section class="intercept friend"><div class="stamp-top">FROM A FRIEND</div><h2>📨 Incoming challenge${ch.f ? ' from ' + esc(ch.f) : ''}</h2>
     <pre class="code">${esc(ch.t)}</pre><p class="muted">Cipher: <b>${esc(CIPHERS[ch.c]?.name || '?')}</b>${ch.c === 'keyword' ? ' — ask your friend for the keyword!' : ''}</p>
     <div class="row"><input id="chGuess" placeholder="Your decoded message"><button class="btn" data-act="chcheck">Check</button></div>
@@ -495,7 +528,7 @@ VIEWS.dojo = () => {
   if (round && !round.done) return dojoRound();
   if (round && round.done) return dojoResult();
   return `
-  <header class="dojo-hero">${dojoScene()}<div class="dojo-hero-text"><h1>Math Dojo</h1><p>From white belt to black belt — one small round at a time. Score 8/10 to earn the next belt. Paper & pencil encouraged.</p></div></header>
+  <header class="dojo-hero">${dojoScene()}${sticker('sprout', { r: '18px', y: '12px', size: 56, rot: 8 })}<div class="dojo-hero-text"><h1>Math Dojo</h1><p>From white belt to black belt — one small round at a time. Score 8/10 to earn the next belt. Paper & pencil encouraged.</p></div></header>
   <div class="dojo-intro">${avatar('smug', 'sm')}<p><b>${cname()}:</b> ${esc(pick(L.math))}</p></div>
   <section class="belts">${BELTS.map((b, i) => {
     const locked = i > S.belt, best = S.beltBest[i];
@@ -510,7 +543,7 @@ function dojoScene() {
     <path d="M0,190 L120,120 L220,170 L340,90 L460,160 L560,110 L700,170 L820,100 L1000,160 V300 H0Z" fill="#D49A6A" opacity=".55"/>
     <path d="M0,220 L160,160 L300,210 L440,150 L600,215 L760,160 L1000,210 V300 H0Z" fill="#B97C55" opacity=".6"/>
     <g fill="#5A2E1E"><rect x="110" y="168" width="10" height="80"/><path d="M60,170 Q115,150 170,170 L160,160 Q115,140 70,160Z"/><path d="M50,200 Q115,178 180,200 L168,186 Q115,166 62,186Z"/>
-      <rect x="760" y="120" width="190" height="120"/><path d="M730,128 Q855,92 980,128 L960,112 Q855,72 750,112 Z"/><path d="M745,100 Q855,66 965,100 L950,88 Q855,52 760,88 Z"/>
+      <rect x="760" y="120" width="190" height="120"/><path d="M730,128 Q855,92 980,128 L960,112 Q855,72 750,112 Z"/><path d="M745,100 Q855,66 800,100 L950,88 Q855,52 760,88 Z"/>
       <rect x="800" y="170" width="30" height="70" fill="#E8B04A"/><rect x="880" y="170" width="30" height="70" fill="#E8B04A"/></g>
     <g fill="#3E2416"><path d="M300,300 Q290,200 310,150 Q330,120 300,90" stroke="#3E2416" stroke-width="10" fill="none"/>
       <ellipse cx="290" cy="110" rx="60" ry="16" fill="#4A6B3A"/><ellipse cx="320" cy="140" rx="50" ry="13" fill="#4A6B3A"/><ellipse cx="300" cy="80" rx="40" ry="12" fill="#4A6B3A"/></g>
@@ -568,7 +601,7 @@ AFTER.dojo = () => {
 /* ── Rest Nook ── */
 VIEWS.rest = () => `
   <a class="back" href="#cafe">← Back to café</a>
-  <header class="page-head"><h1>🛋️ Rest Nook</h1><p>Balance is part of the adventure. Real rest, not scroll-rest.</p></header>
+  <header class="page-head deco-head">${sticker('catloaf', { r: '3%', y: '-10px', size: 76, rot: 4 })}${sticker('moon', { r: '14%', y: '-8px', size: 40, rot: -12 })}<h1>🛋️ Rest Nook</h1><p>Balance is part of the adventure. Real rest, not scroll-rest.</p></header>
   <section class="breathe-box">
     <div class="breath" id="breath"><span id="bLabel">Tap to begin</span></div>
     <div class="row center"><button class="btn" data-act="breathe">🫁 Box breathing (4·4·4·4)</button><button class="btn ghost" data-act="breathe478">🌙 4·7·8 sleepy breath</button></div>
@@ -601,7 +634,7 @@ function breathe(pattern) {
 VIEWS.me = () => {
   const lv = level();
   return `
-  <header class="passport-head">
+  <header class="passport-head">${sticker('tag', { r: '16px', y: '-18px', size: 120, rot: 6, arg: 'my passport' })}${sticker('button', { x: '-10px', b: '-14px', size: 40, rot: 0 })}
     ${avatar('happy', 'md')}
     <div><div class="tag">HOBBY CAFÉ PASSPORT</div><h1>${esc(S.name)}</h1>
     <p>${LEVELS[lv]} · ${S.xp} XP · 🔥 ${S.streak.count} day streak (best ${S.streak.best})</p>
@@ -671,6 +704,8 @@ const ACTIONS = {
   },
   rescuedone: () => { closeOverlay(); gainXp(10, 'scroll rescued'); say('Phone: 0. You: 1. Heh.', 'smug'); },
   closeov: () => closeOverlay(),
+  skiplevel: (t) => t.classList.add('out'),
+  chime: (t) => { const g = t.closest('.chime-g'); g.classList.remove('ring'); void g.getBoundingClientRect(); g.classList.add('ring'); windChime(); },
   poke: (t) => { const m = pick(['smug', 'sparkle', 'cool', 'shock', 'happy', 'sleepy']);
     const pol = t.closest('.polaroid'); pol.querySelector('.avatar').outerHTML = avatar(m, 'lg'); pol.classList.remove('wiggle'); void pol.offsetWidth; pol.classList.add('wiggle');
     $('#heroLine').textContent = pick({ smug: ['Heh. I know what you\'re thinking.', 'Heh heh. I have a plan.'], sparkle: ['Ooh! Are we doing an adventure?!', 'Sparkle mode activated!'], cool: ['Agent mode. Very cool. Very secret.', 'Shades on. Mission face.'], shock: ['Hey! Don\'t poke a spy!', 'Wah! You startled me!'], happy: ['Hehe, that tickles!', 'Hi hi hi!'], sleepy: ['Five more minutes… then hobbies.', 'Zzz… peanuts… zzz'] }[m]); },
