@@ -1,0 +1,11 @@
+{
+  "name": "Hobby Café",
+  "short_name": "Hobby Café",
+  "description": "Hobbies, puzzles, secret codes & math belts with your café companion.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F6EEDF",
+  "theme_color": "#3B2418",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
