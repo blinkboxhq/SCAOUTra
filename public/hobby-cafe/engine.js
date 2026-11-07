@@ -160,50 +160,49 @@ window.scramble = function (w) {
 };
 
 /* ═════════ Companion art ═════════
-   An original chibi café-agent drawn in SVG. Moods: happy, smug, sparkle, cool, sleepy, shock. */
+   An ORIGINAL barista-spy girl drawn in SVG (rose bob, burgundy beret with a gold star, amber eyes, freckles).
+   Users can replace her with their own pictures per mood in Passport → Mood album (kept on-device only).
+   Moods: happy, smug, sparkle, cool, sleepy, shock. */
 window.companionSVG = function (mood = 'happy') {
-  const hair = '#F4A3B0', hairDk = '#D97A8C', skin = '#FDEDE0', line = '#5A3A3F';
-  const eyeG = '#2E7A5A', eyeL = '#7DD3A6';
+  const hair = '#EE9DB0', hairDk = '#C96F86', skin = '#FCE9DA', line = '#5A3A3F', iris = '#8A4B22', irisL = '#D89A55';
   const eye = (x) => {
     switch (mood) {
-      case 'smug': return `<path d="M${x - 11},116 Q${x},110 ${x + 11},116" stroke="${line}" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M${x - 9},117 Q${x},126 ${x + 9},117 Z" fill="${eyeG}"/>`;
-      case 'sparkle': return `<ellipse cx="${x}" cy="118" rx="10" ry="12" fill="${eyeG}"/>
-        <path d="M${x},109 L${x + 2.5},115.5 L${x + 9},118 L${x + 2.5},120.5 L${x},127 L${x - 2.5},120.5 L${x - 9},118 L${x - 2.5},115.5 Z" fill="#FFF6B0"/>`;
-      case 'sleepy': return `<path d="M${x - 9},119 Q${x},126 ${x + 9},119" stroke="${line}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      case 'smug': return `<path d="M${x - 10},117 Q${x},111 ${x + 10},117" stroke="${line}" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M${x - 8},118 Q${x},125 ${x + 8},118 Z" fill="${iris}"/>`;
+      case 'sparkle': return `<circle cx="${x}" cy="118" r="10" fill="${iris}"/><path d="M${x},109 L${x + 2.5},115.5 L${x + 9},118 L${x + 2.5},120.5 L${x},127 L${x - 2.5},120.5 L${x - 9},118 L${x - 2.5},115.5 Z" fill="#FFE9A8"/>`;
+      case 'sleepy': return `<path d="M${x - 9},118 Q${x},125 ${x + 9},118" stroke="${line}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
       case 'shock': return `<circle cx="${x}" cy="118" r="9" fill="#fff" stroke="${line}" stroke-width="2"/><circle cx="${x}" cy="118" r="3" fill="${line}"/>`;
       case 'cool': return '';
-      default: return `<ellipse cx="${x}" cy="118" rx="10" ry="12.5" fill="${eyeG}"/>
-        <ellipse cx="${x}" cy="121" rx="6" ry="7" fill="${eyeL}"/>
-        <circle cx="${x - 3.5}" cy="112.5" r="3.6" fill="#fff"/><circle cx="${x + 3.5}" cy="124" r="1.6" fill="#fff"/>`;
+      default: return `<circle cx="${x}" cy="118" r="10" fill="${iris}"/><circle cx="${x}" cy="121" r="5.5" fill="${irisL}"/>
+        <circle cx="${x - 3.5}" cy="113.5" r="3.4" fill="#fff"/><circle cx="${x + 3.5}" cy="123" r="1.5" fill="#fff"/>
+        <path d="M${x - 11},106 Q${x},101 ${x + 10},105" stroke="${line}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
     }
   };
   const mouth = {
-    happy: `<path d="M91,139 Q100,149 109,139 Q100,143 91,139 Z" fill="#D9566E"/>`,
-    smug: `<path d="M84,137 Q100,147 116,136" stroke="${line}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
-    sparkle: `<ellipse cx="100" cy="142" rx="7" ry="8" fill="#D9566E"/><ellipse cx="100" cy="146" rx="4" ry="3" fill="#F3A0AE"/>`,
-    cool: `<path d="M93,142 L107,142" stroke="${line}" stroke-width="2.4" stroke-linecap="round"/>`,
-    sleepy: `<ellipse cx="100" cy="142" rx="3" ry="3.5" fill="#D9566E"/>`,
-    shock: `<ellipse cx="100" cy="143" rx="6" ry="8" fill="#D9566E"/>`,
+    happy: `<path d="M90,140 Q100,151 110,140 Q100,144 90,140 Z" fill="#C9506A"/>`,
+    smug: `<path d="M86,139 Q99,146 114,136" stroke="${line}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
+    sparkle: `<path d="M90,138 Q100,156 110,138 Z" fill="#C9506A"/>`,
+    cool: `<path d="M92,142 Q100,145 108,141" stroke="${line}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+    sleepy: `<path d="M95,142 Q100,145 105,142" stroke="${line}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    shock: `<ellipse cx="100" cy="143" rx="6" ry="8" fill="#C9506A"/>`,
   }[mood] || '';
-  const shades = mood === 'cool' ? `<g><rect x="61" y="106" width="34" height="22" rx="5" fill="#1C1A20"/><rect x="105" y="106" width="34" height="22" rx="5" fill="#1C1A20"/>
-    <path d="M95,112 L105,112" stroke="#1C1A20" stroke-width="4"/><path d="M66,111 L76,111" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
-    <path d="M110,111 L120,111" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/></g>` : '';
-  const extra = mood === 'sleepy' ? `<text x="150" y="70" font-size="20" fill="${hairDk}" font-family="sans-serif" font-weight="700">z</text><text x="164" y="54" font-size="14" fill="${hairDk}" font-family="sans-serif" font-weight="700">z</text>`
-    : mood === 'sparkle' ? `<path d="M168,60 l3,8 8,3 -8,3 -3,8 -3,-8 -8,-3 8,-3z" fill="#F2C94C"/><path d="M28,84 l2,5 5,2 -5,2 -2,5 -2,-5 -5,-2 5,-2z" fill="#F2C94C"/>`
-    : mood === 'shock' ? `<path d="M160,48 L166,74 M172,52 L170,74" stroke="${hairDk}" stroke-width="3" stroke-linecap="round"/>` : '';
+  const shades = mood === 'cool' ? `<g><path d="M60,108 h36 l-3,16 q-1,5 -6,5 h-20 q-5,0 -6,-5z" fill="#1C1A20"/><path d="M104,108 h36 l-1,16 q-1,5 -6,5 h-20 q-5,0 -6,-5z" fill="#1C1A20"/>
+    <path d="M96,111 Q100,108 104,111" stroke="#1C1A20" stroke-width="3" fill="none"/><path d="M66,112 L78,112 M110,112 L122,112" stroke="#fff" stroke-opacity=".4" stroke-width="3" stroke-linecap="round"/></g>` : '';
+  const extra = mood === 'sleepy' ? `<text x="152" y="76" font-size="20" fill="${hairDk}" font-family="sans-serif" font-weight="700">z</text><text x="166" y="60" font-size="14" fill="${hairDk}" font-family="sans-serif" font-weight="700">z</text>`
+    : mood === 'sparkle' ? `<path d="M170,84 l3,8 8,3 -8,3 -3,8 -3,-8 -8,-3 8,-3z" fill="#F2C94C"/><path d="M26,96 l2,5 5,2 -5,2 -2,5 -2,-5 -5,-2 5,-2z" fill="#F2C94C"/>`
+    : mood === 'shock' ? `<path d="M164,70 L168,92 M176,74 L172,92" stroke="${hairDk}" stroke-width="3" stroke-linecap="round"/>` : '';
   return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Your café companion, feeling ${mood}">
-  <path d="M38,112 Q30,38 100,32 Q170,38 162,112 L166,172 Q152,182 142,166 L58,166 Q48,182 34,172 Z" fill="${hair}" stroke="${hairDk}" stroke-width="2"/>
-  <path d="M70,160 L130,160 L136,200 L64,200 Z" fill="#2A2530"/><path d="M88,160 L100,176 L112,160 Z" fill="#fff"/><path d="M96,168 L104,168 L100,184 Z" fill="#C8423C"/>
-  <ellipse cx="100" cy="114" rx="53" ry="51" fill="${skin}" stroke="${line}" stroke-width="1.5"/>
-  <ellipse cx="70" cy="134" rx="9" ry="5" fill="#F7AFBD" opacity=".7"/><ellipse cx="130" cy="134" rx="9" ry="5" fill="#F7AFBD" opacity=".7"/>
-  ${eye(78)}${eye(122)}${shades}${mouth}
-  <path d="M44,112 Q44,46 100,42 Q156,46 156,112 L148,88 L140,104 L131,80 L120,100 L108,76 L97,98 L86,78 L75,101 L64,84 L54,106 Z" fill="${hair}" stroke="${hairDk}" stroke-width="2" stroke-linejoin="round"/>
-  <path d="M44,104 Q36,140 46,172 L58,154 Q53,128 56,104 Z" fill="${hair}" stroke="${hairDk}" stroke-width="2"/>
-  <path d="M156,104 Q164,140 154,172 L142,154 Q147,128 144,104 Z" fill="${hair}" stroke="${hairDk}" stroke-width="2"/>
-  <path d="M62,58 Q58,58 56,54 L40,22 Q38,18 43,20 L80,40 Q83,43 79,46 Z" fill="#2A2530"/><path d="M50,52 Q60,44 74,44" stroke="#D9B44A" stroke-width="3" fill="none" stroke-dasharray="3 3"/>
-  <path d="M138,58 Q142,58 144,54 L160,22 Q162,18 157,20 L120,40 Q117,43 121,46 Z" fill="#2A2530"/><path d="M150,52 Q140,44 126,44" stroke="#D9B44A" stroke-width="3" fill="none" stroke-dasharray="3 3"/>
-  <path d="M100,43 Q90,22 106,14 Q96,26 106,42" fill="none" stroke="${hairDk}" stroke-width="2.4" stroke-linecap="round"/>
-  <ellipse cx="80" cy="60" rx="10" ry="5" fill="#fff" opacity=".35" transform="rotate(-20 80 60)"/><ellipse cx="124" cy="58" rx="7" ry="4" fill="#fff" opacity=".35" transform="rotate(20 124 58)"/>
+  <path d="M38,120 Q30,52 100,46 Q170,52 162,120 Q168,150 156,170 Q146,180 138,168 Q146,152 136,146 L64,146 Q54,152 62,168 Q54,180 44,170 Q32,150 38,120 Z" fill="${hair}" stroke="${hairDk}" stroke-width="2"/>
+  <path d="M60,164 Q100,150 140,164 L148,200 L52,200 Z" fill="#F3E3C7"/><path d="M76,158 L82,200 M124,158 L118,200" stroke="#D9A441" stroke-width="7"/>
+  <path d="M84,156 Q100,170 116,156" fill="none" stroke="#E2CDA9" stroke-width="5"/><ellipse cx="100" cy="182" rx="5" ry="7" fill="#6B4226"/><path d="M100,176 Q97,182 100,188" stroke="#3B2418" stroke-width="1.4" fill="none"/>
+  <ellipse cx="100" cy="117" rx="51" ry="49" fill="${skin}" stroke="${line}" stroke-width="1.5"/>
+  <ellipse cx="70" cy="135" rx="9" ry="5" fill="#F6A9B6" opacity=".65"/><ellipse cx="130" cy="135" rx="9" ry="5" fill="#F6A9B6" opacity=".65"/>
+  <g fill="#C98A6A" opacity=".7"><circle cx="66" cy="128" r="1.3"/><circle cx="72" cy="131" r="1.3"/><circle cx="62" cy="132" r="1.2"/><circle cx="134" cy="128" r="1.3"/><circle cx="128" cy="131" r="1.3"/><circle cx="138" cy="132" r="1.2"/></g>
+  ${eye(79)}${eye(121)}${shades}${mouth}
+  <path d="M49,116 Q44,62 104,58 Q156,60 153,108 Q146,86 124,80 Q130,92 127,102 Q112,82 86,86 Q64,92 56,104 Q52,108 49,116 Z" fill="${hair}" stroke="${hairDk}" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M50,108 Q40,132 48,150 Q54,160 50,170 Q62,162 60,146 Q56,130 60,112 Z" fill="${hair}" stroke="${hairDk}" stroke-width="2"/>
+  <path d="M150,106 Q160,132 152,150 Q146,160 150,170 Q138,162 140,146 Q144,130 140,110 Z" fill="${hair}" stroke="${hairDk}" stroke-width="2"/>
+  <g transform="rotate(-12 96 56)"><ellipse cx="96" cy="58" rx="64" ry="17" fill="#7A2E3A"/><path d="M38,56 Q46,22 100,22 Q150,24 156,54 Q100,44 38,56 Z" fill="#8E3A47"/>
+    <path d="M96,22 q2,-9 7,-8" stroke="#7A2E3A" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M50,48 Q96,36 146,46" stroke="#fff" stroke-opacity=".12" stroke-width="4" fill="none"/></g>
+  <path d="M136,40 l3.5,7.5 8,1 -6,5.5 1.6,8 -7.1,-4 -7.1,4 1.6,-8 -6,-5.5 8,-1z" fill="#F2C94C" stroke="#B88A1F" stroke-width="1"/>
   ${extra}</svg>`;
 };

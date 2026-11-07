@@ -11,7 +11,7 @@ const DEFAULT = {
   streak: { last: '', count: 0, best: 0 },
   belt: 0, beltBest: {},
   riddles: [], codes: [], puzzles: 0,
-  energy: 2, mood: 'surprise',
+  energy: 2, mood: 'surprise', moods: {},
 };
 let S;
 try { S = Object.assign({}, DEFAULT, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch { S = { ...DEFAULT }; }
@@ -46,10 +46,38 @@ const ENERGY = { 1: ['🔋', 'Cozy'], 2: ['⚡', 'Steady'], 3: ['🔥', 'Hyper']
 const LVL = { 1: 'Beginner', 2: 'Explorer', 3: 'Master' };
 const cname = () => esc(S.companion || 'Anya');
 
+const MOODS = [['happy', '😊 Happy'], ['smug', '😏 Smug “heh”'], ['cool', '😎 Cool shades'], ['sparkle', '✨ Sparkly excited'], ['shock', '😱 Shocked'], ['sleepy', '😴 Sleepy / calm']];
 function avatar(mood = 'happy', cls = '') {
-  if (S.avatar) return `<div class="avatar ${cls}"><img src="${S.avatar}" alt="${cname()}"></div>`;
+  const m = S.moods || {}, ph = m[mood] || S.avatar || Object.values(m)[0];
+  if (ph) return `<div class="avatar ${cls}"><img src="${ph}" alt="${cname()} feeling ${mood}"></div>`;
   return `<div class="avatar ${cls}">${companionSVG(mood)}</div>`;
 }
+
+/* ═════════ Café ambience (generated, no audio files) ═════════ */
+const amb = { on: false, ctx: null, nodes: [], t: null };
+function ambienceToggle() {
+  if (amb.on) { amb.nodes.forEach(n => { try { n.stop?.(); n.disconnect(); } catch {} }); amb.nodes = []; clearTimeout(amb.t); amb.ctx?.suspend(); amb.on = false; return; }
+  const ctx = amb.ctx || (amb.ctx = new (window.AudioContext || window.webkitAudioContext)()); ctx.resume();
+  const len = ctx.sampleRate * 4, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0); let last = 0;
+  for (let i = 0; i < len; i++) { last = (last + .02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.2; } // brown noise = soft rain/café murmur
+  const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+  const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900;
+  const g = ctx.createGain(); g.gain.value = .22; src.connect(lp).connect(g).connect(ctx.destination); src.start();
+  amb.nodes = [src, lp, g]; amb.on = true;
+  const clink = () => { if (!amb.on) return; const o = ctx.createOscillator(), og = ctx.createGain(), f = 1800 + Math.random() * 1600;
+    o.frequency.value = f; o.type = 'sine'; og.gain.setValueAtTime(.0001, ctx.currentTime); og.gain.exponentialRampToValueAtTime(.05, ctx.currentTime + .01); og.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + 1.2);
+    o.connect(og).connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 1.3); amb.t = setTimeout(clink, 5000 + Math.random() * 11000); };
+  amb.t = setTimeout(clink, 2500);
+}
+
+/* tap sparkles */
+document.addEventListener('pointerdown', e => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  for (let i = 0; i < 6; i++) { const s = document.createElement('i'); s.className = 'spark'; s.textContent = pick(['✦', '✧', '♡', '⋆']);
+    s.style.left = e.clientX + 'px'; s.style.top = e.clientY + 'px'; const a = Math.PI * 2 * i / 6 + Math.random();
+    s.style.setProperty('--dx', Math.cos(a) * (24 + Math.random() * 20) + 'px'); s.style.setProperty('--dy', Math.sin(a) * (24 + Math.random() * 20) + 'px');
+    document.body.appendChild(s); setTimeout(() => s.remove(), 700); }
+}, { passive: true });
 
 function toast(msg) {
   const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
@@ -115,18 +143,22 @@ const every = (fn, ms) => timers.push(setInterval(fn, ms));
 function stopTimers() { timers.forEach(clearInterval); timers = []; }
 
 /* ── Café (home) ── */
+const tod = () => { const h = new Date().getHours(); return h < 6 || h >= 20 ? 'night' : h < 11 ? 'morning' : h < 17 ? 'day' : 'sunset'; };
+const TOD_HELLO = { morning: 'Good morning! The croissants are warm and so is your brain.', day: 'Afternoon café hours! Perfect time for an adventure.', sunset: 'Golden hour at the café… very dramatic. Very cinematic.', night: 'Night café is open. Cozy mode, lamps on.' };
 VIEWS.cafe = () => {
   const lv = level(), next = levelXp(lv + 1), cur = levelXp(lv);
   const pct = lv >= LEVELS.length - 1 ? 100 : Math.round((S.xp - cur) / (next - cur) * 100);
-  const sp = todaysSpecial();
-  const greet = pick(L.greet);
+  const cups = Math.round(pct / 10), sp = todaysSpecial(), t = tod();
+  const greet = Math.random() < .5 ? TOD_HELLO[t] : pick(L.greet);
+  const photos = Object.keys(S.moods || {}).length;
   return `
-  <section class="storefront">
-    <div class="shelves" aria-hidden="true">${shelves()}</div>
-    <div class="sign"><span>HOBBY</span> CAFÉ</div>
-    <div class="hours">OPEN · for fun, adventure & rest</div>
+  <section class="storefront tod-${t}">
+    ${cafeScene(t)}
+    <div class="sign-board"><div class="chains"></div><div class="sign"><span>HOBBY</span> CAFÉ</div><div class="hours">est. today · fun · adventure · rest</div></div>
     <div class="hero-row">
-      <div class="hero-avatar">${avatar(pick(['happy', 'smug', 'cool']), 'lg')}</div>
+      <button class="polaroid" data-act="poke" aria-label="Poke ${cname()}">
+        <i class="tape"></i>${avatar(pick(['happy', 'smug', 'cool']), 'lg')}<span class="pol-cap">${cname()} ✿</span>
+      </button>
       <div class="hero-talk">
         <div class="speech"><b>${cname()}</b><p id="heroLine">${esc(greet)}</p></div>
         <div class="checkin">
@@ -134,44 +166,84 @@ VIEWS.cafe = () => {
           <div class="chips" id="energyChips">${[1, 2, 3].map(e => `<button class="chip ${S.energy === e ? 'on' : ''}" data-energy="${e}">${ENERGY[e][0]} ${ENERGY[e][1]}</button>`).join('')}</div>
           <div class="label">You're craving…</div>
           <div class="chips" id="moodChips">${[['adventure', '🗺️ Adventure'], ['drama', '🎭 Drama'], ['calm', '🍵 Calm'], ['surprise', '🎁 Surprise me']].map(([m, l]) => `<button class="chip ${S.mood === m ? 'on' : ''}" data-mood="${m}">${l}</button>`).join('')}</div>
-          <button class="btn big" data-act="idea">✨ ${cname()}, give me an idea!</button>
+          <div class="row"><button class="btn big glowy" data-act="idea">✨ ${cname()}, give me an idea!</button>
+          <button class="btn ghost-dark" data-act="ambience" id="ambBtn">${amb.on ? '🔊 Café sounds on' : '🎧 Café sounds'}</button></div>
         </div>
       </div>
     </div>
+    ${photos ? '' : `<a class="photo-hint" href="#me/photos">📸 Add your own ${cname()} pictures →</a>`}
   </section>
   <div id="ideaSlot"></div>
 
-  <section class="stats">
-    <div class="stat"><div class="k">${LEVELS[lv]}</div><div class="bar"><i style="width:${pct}%"></i></div><small>${S.xp} XP · level ${lv + 1}</small></div>
-    <div class="stat"><div class="k">🔥 ${S.streak.count}</div><small>day streak</small></div>
-    <div class="stat"><div class="k">🎫 ${Object.keys(S.tried).length}</div><small>of ${H.length} hobbies tried</small></div>
+  <section class="loyalty">
+    <div class="loy-left"><div class="loy-title">Loyalty card · <b>${LEVELS[lv]}</b></div>
+      <div class="cups">${Array.from({ length: 10 }, (_, i) => `<span class="${i < cups ? 'full' : ''}">☕</span>`).join('')}</div>
+      <small>${S.xp} XP · level ${lv + 1} · fill the card to level up</small></div>
+    <div class="loy-stat"><b>🔥 ${S.streak.count}</b><small>day streak</small></div>
+    <div class="loy-stat"><b>🎫 ${Object.keys(S.tried).length}</b><small>of ${H.length} tried</small></div>
   </section>
 
-  <h2 class="sec">Today at the café</h2>
-  <section class="tiles">
-    <button class="tile rescue" data-act="rescue"><span>🚨</span><b>Doom-scroll rescue</b><small>Caught yourself scrolling? 5-minute counter-mission.</small></button>
-    <a class="tile special" href="#menu/${sp.id}"><span>${sp.emoji}</span><b>Today's special</b><small>${esc(sp.name)} · ${sp.mins} min</small></a>
-    <a class="tile" href="#spy"><span>📜</span><b>Secret mission</b><small>${S.codes.includes(today()) ? 'Decoded ✓ — great work, agent' : 'An intercepted message awaits decoding'}</small></a>
-    <a class="tile" href="#dojo"><span>🥋</span><b>Math Dojo</b><small>${BELTS[S.belt].name} · ${BELTS[S.belt].topic}</small></a>
-    <a class="tile" href="#puzzles"><span>🧩</span><b>Puzzle Corner</b><small>Word search, scrambles, riddles & puzzle maker</small></a>
-    <a class="tile calm" href="#rest"><span>🛋️</span><b>Rest Nook</b><small>Breathing, do-nothing timer, cozy picks</small></a>
+  <section class="chalkboard">
+    <h2>Today's Specials <small>${new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}</small></h2>
+    <ul>
+      <li><button data-act="rescue"><span>🚨</span><b>Doom-scroll rescue</b><em>5-min counter-mission</em></button></li>
+      <li><a href="#menu/${sp.id}"><span>${sp.emoji}</span><b>Chef's pick: ${esc(sp.name)}</b><em>${sp.mins} min</em></a></li>
+      <li><a href="#spy"><span>📜</span><b>Secret mission</b><em>${S.codes.includes(today()) ? 'decoded ✓' : 'message intercepted!'}</em></a></li>
+      <li><a href="#dojo"><span>🥋</span><b>Math Dojo · ${BELTS[S.belt].name}</b><em>${BELTS[S.belt].topic}</em></a></li>
+      <li><a href="#puzzles"><span>🧩</span><b>Puzzle corner</b><em>word search · riddles</em></a></li>
+      <li><a href="#rest"><span>🛋️</span><b>Rest nook</b><em>breathe · do nothing</em></a></li>
+    </ul>
+    <div class="chalk-doodle">☕ ~ ♡ ~ ✿</div>
   </section>
 
-  <h2 class="sec">The café rooms</h2>
-  <section class="rooms">${Object.entries(C).map(([k, c]) => {
+  <h2 class="sec hand">Pick a room from the shelf ↓</h2>
+  <section class="bookshelf">${Object.entries(C).map(([k, c], i) => {
     const tot = H.filter(h => h.cat === k).length, done = H.filter(h => h.cat === k && S.tried[h.id]).length;
-    return `<a class="room" href="#menu" data-cat="${k}" style="--c:${c.color}"><span>${c.emoji}</span><b>${c.name}</b><small>${c.blurb}</small><em>${done}/${tot}</em></a>`;
+    return `<a class="book" href="#menu" data-cat="${k}" style="--c:${c.color};--tilt:${[-2, 1, -1, 2, 0][i % 5]}deg">
+      <span class="spine"></span><span class="emblem">${c.emoji}</span><b>${c.name}</b><small>${c.blurb}</small>
+      <em>${done}/${tot} chapters</em><i class="ribbon" style="height:${18 + Math.round(done / tot * 40)}px"></i></a>`;
   }).join('')}</section>`;
 };
-function shelves() {
-  const r = seeded('shelf'), cols = ['#C8423C', '#3C78C8', '#E8833A', '#4BA56A', '#7B4FB0', '#D9B44A', '#8A5A3C', '#F4A3B0', '#2F7F8F'];
-  let out = '';
-  for (let row = 0; row < 3; row++) {
-    out += '<div class="shelf">';
-    for (let i = 0; i < 34; i++) out += `<i style="height:${58 + r() * 40}%;width:${6 + r() * 8}px;background:${cols[Math.floor(r() * cols.length)]}"></i>`;
-    out += '</div>';
-  }
-  return out;
+
+function cafeScene(t) {
+  const r = seeded('cafe-scene'), cols = ['#B5463F', '#3F6FB0', '#D9813A', '#4E9A62', '#7B55A8', '#D2A640', '#8A5A3C', '#E59AAA', '#2F7F8F', '#C9B79C'];
+  const books = (x0, y, w) => { let out = '', x = x0; while (x < x0 + w - 14) { const bw = 9 + r() * 12, bh = 34 + r() * 26, lean = r() < .08;
+    out += `<rect x="${x.toFixed(1)}" y="${(y - bh).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="1.5" fill="${cols[Math.floor(r() * cols.length)]}" ${lean ? `transform="rotate(8 ${x} ${y})"` : ''}/>
+      <rect x="${(x + 2).toFixed(1)}" y="${(y - bh + 6).toFixed(1)}" width="${(bw - 4).toFixed(1)}" height="2" fill="#fff" opacity=".35"/>`; x += bw + 1.5; } return out; };
+  const sky = { morning: ['#FFD9B0', '#FFF1D6'], day: ['#8EC5F0', '#D7EEFF'], sunset: ['#3E2A5C', '#F08A5D'], night: ['#0E1430', '#28305E'] }[t];
+  const stars = t === 'night' ? Array.from({ length: 26 }, () => `<circle cx="${740 + r() * 170}" cy="${60 + r() * 200}" r="${(r() * 1.6 + .4).toFixed(1)}" fill="#fff" class="twinkle" style="animation-delay:${(r() * 3).toFixed(1)}s"/>`).join('') : '';
+  const orb = t === 'night' ? `<circle cx="860" cy="100" r="22" fill="#FFF6D8"/><circle cx="870" cy="94" r="20" fill="${sky[0]}"/>`
+    : t === 'sunset' ? `<circle cx="820" cy="240" r="34" fill="#FFB86B" opacity=".95"/>` : `<circle cx="850" cy="110" r="26" fill="#FFF3B0"/>`;
+  const lamp = (x, len) => `<line x1="${x}" y1="0" x2="${x}" y2="${len}" stroke="#1A0F0A" stroke-width="2"/>
+    <circle cx="${x}" cy="${len + 26}" r="70" fill="url(#lampGlow)" class="glow"/>
+    <path d="M${x - 26},${len + 26} Q${x - 22},${len} ${x},${len} Q${x + 22},${len} ${x + 26},${len + 26} Z" fill="#C9963E"/><ellipse cx="${x}" cy="${len + 27}" rx="10" ry="5" fill="#FFF1C4"/>`;
+  const motes = Array.from({ length: 18 }, () => `<circle cx="${(r() * 1000).toFixed(0)}" cy="${(80 + r() * 300).toFixed(0)}" r="${(r() * 1.8 + .6).toFixed(1)}" fill="#FFE6A8" class="mote" style="animation-delay:${(r() * 8).toFixed(1)}s;animation-duration:${(8 + r() * 8).toFixed(1)}s"/>`).join('');
+  return `<svg class="scene" viewBox="0 0 1000 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><radialGradient id="lampGlow"><stop offset="0" stop-color="#FFD98A" stop-opacity=".55"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient>
+      <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2216"/><stop offset="1" stop-color="#26160E"/></linearGradient></defs>
+    <rect width="1000" height="460" fill="url(#wall)"/>
+    <g opacity=".14">${Array.from({ length: 21 }, (_, i) => `<line x1="${i * 50}" y1="0" x2="${i * 50}" y2="460" stroke="#000" stroke-width="2"/>`).join('')}</g>
+    <g class="shelfwall" opacity=".75">
+      ${[150, 250, 350].map(y => `${books(20, y, 300)}<rect x="10" y="${y}" width="320" height="10" fill="#8A5A34"/><rect x="10" y="${y + 10}" width="320" height="4" fill="#5A3A22"/>`).join('')}
+      <g transform="translate(250 98)"><path d="M0,52 h40 l-5,-22 h-30z" fill="#B5683E"/><path d="M20,30 q-16,-30 -4,-40 q8,18 4,40 q12,-26 22,-30 q-2,20 -22,30" fill="#4E9A62"/></g>
+    </g>
+    <g transform="translate(720 40)"><path d="M0,280 V90 A110,90 0 0 1 220,90 V280 Z" fill="#5A3A22"/><path d="M14,272 V96 A96,78 0 0 1 206,96 V272 Z" fill="url(#sky)"/>
+      <g transform="translate(-720 -40)">${stars}${orb}</g>
+      ${t === 'day' || t === 'morning' ? '<g fill="#fff" opacity=".85" class="cloud"><ellipse cx="70" cy="150" rx="34" ry="12"/><ellipse cx="92" cy="142" rx="22" ry="14"/></g>' : ''}
+      <path d="M110,14 V272 M14,180 H206" stroke="#5A3A22" stroke-width="7"/>
+      <path d="M8,280 H212 v12 H8z" fill="#8A5A34"/>
+      <g transform="translate(150 246)"><path d="M0,34 h28 l-4,-18 h-20z" fill="#C46A4A"/><path d="M14,16 q-12,-18 -2,-24 q4,10 2,24 q8,-14 16,-16 q-2,12 -16,16" fill="#5DAA6E"/></g>
+    </g>
+    <path d="M0,0 Q40,40 20,90 Q50,60 60,120 Q70,70 110,60" stroke="#3E7A4A" stroke-width="3" fill="none" opacity=".8"/>
+    ${[[20, 90], [60, 120], [110, 60], [40, 40], [86, 70]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="9" ry="5" fill="#5DAA6E" transform="rotate(30 ${x} ${y})"/>`).join('')}
+    ${lamp(420, 60)}${lamp(580, 40)}${lamp(160, 30)}
+    <rect x="0" y="400" width="1000" height="60" fill="#5A3A22"/><rect x="0" y="396" width="1000" height="8" fill="#8A5A34"/>
+    <g transform="translate(880 352)"><path d="M0,10 h40 v26 q0,14 -20,14 q-20,0 -20,-14z" fill="#FFF6E6"/><path d="M40,16 q14,0 14,10 q0,10 -14,10" stroke="#FFF6E6" stroke-width="5" fill="none"/>
+      <path d="M8,6 q-6,-12 2,-22 q6,-10 0,-22" class="steam" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M22,4 q-6,-14 2,-24 q6,-10 0,-20" class="steam s2" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+    <g transform="translate(60 360)"><rect width="56" height="40" rx="3" fill="#B5463F"/><rect y="-8" width="60" height="10" rx="2" fill="#3F6FB0"/><rect x="4" y="-16" width="52" height="9" rx="2" fill="#D2A640"/></g>
+    ${motes}
+  </svg>`;
 }
 AFTER.cafe = () => {
   document.querySelectorAll('[data-cat]').forEach(a => a.addEventListener('click', () => { menuF.cat = a.dataset.cat; }));
@@ -273,6 +345,7 @@ VIEWS.mission = (id) => {
         <button class="btn ghost" data-act="screenoff">🌙 Screen-off mode</button>
         <button class="btn big" data-act="finish">✅ Mission complete</button>
       </div>
+      <div class="seal">✦</div>
       <a class="abort" href="#menu/${h.id}" data-act="abort">abort mission</a>
     </div>
   </section>
@@ -376,11 +449,11 @@ VIEWS.spy = (chal) => {
     <pre class="code">${esc(ch.t)}</pre><p class="muted">Cipher: <b>${esc(CIPHERS[ch.c]?.name || '?')}</b>${ch.c === 'keyword' ? ' — ask your friend for the keyword!' : ''}</p>
     <div class="row"><input id="chGuess" placeholder="Your decoded message"><button class="btn" data-act="chcheck">Check</button></div>
     <p class="muted">Tip: paste it into the Code Machine below and try decoding.</p></section>` : ''}
-  <section class="intercept">
-    <div class="stamp-top">${solved ? 'DECODED' : 'INTERCEPTED'}</div>
+  <section class="intercept dossier">
+    <i class="clip"></i><div class="stamp-top">${solved ? 'DECODED' : 'INTERCEPTED'}</div>
     <h2>📜 Today's secret mission</h2>
     <p>We intercepted this message. Decode it, agent.</p>
-    <pre class="code">${esc(d.enc)}</pre>
+    <pre class="code type" data-type="${esc(d.enc)}"></pre>
     ${solved ? `<p class="win">✓ “${d.msg}” — mission accomplished.</p>` : `
     <div class="row"><input id="icGuess" placeholder="Type the decoded message…"><button class="btn" data-act="iccheck">Submit</button></div>
     <details><summary>Need a hint?</summary><p>The cipher is <b>${CIPHERS[d.type].name}</b>. ${CIPHERS[d.type].about}${d.type === 'caesar' ? ' Try different shifts in the Code Machine!' : ''}</p></details>`}
@@ -403,6 +476,7 @@ VIEWS.spy = (chal) => {
     <div class="menu-grid">${H.filter(h => h.cat === 'spy').map(h => `<a class="card" href="#menu/${h.id}" style="--c:${C.spy.color}"><span class="e">${h.emoji}</span><b>${esc(h.name)}</b><small>${h.mins} min · ${LVL[h.level]}</small></a>`).join('')}</div></section>`;
 };
 AFTER.spy = () => {
+  const ty = $('.code.type'); if (ty) { const full = ty.dataset.type; let i = 0; every(() => { if (i <= full.length) ty.textContent = full.slice(0, i++) + (i <= full.length ? '▌' : ''); }, 38); }
   const run = () => { const c = CIPHERS[cip.type]; $('#cipOut').value = c[cip.dir]($('#cipIn').value, cip.p); };
   $('#cipIn').addEventListener('input', run);
   $('#cipP')?.addEventListener('input', e => { cip.p = e.target.value; run(); });
@@ -421,7 +495,7 @@ VIEWS.dojo = () => {
   if (round && !round.done) return dojoRound();
   if (round && round.done) return dojoResult();
   return `
-  <header class="page-head"><h1>🥋 Math Dojo</h1><p>From white belt to black belt — one small round at a time. Score 8/10 to earn the next belt. Paper and pencil are encouraged!</p></header>
+  <header class="dojo-hero">${dojoScene()}<div class="dojo-hero-text"><h1>Math Dojo</h1><p>From white belt to black belt — one small round at a time. Score 8/10 to earn the next belt. Paper & pencil encouraged.</p></div></header>
   <div class="dojo-intro">${avatar('smug', 'sm')}<p><b>${cname()}:</b> ${esc(pick(L.math))}</p></div>
   <section class="belts">${BELTS.map((b, i) => {
     const locked = i > S.belt, best = S.beltBest[i];
@@ -429,6 +503,23 @@ VIEWS.dojo = () => {
       <span class="knot"></span><b>${b.name}</b><small>${b.topic}</small><em>${locked ? '🔒' : best != null ? `best ${best}/10` : 'start →'}</em></button>`;
   }).join('')}</section>`;
 };
+function dojoScene() {
+  return `<svg class="scene" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><linearGradient id="dawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F7C98B"/><stop offset=".6" stop-color="#F3A66B"/><stop offset="1" stop-color="#E9D3A8"/></linearGradient></defs>
+    <rect width="1000" height="300" fill="url(#dawn)"/><circle cx="640" cy="150" r="60" fill="#FFF0C9" opacity=".9"/>
+    <path d="M0,190 L120,120 L220,170 L340,90 L460,160 L560,110 L700,170 L820,100 L1000,160 V300 H0Z" fill="#D49A6A" opacity=".55"/>
+    <path d="M0,220 L160,160 L300,210 L440,150 L600,215 L760,160 L1000,210 V300 H0Z" fill="#B97C55" opacity=".6"/>
+    <g fill="#5A2E1E"><rect x="110" y="168" width="10" height="80"/><path d="M60,170 Q115,150 170,170 L160,160 Q115,140 70,160Z"/><path d="M50,200 Q115,178 180,200 L168,186 Q115,166 62,186Z"/>
+      <rect x="760" y="120" width="190" height="120"/><path d="M730,128 Q855,92 980,128 L960,112 Q855,72 750,112 Z"/><path d="M745,100 Q855,66 965,100 L950,88 Q855,52 760,88 Z"/>
+      <rect x="800" y="170" width="30" height="70" fill="#E8B04A"/><rect x="880" y="170" width="30" height="70" fill="#E8B04A"/></g>
+    <g fill="#3E2416"><path d="M300,300 Q290,200 310,150 Q330,120 300,90" stroke="#3E2416" stroke-width="10" fill="none"/>
+      <ellipse cx="290" cy="110" rx="60" ry="16" fill="#4A6B3A"/><ellipse cx="320" cy="140" rx="50" ry="13" fill="#4A6B3A"/><ellipse cx="300" cy="80" rx="40" ry="12" fill="#4A6B3A"/></g>
+    <rect y="262" width="1000" height="38" fill="#CDB38A"/><g stroke="#B79A6E" stroke-width="2">${Array.from({ length: 20 }, (_, i) => `<line x1="${i * 55}" y1="262" x2="${i * 55 - 30}" y2="300"/>`).join('')}</g>
+    <g fill="#E07A2E" transform="translate(520 196)"><circle cx="0" cy="0" r="9" fill="#F0C9A0"/><path d="M-12,12 h24 l6,30 h-36z"/><path d="M-12,42 l-22,24 M12,42 l20,24" stroke="#E07A2E" stroke-width="9" stroke-linecap="round"/><path d="M-12,16 l-26,-6 M12,16 l28,4" stroke="#E07A2E" stroke-width="8" stroke-linecap="round"/></g>
+    <g fill="#E07A2E" transform="translate(600 206) scale(.8)"><circle cx="0" cy="0" r="9" fill="#F0C9A0"/><path d="M-12,12 h24 l6,30 h-36z"/><path d="M-12,42 l-18,26 M12,42 l18,26" stroke="#E07A2E" stroke-width="9" stroke-linecap="round"/><path d="M-12,16 l-20,14 M12,16 l26,-10" stroke="#E07A2E" stroke-width="8" stroke-linecap="round"/></g>
+    ${Array.from({ length: 4 }, (_, i) => `<ellipse cx="${200 + i * 220}" cy="${230 - i * 8}" rx="160" ry="10" fill="#fff" opacity=".25" class="mist" style="animation-delay:${i * 2}s"/>`).join('')}
+  </svg>`;
+}
 function dojoRound() {
   const p = round.qs[round.i], b = BELTS[round.belt];
   return `<section class="round" style="--b:${b.color};--bi:${b.ink}">
@@ -529,22 +620,29 @@ VIEWS.me = () => {
   <section class="settings">
     <label>Your code name <input id="setName" value="${esc(S.name)}"></label>
     <label>Companion's name <input id="setComp" value="${esc(S.companion)}"></label>
-    <label>Companion picture <input id="setAvatar" type="file" accept="image/*"> <small>Use any picture you like — it stays on this device only.</small></label>
-    ${S.avatar ? '<button class="btn ghost sm" data-act="clearavatar">Use the drawn companion again</button>' : ''}
+    <div id="photos" class="album"><h3>📸 ${cname()}'s mood album</h3>
+      <p class="muted">Add your favourite pictures of ${cname()} for each mood — she'll react with the right face all over the café. Pictures stay on this device only (not uploaded anywhere). Tap a frame to choose, or drag a picture onto it.</p>
+      <div class="album-grid">${MOODS.map(([k, l]) => `<label class="frame" data-mood-slot="${k}"><input type="file" accept="image/*" hidden data-mood-file="${k}">
+        ${S.moods?.[k] ? `<img src="${S.moods[k]}" alt="">` : `<span class="placeholder">${companionSVG(k)}</span>`}<b>${l}</b>
+        ${S.moods?.[k] ? `<button type="button" class="x" data-act="clearmood" data-k="${k}" aria-label="Remove">×</button>` : '<em>+ add</em>'}</label>`).join('')}</div>
+      ${Object.keys(S.moods || {}).length || S.avatar ? '<button class="btn ghost sm" data-act="clearavatar">Use the drawn companion again</button>' : ''}</div>
     <div class="row"><button class="btn ghost sm" data-act="export">⬇ Back up my progress</button><label class="btn ghost sm">⬆ Restore backup<input id="importF" type="file" accept="application/json" hidden></label><button class="btn ghost sm danger" data-act="reset">Reset everything</button></div>
   </section>`;
 };
 AFTER.me = () => {
   $('#setName').onchange = e => { S.name = e.target.value.trim() || 'Agent'; save(); toast('Saved'); };
   $('#setComp').onchange = e => { S.companion = e.target.value.trim() || 'Anya'; save(); toast('Saved'); render(); };
-  $('#setAvatar').onchange = e => {
-    const f = e.target.files[0]; if (!f) return;
+  const setMood = (k, f) => { if (!f || !f.type.startsWith('image/')) return;
     const img = new Image(), rd = new FileReader();
-    rd.onload = () => { img.onload = () => { const cv = document.createElement('canvas'), s = 320; cv.width = cv.height = s;
-      const m = Math.min(img.width, img.height); cv.getContext('2d').drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, s, s);
-      S.avatar = cv.toDataURL('image/jpeg', .85); save(); render(); say('Ooh! Do I look cool? I look cool.', 'cool'); }; img.src = rd.result; };
-    rd.readAsDataURL(f);
-  };
+    rd.onload = () => { img.onload = () => { const cv = document.createElement('canvas'), sz = 360; cv.width = cv.height = sz;
+      const m = Math.min(img.width, img.height); cv.getContext('2d').drawImage(img, (img.width - m) / 2, (img.height - m) / 2.6, m, m, 0, 0, sz, sz);
+      S.moods = { ...(S.moods || {}), [k]: cv.toDataURL('image/jpeg', .85) }; save(); const y = scrollY; render(); scrollTo(0, y); say(k === 'cool' ? 'Shades on. I look SO cool.' : 'Ooh! Is that me? Cute!', k); }; img.src = rd.result; };
+    rd.readAsDataURL(f); };
+  document.querySelectorAll('[data-mood-file]').forEach(inp => inp.onchange = e => setMood(inp.dataset.moodFile, e.target.files[0]));
+  document.querySelectorAll('[data-mood-slot]').forEach(fr => {
+    fr.ondragover = e => { e.preventDefault(); fr.classList.add('drag'); }; fr.ondragleave = () => fr.classList.remove('drag');
+    fr.ondrop = e => { e.preventDefault(); fr.classList.remove('drag'); setMood(fr.dataset.moodSlot, e.dataTransfer.files[0]); }; });
+  if (param === 'photos') setTimeout(() => $('#photos')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   $('#importF').onchange = e => { const f = e.target.files[0]; if (!f) return; f.text().then(t => { try { S = Object.assign({}, DEFAULT, JSON.parse(t)); save(); render(); toast('Progress restored!'); } catch { toast('That file didn\'t work'); } }); };
 };
 
@@ -573,6 +671,10 @@ const ACTIONS = {
   },
   rescuedone: () => { closeOverlay(); gainXp(10, 'scroll rescued'); say('Phone: 0. You: 1. Heh.', 'smug'); },
   closeov: () => closeOverlay(),
+  poke: (t) => { const m = pick(['smug', 'sparkle', 'cool', 'shock', 'happy', 'sleepy']);
+    const pol = t.closest('.polaroid'); pol.querySelector('.avatar').outerHTML = avatar(m, 'lg'); pol.classList.remove('wiggle'); void pol.offsetWidth; pol.classList.add('wiggle');
+    $('#heroLine').textContent = pick({ smug: ['Heh. I know what you\'re thinking.', 'Heh heh. I have a plan.'], sparkle: ['Ooh! Are we doing an adventure?!', 'Sparkle mode activated!'], cool: ['Agent mode. Very cool. Very secret.', 'Shades on. Mission face.'], shock: ['Hey! Don\'t poke a spy!', 'Wah! You startled me!'], happy: ['Hehe, that tickles!', 'Hi hi hi!'], sleepy: ['Five more minutes… then hobbies.', 'Zzz… peanuts… zzz'] }[m]); },
+  ambience: (t) => { ambienceToggle(); t.textContent = amb.on ? '🔊 Café sounds on' : '🎧 Café sounds'; },
   wish: (t) => { const id = t.dataset.id; S.wish = S.wish.includes(id) ? S.wish.filter(x => x !== id) : [...S.wish, id]; save(); render(); },
   abort: () => { mission = null; },
   screenoff: () => {
@@ -626,7 +728,8 @@ const ACTIONS = {
   dojohome: () => { round = null; render(); },
   breathe: () => breathe('box'),
   breathe478: () => breathe('478'),
-  clearavatar: () => { S.avatar = null; save(); render(); },
+  clearavatar: () => { S.avatar = null; S.moods = {}; save(); render(); },
+  clearmood: (t, e) => { e.preventDefault(); const m = { ...S.moods }; delete m[t.dataset.k]; S.moods = m; save(); const y = scrollY; render(); scrollTo(0, y); },
   export: () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' })); a.download = `hobby-cafe-backup-${today()}.json`; a.click(); },
   reset: () => { if (confirm('Erase ALL progress, stamps and journal? This cannot be undone.')) { localStorage.removeItem(KEY); S = { ...DEFAULT }; render(); } },
 };

@@ -9,7 +9,7 @@ A personal anti-doom-scroll app: a cozy book café where your companion hands yo
 - **Spy HQ**: a daily coded message plus a Code Machine (Caesar, Atbash, A1Z26, Morse, mirror, keyword) and shareable friend-challenge links.
 - **Math Dojo**: 9 belts, from white (addition) to black (word problems & probability). Score 8/10 to earn the next belt.
 - **Rest Nook**: box and 4-7-8 breathing, plus a do-nothing timer.
-- **Passport**: XP, levels, streaks, stamps, wishlist and journal. You can rename yourself and your companion, upload a companion picture, and back up or restore your progress.
+- **Passport**: XP, levels, streaks, stamps, wishlist, journal, and a **mood album**: add your own pictures of your companion for 6 moods (stored on this device only).
 
 Everything is saved on your device only (localStorage). It works offline and can be installed as an app
 (Safari on iPhone: Share, then Add to Home Screen. Chrome/Edge on a Mac: the install icon in the address bar).
